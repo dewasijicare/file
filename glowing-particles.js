@@ -27,7 +27,7 @@
         canvas.style.left = '0';
         canvas.style.width = '100%';
         canvas.style.height = '100%';
-        canvas.style.zIndex = '-1';
+        canvas.style.zIndex = '9999';
         canvas.style.pointerEvents = 'none';
 
         document.body.appendChild(canvas);
@@ -116,3 +116,4 @@
         console.log('Efek partikel glowing (versi melayang) berhasil dimuat.');
     });
 })();
+

@@ -3,9 +3,10 @@
     document.addEventListener('DOMContentLoaded', () => {
 
         // --- PENGATURAN EFEK ---
-        // Anda bisa mengubah nilai di bawah ini untuk kustomisasi
-        const particleCount = 150; // Jumlah serpihan debu. (Default: 150)
-        const particleSpeed = 0.5; // Kecepatan dasar partikel. (Default: 0.5)
+        // [PERUBAHAN] Jumlah partikel dikurangi agar tidak terlalu ramai
+        const particleCount = 80;
+        // [PERUBAHAN] Kecepatan dasar partikel sedikit dikurangi untuk efek lebih lambat
+        const particleSpeed = 0.3;
         const particleColors = [
             'rgba(255, 255, 255, 0.8)', // Putih
             'rgba(255, 255, 255, 0.8)', // Putih (dibuat lebih banyak)
@@ -26,8 +27,8 @@
         canvas.style.left = '0';
         canvas.style.width = '100%';
         canvas.style.height = '100%';
-        canvas.style.zIndex = '9999'; // PENTING: Agar berada di belakang konten lain
-        canvas.style.pointerEvents = 'none'; // Agar tidak bisa diklik
+        canvas.style.zIndex = '-1';
+        canvas.style.pointerEvents = 'none';
 
         document.body.appendChild(canvas);
 
@@ -38,25 +39,34 @@
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2.5 + 1; // Ukuran dari 1px hingga 3.5px
-                this.speedX = (Math.random() - 0.5) * particleSpeed; // Arah gerak horizontal (kanan/kiri)
-                this.speedY = Math.random() * particleSpeed + 0.1; // Arah gerak vertikal (selalu ke bawah)
+                // [PERUBAHAN] Ukuran partikel dibuat jauh lebih kecil
+                this.size = Math.random() * 1.5 + 0.5; // Ukuran dari 0.5px hingga 2.0px
+                this.speedX = (Math.random() - 0.5) * particleSpeed;
+                this.speedY = Math.random() * particleSpeed + 0.1;
                 this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
             }
             // Memperbarui posisi partikel
             update() {
+                // [PERUBAHAN] Menambahkan efek "angin" yang membuat gerakan horizontal tidak beraturan
+                // Setiap frame, arah horizontal sedikit berubah secara acak
+                this.speedX += (Math.random() - 0.5) * 0.05;
+
+                // Batasi kecepatan horizontal agar tidak terlalu liar
+                if (this.speedX > particleSpeed) this.speedX = particleSpeed;
+                if (this.speedX < -particleSpeed) this.speedX = -particleSpeed;
+
                 this.x += this.speedX;
                 this.y += this.speedY;
 
-                // Jika partikel keluar layar, kembalikan ke atas dengan posisi acak
-                if (this.y > canvas.height) {
+                // Jika partikel keluar layar, kembalikan ke atas
+                if (this.y > canvas.height + this.size) {
                     this.y = 0 - this.size;
                     this.x = Math.random() * canvas.width;
                 }
-                if (this.x > canvas.width) {
+                if (this.x > canvas.width + this.size) {
                     this.x = 0 - this.size;
                 }
-                if (this.x < 0) {
+                if (this.x < 0 - this.size) {
                     this.x = canvas.width + this.size;
                 }
             }
@@ -64,7 +74,8 @@
             draw() {
                 ctx.fillStyle = this.color;
                 ctx.shadowColor = this.color;
-                ctx.shadowBlur = 10; // Efek cahaya glowing
+                // [PERUBAHAN] Efek glowing dibuat lebih kuat
+                ctx.shadowBlur = 15;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
@@ -96,11 +107,12 @@
         animate();
 
         // Buat canvas responsif jika ukuran window berubah
+        let resizeTimer;
         window.addEventListener('resize', () => {
-            init();
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(init, 100);
         });
         
-        console.log('Efek partikel glowing berhasil dimuat.');
+        console.log('Efek partikel glowing (versi melayang) berhasil dimuat.');
     });
-
 })();

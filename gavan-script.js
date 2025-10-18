@@ -1,4 +1,3 @@
-<script>
 (function() {
     // BLOK CSS LENGKAP
     const gavanThemeStyles = `
@@ -280,4 +279,3 @@
         }
     });
 })();
-</script>

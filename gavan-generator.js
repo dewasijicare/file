@@ -18,9 +18,8 @@
         // 3. Tempatkan kontainer yang baru dibuat ini di bawah form login
         loginForm.parentElement.insertBefore(container, loginForm.nextSibling);
         
-        // 4. Siapkan CSS khusus untuk widget (dengan ukuran lebih kecil)
+        // 4. Siapkan CSS khusus untuk widget
         const widgetStyles = `
-            /* [UKURAN] Mengurangi margin dan padding utama */
             #gavan-generator-widget {
                 background: linear-gradient(145deg, #2c3e50, #1a252f);
                 border: 1px solid #00aaff;
@@ -33,7 +32,6 @@
                 font-family: 'Exo 2', sans-serif;
                 max-width: 400px;
             }
-            /* [UKURAN] Mengurangi margin bawah judul */
             #gavan-generator-widget h3 {
                 color: #FFD700; text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
                 text-transform: uppercase; font-weight: 700;
@@ -41,31 +39,26 @@
                 display: flex; align-items: center; justify-content: center; gap: 10px;
                 font-size: 1.1rem;
             }
-            /* [UKURAN] Mengurangi margin bawah dan padding display angka */
             .generator-display-slot {
                 display: flex; justify-content: center; gap: 8px; margin-bottom: 1rem;
                 background-color: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; border: 1px solid #34495e;
             }
-            /* [UKURAN] Mengurangi tinggi kontainer angka */
             .digit-container {
                 width: 45px; height: 50px; overflow: hidden; border-radius: 5px; background-color: #0c0c1e;
             }
             .digit-reel {
                 display: flex; flex-direction: column;
-                /* [ANIMASI] Transisi untuk efek berhenti yang 'bounce' */
                 transition: transform 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
             }
-            /* [ANIMASI] Transisi untuk putaran cepat & linear */
             .digit-reel.spinning {
-                 transition: transform 0.15s linear;
+                 /* [ANIMASI LEBIH MULUS] Transisi untuk putaran cepat & linear */
+                 transition: transform 1s linear;
             }
-            /* [UKURAN] Menyesuaikan tinggi, line-height, dan font-size angka */
             .digit-reel > div {
                 width: 45px; height: 50px; line-height: 50px;
                 font-size: 2rem; font-weight: 700; color: #fff;
                 text-shadow: 0 0 6px #fff, 0 0 18px rgba(236,240,241,.7);
             }
-            /* [UKURAN] Mengurangi padding tombol */
             #generate-btn-slot {
                 background: linear-gradient(45deg,#ffd700,#ffa500) !important;
                 border: none !important; color: #2c3e50 !important;
@@ -91,7 +84,7 @@
 
         // 6. Buat HTML untuk widget di dalam kontainer yang sudah dibuat
         let reelHTML = '';
-        const numbers = '0123456789'.repeat(5);
+        const numbers = '0123456789'.repeat(10); // Perbanyak angka untuk putaran lebih lama
         for(let i = 0; i < numbers.length; i++) {
             reelHTML += `<div>${numbers[i]}</div>`;
         }
@@ -116,16 +109,16 @@
         const reels = document.querySelectorAll('.digit-reel');
         if (reels.length === 0) return;
 
-        // [UKURAN] Sesuaikan tinggi digit sesuai CSS
         const digitHeight = 50; 
         let isSpinning = false;
 
-        // [ANIMASI] Inisialisasi posisi awal reel ke posisi acak agar tidak statis
+        // Inisialisasi posisi awal reel ke posisi acak
         reels.forEach(reel => {
-            reel.style.transition = 'none'; // Hapus transisi untuk pengaturan awal
+            reel.style.transition = 'none';
             const randomNumber = Math.floor(Math.random() * 10);
-            const startPosition = -((10 * 2) + randomNumber) * digitHeight; // Ambil posisi dari set angka ke-2
+            const startPosition = -((10 * 5) + randomNumber) * digitHeight; // Ambil posisi dari tengah
             reel.style.transform = `translateY(${startPosition}px)`;
+            setTimeout(() => { reel.style.transition = ''; }, 100); // Aktifkan transisi setelah pengaturan awal
         });
 
         generateBtn.addEventListener('click', () => {
@@ -136,33 +129,20 @@
             generateBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Memutar...';
             
             reels.forEach((reel, index) => {
-                // [ANIMASI] Logika baru untuk putaran langsung
-                // 1. Hapus transisi 'bounce' agar bisa langsung di-reset posisinya tanpa terlihat
-                reel.style.transition = 'none';
-                
-                // Ambil posisi saat ini dan reset ke blok angka sebelumnya untuk memberikan ruang putar
-                const currentTransform = reel.style.transform || 'translateY(0px)';
-                const currentY = parseInt(currentTransform.replace(/[^0-9-]/g, ''), 10);
-                const resetPosition = currentY % (10 * digitHeight); // Reset ke blok angka pertama
-                reel.style.transform = `translateY(${resetPosition}px)`;
+                // [ANIMASI LEBIH MULUS] Logika baru yang lebih sederhana
+                // 1. Tambahkan kelas .spinning untuk memulai animasi putaran cepat
+                reel.classList.add('spinning');
+                // 2. Tentukan tujuan putaran yang sangat jauh di bawah
+                const spinAmount = 80 + Math.floor(Math.random() * 10); // Putar minimal 8 blok angka
+                const spinDestination = -(spinAmount * digitHeight);
+                reel.style.transform = `translateY(${spinDestination}px)`;
 
-                // 2. Paksa browser menggambar ulang posisi baru ini
-                // lalu aktifkan kembali transisi putaran cepat
+                // 3. Hentikan putaran di angka acak secara berurutan
                 setTimeout(() => {
-                    reel.classList.add('spinning');
-                    reel.style.transition = ''; // Biarkan kelas CSS yang mengatur transisi
-
-                    // 3. Tentukan tujuan putaran (beberapa blok ke bawah)
-                    const spinDestination = resetPosition - (30 * digitHeight); // Putar sejauh 3 blok angka
-                    reel.style.transform = `translateY(${spinDestination}px)`;
-                }, 20); // Jeda sangat singkat
-
-                // 4. Hentikan putaran di angka acak secara berurutan
-                setTimeout(() => {
-                    reel.classList.remove('spinning');
+                    reel.classList.remove('spinning'); // Hapus kelas .spinning untuk mengembalikan transisi 'bounce'
                     const randomNumber = Math.floor(Math.random() * 10);
-                    // Ambil dari set angka ke-3 (30) atau ke-4 (40) untuk posisi tengah
-                    const targetPosition = -((10 * 3) + randomNumber) * digitHeight;
+                    // Ambil posisi dari blok angka ke-5 agar tidak kembali ke atas
+                    const targetPosition = -((10 * 5) + randomNumber) * digitHeight;
                     reel.style.transform = `translateY(${targetPosition}px)`;
                 }, 1000 + (index * 500));
             });
@@ -175,6 +155,6 @@
             }, 1000 + (reels.length * 500));
         });
         
-        console.log('Widget Generator 4D (v2) berhasil dimuat dan ditempatkan.');
+        console.log('Widget Generator 4D (v3 - Mulus) berhasil dimuat.');
     });
 })();

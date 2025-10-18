@@ -26,7 +26,7 @@
         canvas.style.left = '0';
         canvas.style.width = '100%';
         canvas.style.height = '100%';
-        canvas.style.zIndex = '-1'; // PENTING: Agar berada di belakang konten lain
+        canvas.style.zIndex = '9999'; // PENTING: Agar berada di belakang konten lain
         canvas.style.pointerEvents = 'none'; // Agar tidak bisa diklik
 
         document.body.appendChild(canvas);
@@ -102,4 +102,5 @@
         
         console.log('Efek partikel glowing berhasil dimuat.');
     });
+
 })();

@@ -116,38 +116,42 @@
     let intervalsInitialized = false;
     let observer;
 
-    // [PERBAIKAN] FUNGSI GENERATOR YANG LEBIH BAIK
+    // [FINAL] FUNGSI GENERATOR DENGAN JANGKAR YANG LEBIH BAIK
     function initializeGeneratorWidget() {
         if (document.getElementById('gavan-generator-widget')) {
-            return; // Hentikan jika widget sudah ada
+            return;
         }
-        
         console.log('Mencoba menginisialisasi widget generator...');
 
-        // Cari beberapa kemungkinan titik penempatan (jangkar)
-        const loginCard = document.querySelector('form[action="/login"]?.closest('.card.shadow');
-        const quickLoginCard = document.querySelector('#row-quicklogin.card');
-        
         let anchorElement = null;
-
-        if (loginCard) {
-            anchorElement = loginCard;
-            console.log('Jangkar ditemukan: Kartu Login Utama.');
-        } else if (quickLoginCard) {
-            anchorElement = quickLoginCard;
-            console.log('Jangkar ditemukan: Kartu Quick Login.');
+        
+        // Coba cari form login utama berdasarkan teks "MASUK"
+        const loginTitle = Array.from(document.querySelectorAll('h1, h2, h3, div')).find(
+            el => el.textContent.trim().toUpperCase() === 'MASUK'
+        );
+        
+        if (loginTitle) {
+            // Gunakan parent dari judul sebagai jangkar
+            anchorElement = loginTitle.parentElement;
+            console.log('Jangkar ditemukan: Kontainer form "MASUK".');
+        } else {
+            // Fallback: coba cari quick login card
+            const quickLoginCard = document.querySelector('#row-quicklogin.card');
+            if (quickLoginCard) {
+                anchorElement = quickLoginCard;
+                console.log('Jangkar ditemukan: Kartu Quick Login.');
+            }
         }
-
-        // Jika tidak ada jangkar yang ditemukan, hentikan fungsi
+        
         if (!anchorElement) {
-            console.log('Tidak ada jangkar (form login atau quick login) yang ditemukan. Widget tidak ditampilkan.');
+            console.log('Tidak ada jangkar yang cocok ditemukan. Widget tidak ditampilkan.');
             return;
         }
 
-        // Buat HTML untuk widget
         const widgetElement = document.createElement('div');
         widgetElement.id = 'gavan-generator-widget';
-        widgetElement.className = 'card p-3 my-3 shadow';
+        // Buat kelasnya lebih umum, tidak harus shadow
+        widgetElement.className = 'card p-3 my-3';
         
         let reelHTML = '';
         const numbers = '0123456789'.repeat(5);
@@ -168,13 +172,14 @@
             </button>
         `;
 
-        // Tempatkan widget di bawah elemen jangkar
+        // Masukkan widget setelah elemen jangkar
         anchorElement.parentElement.insertBefore(widgetElement, anchorElement.nextSibling);
         console.log('Widget generator berhasil ditempatkan.');
 
-        // Tambahkan fungsionalitas tombol
         const generateBtn = document.getElementById('generate-btn-slot');
         const reels = document.querySelectorAll('.digit-reel');
+        if (reels.length === 0) return;
+
         const digitHeight = reels[0].querySelector('div').clientHeight;
         let isSpinning = false;
 
@@ -192,7 +197,7 @@
                 setTimeout(() => {
                     reel.classList.remove('spinning');
                     const randomNumber = Math.floor(Math.random() * 10);
-                    const targetPosition = -((10 * 3) + randomNumber) * digitHeight; // Ambil set angka ke-3
+                    const targetPosition = -((10 * 3) + randomNumber) * digitHeight;
                     reel.style.transform = `translateY(${targetPosition}px)`;
                 }, 1000 + (index * 600)); 
             });

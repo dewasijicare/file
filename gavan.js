@@ -116,17 +116,32 @@
     let intervalsInitialized = false;
     let observer;
 
-    // --- BLOK KODE GENERATOR BARU DIMULAI ---
+    // [PERBAIKAN] FUNGSI GENERATOR YANG LEBIH BAIK
     function initializeGeneratorWidget() {
-        // Cek jika widget sudah ada, jangan buat lagi
         if (document.getElementById('gavan-generator-widget')) {
-            return;
+            return; // Hentikan jika widget sudah ada
         }
         
-        // Titik referensi: kartu login
+        console.log('Mencoba menginisialisasi widget generator...');
+
+        // Cari beberapa kemungkinan titik penempatan (jangkar)
         const loginCard = document.querySelector('form[action="/login"]?.closest('.card.shadow');
-        if (!loginCard) {
-            return; // Hentikan jika kartu login tidak ditemukan
+        const quickLoginCard = document.querySelector('#row-quicklogin.card');
+        
+        let anchorElement = null;
+
+        if (loginCard) {
+            anchorElement = loginCard;
+            console.log('Jangkar ditemukan: Kartu Login Utama.');
+        } else if (quickLoginCard) {
+            anchorElement = quickLoginCard;
+            console.log('Jangkar ditemukan: Kartu Quick Login.');
+        }
+
+        // Jika tidak ada jangkar yang ditemukan, hentikan fungsi
+        if (!anchorElement) {
+            console.log('Tidak ada jangkar (form login atau quick login) yang ditemukan. Widget tidak ditampilkan.');
+            return;
         }
 
         // Buat HTML untuk widget
@@ -135,7 +150,7 @@
         widgetElement.className = 'card p-3 my-3 shadow';
         
         let reelHTML = '';
-        const numbers = '0123456789'.repeat(5); // Ulangi angka untuk efek putaran tak terbatas
+        const numbers = '0123456789'.repeat(5);
         for(let i = 0; i < numbers.length; i++) {
             reelHTML += `<div>${numbers[i]}</div>`;
         }
@@ -153,46 +168,42 @@
             </button>
         `;
 
-        // Tempatkan widget di bawah kartu login
-        loginCard.parentElement.appendChild(widgetElement);
+        // Tempatkan widget di bawah elemen jangkar
+        anchorElement.parentElement.insertBefore(widgetElement, anchorElement.nextSibling);
+        console.log('Widget generator berhasil ditempatkan.');
 
-        // Tambahkan fungsionalitas
+        // Tambahkan fungsionalitas tombol
         const generateBtn = document.getElementById('generate-btn-slot');
         const reels = document.querySelectorAll('.digit-reel');
         const digitHeight = reels[0].querySelector('div').clientHeight;
+        let isSpinning = false;
 
         generateBtn.addEventListener('click', () => {
+            if(isSpinning) return;
+            isSpinning = true;
+
             generateBtn.disabled = true;
             generateBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Memutar...';
-
-            let finalNumbers = [];
             
             reels.forEach((reel, index) => {
-                // Tentukan angka acak untuk setiap reel
-                const randomNumber = Math.floor(Math.random() * 10);
-                finalNumbers.push(randomNumber);
-
-                // Mulai animasi putaran cepat
                 reel.classList.add('spinning');
                 reel.style.transform = `translateY(-${reel.scrollHeight - digitHeight}px)`;
 
-                // Hentikan putaran secara berurutan
                 setTimeout(() => {
                     reel.classList.remove('spinning');
-                    // Angka diulang 5x, ambil dari set ke-3 untuk posisi tengah
-                    const targetPosition = -((10 * 3) + randomNumber) * digitHeight;
+                    const randomNumber = Math.floor(Math.random() * 10);
+                    const targetPosition = -((10 * 3) + randomNumber) * digitHeight; // Ambil set angka ke-3
                     reel.style.transform = `translateY(${targetPosition}px)`;
-                }, 1000 + (index * 600)); // Jeda 600ms antar pemberhentian
+                }, 1000 + (index * 600)); 
             });
 
-            // Aktifkan kembali tombol setelah semua animasi selesai
             setTimeout(() => {
                 generateBtn.disabled = false;
                 generateBtn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Generate Angka';
+                isSpinning = false;
             }, 1000 + (reels.length * 600));
         });
     }
-    // --- BLOK KODE GENERATOR BARU SELESAI ---
 
     function setupPersistentCountdownIntervals() { if (intervalsInitialized) return; setInterval(() => { document.querySelectorAll('#carousel-togel .togel-countdown-timer').forEach(timer => { const now = new Date().getTime(); const closingTime = parseInt(timer.dataset.time, 10); const status = parseInt(timer.dataset.status, 10); if (status !== 1 || !closingTime || isNaN(closingTime) || (closingTime - now) <= 0) { timer.classList.remove('show-warning-text', 'closing-soon'); if (!timer.classList.contains('is-closed')) { timer.textContent = "TUTUP"; timer.classList.add('is-closed'); } return; } const diff = closingTime - now; if (diff < 1800000) { timer.classList.add('closing-soon'); let blinkCounter = parseInt(timer.dataset.blinkCounter || '0', 10); if (blinkCounter < 5) { timer.classList.add('show-warning-text'); } else { timer.classList.remove('show-warning-text'); } timer.dataset.blinkCounter = (blinkCounter + 1) % 10; } else { timer.classList.remove('closing-soon', 'show-warning-text'); if (timer.dataset.blinkCounter) { delete timer.dataset.blinkCounter; } } }); }, 1000); intervalsInitialized = true; }
     function initializeSwipeableHeaderMenu() { const menuNav = document.querySelector('nav.menubar.d-xl-none'); if (!menuNav || menuNav.dataset.styled === 'true') return; const originalContainer = menuNav.querySelector('#category-navbar .owl-stage-outer'); if (!originalContainer) return; const allItems = Array.from(originalContainer.querySelectorAll('.owl-item:not(.cloned) > .item')); if (allItems.length === 0) return; const homeItem = allItems.find(item => item.querySelector('a[href="/"]')); const otherItems = allItems.filter(item => item !== homeItem); if (!homeItem || otherItems.length === 0) return; const wrapper = document.createElement('div'); wrapper.className = 'custom-header-wrapper'; const homeDiv = document.createElement('div'); homeDiv.className = 'home-link-fixed'; homeDiv.appendChild(homeItem.cloneNode(true)); const scrollableDiv = document.createElement('div'); scrollableDiv.className = 'scrollable-menu-container'; const owlCarouselDiv = document.createElement('div'); owlCarouselDiv.className = 'owl-carousel other-items-carousel'; otherItems.forEach(item => { owlCarouselDiv.appendChild(item.cloneNode(true)); }); scrollableDiv.appendChild(owlCarouselDiv); wrapper.appendChild(homeDiv); wrapper.appendChild(scrollableDiv); const parentContainer = menuNav.querySelector('.container'); parentContainer.innerHTML = ''; parentContainer.appendChild(wrapper); const newCarousel = $(parentContainer).find('.other-items-carousel'); if (newCarousel.length > 0) { newCarousel.owlCarousel({ autoWidth: true, loop: true, margin: 15, nav: false, dots: false, autoplay: true, autoplayTimeout: 4000, autoplayHoverPause: true, }); } menuNav.dataset.styled = 'true'; }

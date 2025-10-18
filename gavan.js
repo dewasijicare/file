@@ -55,8 +55,6 @@
         #betting-page-container .form-check-input:checked { background-color: #00eaff; border-color: #00eaff; box-shadow: 0 0 10px #00eaff; }
         #panel-closed.panel-closed-themed { background: linear-gradient(45deg, #c0392b, #e74c3c) !important; border: 1px solid #e74c3c !important; box-shadow: 0 0 20px rgba(231, 76, 60, 0.6) !important; border-radius: 15px !important; padding: 5rem 1rem !important; }
         #panel-closed.panel-closed-themed strong { font-size: 1.5rem; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
-        
-        /* CSS KHUSUS UNTUK TABEL BETTING */
         #betting-page-container .card-body { padding: 1.25rem; padding-top: 0 !important; }
         #betting-page-container .info-description, #betting-page-container .bet-type-toggle { margin-bottom: 0 !important; }
         #betting-page-container .table-input { margin-left: -1.25rem !important; margin-right: -1.25rem !important; width: calc(100% + 2.5rem) !important; margin-bottom: 1rem !important; }
@@ -67,8 +65,6 @@
         #betting-page-container button[onclick="addRow(event)"]:hover { background-color: rgba(255, 215, 0, 0.2) !important; color: #fff !important; }
         #betting-page-container select#select-market { border-color: #ffd700 !important; }
         #betting-page-container select#select-market:focus { border-color: #ffd700 !important; box-shadow: 0 0 10px rgba(255, 215, 0, 0.6) !important; }
-
-        /* CSS KHUSUS UNTUK HALAMAN PROFIL */
         #profile-page-container .profile-row { display: flex; align-items: center; background-color: #1a252f; padding: 12px 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #34495e; }
         #profile-page-container .profile-row-stacked { flex-direction: column; align-items: flex-start; }
         #profile-page-container .profile-label { display: flex; align-items: center; color: #bdc3c7; flex-basis: 35%; flex-shrink: 0; font-weight: 500; }
@@ -76,6 +72,41 @@
         #profile-page-container .profile-label i { margin-right: 12px; color: #00eaff; font-size: 1.2em; }
         #profile-page-container .profile-value { color: #fff; font-weight: 700; word-break: break-all; text-align: right; flex-grow: 1; }
         #profile-page-container .profile-row-stacked .profile-value { text-align: left; background-color: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 5px; width: 100%; }
+
+        /* --- CSS BARU UNTUK GENERATOR SLOT --- */
+        #gavan-generator-widget {
+            background: linear-gradient(145deg, #2c3e50, #1a252f) !important;
+            border: 1px solid #00aaff !important;
+            box-shadow: 0 0 20px rgba(0, 170, 255, .6) !important;
+            border-radius: 15px !important;
+            color: #ecf0f1;
+            text-align: center;
+        }
+        #gavan-generator-widget h3 {
+            color: #FFD700 !important; text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+            text-transform: uppercase; font-weight: 700;
+            margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .generator-display-slot {
+            display: flex; justify-content: center; gap: 8px; margin-bottom: 1.25rem;
+            background-color: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; border: 1px solid #34495e;
+        }
+        .digit-container {
+            width: 45px; height: 60px; overflow: hidden; border-radius: 5px; background-color: #0c0c1e;
+        }
+        .digit-reel {
+            display: flex; flex-direction: column;
+            transition: transform 1s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Animasi stop dengan efek 'bounce' */
+        }
+        .digit-reel.spinning {
+             transition: transform 0.2s linear; /* Animasi putaran cepat */
+        }
+        .digit-reel > div {
+            width: 45px; height: 60px; line-height: 60px;
+            font-size: 2.2rem; font-weight: 700; color: #fff;
+            text-shadow: 0 0 6px #fff, 0 0 18px rgba(236,240,241,.7);
+            font-family: 'Exo 2', sans-serif;
+        }
     `;
     const styleElement = document.createElement('style');
     document.head.appendChild(styleElement);
@@ -84,6 +115,84 @@
     // --- KUMPULAN FUNGSI ---
     let intervalsInitialized = false;
     let observer;
+
+    // --- BLOK KODE GENERATOR BARU DIMULAI ---
+    function initializeGeneratorWidget() {
+        // Cek jika widget sudah ada, jangan buat lagi
+        if (document.getElementById('gavan-generator-widget')) {
+            return;
+        }
+        
+        // Titik referensi: kartu login
+        const loginCard = document.querySelector('form[action="/login"]?.closest('.card.shadow');
+        if (!loginCard) {
+            return; // Hentikan jika kartu login tidak ditemukan
+        }
+
+        // Buat HTML untuk widget
+        const widgetElement = document.createElement('div');
+        widgetElement.id = 'gavan-generator-widget';
+        widgetElement.className = 'card p-3 my-3 shadow';
+        
+        let reelHTML = '';
+        const numbers = '0123456789'.repeat(5); // Ulangi angka untuk efek putaran tak terbatas
+        for(let i = 0; i < numbers.length; i++) {
+            reelHTML += `<div>${numbers[i]}</div>`;
+        }
+        
+        widgetElement.innerHTML = `
+            <h3><i class="bi bi-shuffle"></i> 4D Generator</h3>
+            <div class="generator-display-slot">
+                <div class="digit-container"><div class="digit-reel">${reelHTML}</div></div>
+                <div class="digit-container"><div class="digit-reel">${reelHTML}</div></div>
+                <div class="digit-container"><div class="digit-reel">${reelHTML}</div></div>
+                <div class="digit-container"><div class="digit-reel">${reelHTML}</div></div>
+            </div>
+            <button id="generate-btn-slot" class="btn btn-secondary w-100">
+                <i class="bi bi-arrow-repeat"></i> Generate Angka
+            </button>
+        `;
+
+        // Tempatkan widget di bawah kartu login
+        loginCard.parentElement.appendChild(widgetElement);
+
+        // Tambahkan fungsionalitas
+        const generateBtn = document.getElementById('generate-btn-slot');
+        const reels = document.querySelectorAll('.digit-reel');
+        const digitHeight = reels[0].querySelector('div').clientHeight;
+
+        generateBtn.addEventListener('click', () => {
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Memutar...';
+
+            let finalNumbers = [];
+            
+            reels.forEach((reel, index) => {
+                // Tentukan angka acak untuk setiap reel
+                const randomNumber = Math.floor(Math.random() * 10);
+                finalNumbers.push(randomNumber);
+
+                // Mulai animasi putaran cepat
+                reel.classList.add('spinning');
+                reel.style.transform = `translateY(-${reel.scrollHeight - digitHeight}px)`;
+
+                // Hentikan putaran secara berurutan
+                setTimeout(() => {
+                    reel.classList.remove('spinning');
+                    // Angka diulang 5x, ambil dari set ke-3 untuk posisi tengah
+                    const targetPosition = -((10 * 3) + randomNumber) * digitHeight;
+                    reel.style.transform = `translateY(${targetPosition}px)`;
+                }, 1000 + (index * 600)); // Jeda 600ms antar pemberhentian
+            });
+
+            // Aktifkan kembali tombol setelah semua animasi selesai
+            setTimeout(() => {
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Generate Angka';
+            }, 1000 + (reels.length * 600));
+        });
+    }
+    // --- BLOK KODE GENERATOR BARU SELESAI ---
 
     function setupPersistentCountdownIntervals() { if (intervalsInitialized) return; setInterval(() => { document.querySelectorAll('#carousel-togel .togel-countdown-timer').forEach(timer => { const now = new Date().getTime(); const closingTime = parseInt(timer.dataset.time, 10); const status = parseInt(timer.dataset.status, 10); if (status !== 1 || !closingTime || isNaN(closingTime) || (closingTime - now) <= 0) { timer.classList.remove('show-warning-text', 'closing-soon'); if (!timer.classList.contains('is-closed')) { timer.textContent = "TUTUP"; timer.classList.add('is-closed'); } return; } const diff = closingTime - now; if (diff < 1800000) { timer.classList.add('closing-soon'); let blinkCounter = parseInt(timer.dataset.blinkCounter || '0', 10); if (blinkCounter < 5) { timer.classList.add('show-warning-text'); } else { timer.classList.remove('show-warning-text'); } timer.dataset.blinkCounter = (blinkCounter + 1) % 10; } else { timer.classList.remove('closing-soon', 'show-warning-text'); if (timer.dataset.blinkCounter) { delete timer.dataset.blinkCounter; } } }); }, 1000); intervalsInitialized = true; }
     function initializeSwipeableHeaderMenu() { const menuNav = document.querySelector('nav.menubar.d-xl-none'); if (!menuNav || menuNav.dataset.styled === 'true') return; const originalContainer = menuNav.querySelector('#category-navbar .owl-stage-outer'); if (!originalContainer) return; const allItems = Array.from(originalContainer.querySelectorAll('.owl-item:not(.cloned) > .item')); if (allItems.length === 0) return; const homeItem = allItems.find(item => item.querySelector('a[href="/"]')); const otherItems = allItems.filter(item => item !== homeItem); if (!homeItem || otherItems.length === 0) return; const wrapper = document.createElement('div'); wrapper.className = 'custom-header-wrapper'; const homeDiv = document.createElement('div'); homeDiv.className = 'home-link-fixed'; homeDiv.appendChild(homeItem.cloneNode(true)); const scrollableDiv = document.createElement('div'); scrollableDiv.className = 'scrollable-menu-container'; const owlCarouselDiv = document.createElement('div'); owlCarouselDiv.className = 'owl-carousel other-items-carousel'; otherItems.forEach(item => { owlCarouselDiv.appendChild(item.cloneNode(true)); }); scrollableDiv.appendChild(owlCarouselDiv); wrapper.appendChild(homeDiv); wrapper.appendChild(scrollableDiv); const parentContainer = menuNav.querySelector('.container'); parentContainer.innerHTML = ''; parentContainer.appendChild(wrapper); const newCarousel = $(parentContainer).find('.other-items-carousel'); if (newCarousel.length > 0) { newCarousel.owlCarousel({ autoWidth: true, loop: true, margin: 15, nav: false, dots: false, autoplay: true, autoplayTimeout: 4000, autoplayHoverPause: true, }); } menuNav.dataset.styled = 'true'; }
@@ -109,7 +218,6 @@
     function styleQuickLogin() { document.querySelectorAll('#row-quicklogin:not([data-styled="true"])').forEach(card => { card.dataset.styled = 'true'; const form = card.querySelector('form'); if (!form) return; const usernameDiv = form.querySelector('label[for="username"]')?.parentElement; const passwordDiv = form.querySelector('label[for="password"]')?.parentElement; const buttonDiv = form.querySelector('.d-flex.gap-1.my-3'); if (!usernameDiv || !passwordDiv || !buttonDiv) return; const newInputsHTML = ` <div class="row g-2 mb-3"> <div class="col-md-6"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-person-fill"></i></span> <input type="text" name="userName" id="username" class="form-control" placeholder="Username"> </div> </div> <div class="col-md-6"> <div class="input-wrapper"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-key-fill"></i></span> <input type="password" name="password" id="password" class="form-control" placeholder="Password"> </div> </div> </div> </div> `; buttonDiv.insertAdjacentHTML('beforebegin', newInputsHTML); usernameDiv.remove(); passwordDiv.remove(); const newPasswordInput = card.querySelector('#password'); if (newPasswordInput) { addPasswordToggle(newPasswordInput); } }); }
     function styleLoginPage() { const loginForm = document.querySelector('#maincontent form[action="/login"]'); if (!loginForm) return; const loginCard = loginForm.closest('.card.shadow'); if (!loginCard || loginCard.dataset.layoutStyled === 'true') return; loginCard.dataset.layoutStyled = 'true'; const usernameGroup = loginForm.querySelector('input[name="userName"]')?.closest('.form-group, .mb-3'); const passwordGroup = loginForm.querySelector('input[name="password"]')?.closest('.form-group, .mb-3'); const buttonContainer = loginForm.querySelector('button[type="submit"]')?.parentElement; if (usernameGroup && passwordGroup && buttonContainer) { const newInputsHTML = ` <div class="row g-2 mb-3"> <div class="col-md-6"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-person-fill"></i></span> <input type="text" name="userName" required="required" class="form-control" placeholder="User Name"> </div> </div> <div class="col-md-6"> <div class="input-wrapper"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-key-fill"></i></span> <input type="password" name="password" required="required" class="form-control" placeholder="Password"> </div> </div> </div> </div> `; buttonContainer.insertAdjacentHTML('beforebegin', newInputsHTML); usernameGroup.remove(); passwordGroup.remove(); } }
     function styleRegisterPage() { const form = document.querySelector('form[action="/register"]'); if (!form || form.dataset.styled === 'true') return; form.dataset.styled = 'true'; const card = form.closest('.card.shadow'); const mainRow = card ? card.querySelector('.row.mb-3') : null; const buttonWrapper = card ? card.querySelector('.d-grid.gap-3.mb-3') : null; if (!card || !mainRow || !buttonWrapper) return; mainRow.before(form); form.append(mainRow); form.append(buttonWrapper); form.querySelectorAll('h3').forEach(h3 => h3.remove()); form.querySelectorAll('.form-group').forEach(group => { const label = group.querySelector('label'); const input = group.querySelector('input, select'); if (!label || !input) return; const icon = label.querySelector('i.bi'); const placeholderText = label.textContent.replace(/\(.*\)/g, '').replace(/(\r\n|\n|\r)/gm, " ").trim(); let newElement; if (icon) { const inputGroup = document.createElement('div'); inputGroup.className = 'input-group mb-2'; const iconSpan = document.createElement('span'); iconSpan.className = 'input-group-text'; iconSpan.appendChild(icon.cloneNode(true)); inputGroup.appendChild(iconSpan); inputGroup.appendChild(input); newElement = inputGroup; } else { const simpleDiv = document.createElement('div'); simpleDiv.className = 'mb-2'; simpleDiv.appendChild(input); newElement = simpleDiv; } if (input.tagName.toLowerCase() !== 'select') { input.placeholder = placeholderText; } else { if (!input.querySelector('option[value=""]')) { const defaultOption = document.createElement('option'); defaultOption.value = ""; defaultOption.textContent = placeholderText || "Pilih Opsi"; defaultOption.disabled = true; defaultOption.selected = true; input.prepend(defaultOption); } } input.classList.add('form-control'); if (input.type === 'password') { const wrapper = document.createElement('div'); wrapper.className = 'input-wrapper'; wrapper.appendChild(newElement); group.replaceWith(wrapper); } else { group.replaceWith(newElement); } }); const passwordInput = form.querySelector('#password'); const confirmPasswordInput = form.querySelector('#confirmpassword'); if (passwordInput && confirmPasswordInput) { const passwordWrapper = passwordInput.closest('.input-wrapper'); confirmPasswordInput.closest('.input-wrapper')?.querySelector('.password-toggle-icon')?.remove(); if (passwordWrapper && !passwordWrapper.querySelector('.password-toggle-icon')) { const toggleIcon = document.createElement('i'); toggleIcon.className = 'bi bi-eye-fill password-toggle-icon'; toggleIcon.addEventListener('click', () => { const isPassword = passwordInput.type === 'password'; const newType = isPassword ? 'text' : 'password'; passwordInput.type = newType; confirmPasswordInput.type = newType; toggleIcon.className = isPassword ? 'bi bi-eye-slash-fill password-toggle-icon' : 'bi bi-eye-fill password-toggle-icon'; }); passwordWrapper.appendChild(toggleIcon); passwordInput.dataset.toggleAdded = 'true'; confirmPasswordInput.dataset.toggleAdded = 'true'; } } }
-    
     function styleProfilePage() {
         const title = Array.from(document.querySelectorAll('h1.text-center')).find(h1 => h1.textContent.trim() === 'Profil Akun');
         if (!title) return;
@@ -128,7 +236,7 @@
             if (!labelEl) return;
             let labelText = labelEl.textContent.trim();
             let valueText = '';
-            if (labelText === 'Nama Lengkap' || labelText === 'Credit') { return; } // [PERUBAHAN] Hapus juga Credit
+            if (labelText === 'Nama Lengkap' || labelText === 'Credit') { return; }
             if (labelText === 'Nama') { labelText = 'Username'; }
             if (labelText === 'Rekening Bank') {
                 const inputs = group.querySelectorAll('input.form-control');
@@ -155,53 +263,34 @@
         profileForm.prepend(newContentWrapper);
         formGroups.forEach(group => group.remove());
     }
-
-    // [FUNGSI BARU] FUNGSI UNTUK MENATA HALAMAN GANTI PASSWORD
     function styleChangePasswordPage() {
         const form = document.querySelector('form[action="/change-password"]');
         if (!form || form.dataset.styled === 'true') return;
         form.dataset.styled = 'true';
-
-        const iconMapping = {
-            'currentpassword': 'bi-key-fill',
-            'password': 'bi-shield-lock-fill',
-            'confirmpassword': 'bi-shield-check'
-        };
-
+        const iconMapping = { 'currentpassword': 'bi-key-fill', 'password': 'bi-shield-lock-fill', 'confirmpassword': 'bi-shield-check' };
         form.querySelectorAll('.form-group').forEach(group => {
             const label = group.querySelector('label');
             const input = group.querySelector('input');
             if (!label || !input) return;
-
             const iconClass = iconMapping[input.id];
             if (!iconClass) return;
-            
             const placeholderText = label.textContent.trim();
-            
             const inputGroup = document.createElement('div');
             inputGroup.className = 'input-group mb-3';
-            
             const iconSpan = document.createElement('span');
             iconSpan.className = 'input-group-text';
             iconSpan.innerHTML = `<i class="bi ${iconClass}"></i>`;
-
             input.placeholder = placeholderText;
             inputGroup.appendChild(iconSpan);
-            inputGroup.appendChild(input.cloneNode(true)); // Salin inputnya
-
+            inputGroup.appendChild(input.cloneNode(true));
             const wrapper = document.createElement('div');
             wrapper.className = 'input-wrapper';
             wrapper.appendChild(inputGroup);
-
-            // Ganti form group lama dengan yang baru
             group.replaceWith(wrapper);
-            
-            // Tambahkan kembali toggle password ke input yang baru
             const newPasswordInput = wrapper.querySelector('input');
             addPasswordToggle(newPasswordInput);
         });
     }
-
     function styleLogoutButton() {
         const profileFormLogout = document.querySelector('form a[href="/logout"]');
         if (profileFormLogout && !profileFormLogout.dataset.styled) {
@@ -252,7 +341,10 @@
             styleRegisterPage(); 
             styleProfilePage();
             styleLogoutButton();
-            styleChangePasswordPage(); // [PEMANGGILAN FUNGSI BARU]
+            styleChangePasswordPage();
+            
+            // Panggil fungsi generator di sini
+            initializeGeneratorWidget();
         };
         
         observer = new MutationObserver(observerCallback);

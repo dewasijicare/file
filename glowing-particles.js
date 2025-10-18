@@ -4,7 +4,7 @@
 
         // --- PENGATURAN EFEK ---
         // [PERUBAHAN] Jumlah partikel dikurangi agar tidak terlalu ramai
-        const particleCount = 80;
+        const particleCount = 60;
         // [PERUBAHAN] Kecepatan dasar partikel sedikit dikurangi untuk efek lebih lambat
         const particleSpeed = 0.3;
         const particleColors = [
@@ -116,4 +116,5 @@
         console.log('Efek partikel glowing (versi melayang) berhasil dimuat.');
     });
 })();
+
 

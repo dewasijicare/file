@@ -18,22 +18,33 @@
         // 3. Tempatkan kontainer yang baru dibuat ini di bawah form login
         loginForm.parentElement.insertBefore(container, loginForm.nextSibling);
         
-        // 4. Siapkan CSS khusus untuk widget (desain baru yang lebih ringkas)
+        // 4. Siapkan CSS khusus untuk widget (dengan animasi @keyframes)
         const widgetStyles = `
+            /* [ANIMASI FINAL] Definisikan animasi putaran yang mulus */
+            @keyframes spinReel {
+                from {
+                    transform: translateY(0);
+                }
+                to {
+                    /* Putar sejauh 10 blok angka (5000px) */
+                    transform: translateY(-500px); 
+                }
+            }
+
             #gavan-generator-widget {
-                background: linear-gradient(145deg, #2c3e50, #1a252f);
+                background: linear-gradient(145deg, #2c3e50, #1a2f2f);
                 border: 1px solid #00aaff;
                 box-shadow: 0 0 20px rgba(0, 170, 255, .6);
                 border-radius: 15px;
                 color: #ecf0f1;
                 text-align: center;
                 padding: 0.75rem;
-                margin: 1rem auto; /* Margin atas bawah diperkecil */
+                margin: 1rem auto;
                 font-family: 'Exo 2', sans-serif;
                 max-width: 400px;
             }
             .generator-display-slot {
-                display: flex; justify-content: center; gap: 8px; margin-bottom: 0.75rem; /* Margin bawah display diperkecil */
+                display: flex; justify-content: center; gap: 8px; margin-bottom: 0.75rem;
                 background-color: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; border: 1px solid #34495e;
             }
             .digit-container {
@@ -41,17 +52,20 @@
             }
             .digit-reel {
                 display: flex; flex-direction: column;
+                /* Transisi ini HANYA untuk efek berhenti 'bounce' */
                 transition: transform 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
             }
-            .digit-reel.spinning {
-                 transition: transform 1s linear;
+            /* [ANIMASI FINAL] Gunakan @keyframes saat berputar */
+            .digit-reel.is-spinning {
+                /* Durasi 0.5 detik per putaran penuh, berulang tak terbatas */
+                animation: spinReel 0.5s linear infinite;
+                transition: none; /* Matikan transisi 'bounce' saat berputar */
             }
             .digit-reel > div {
                 width: 45px; height: 50px; line-height: 50px;
                 font-size: 2rem; font-weight: 700; color: #fff;
                 text-shadow: 0 0 6px #fff, 0 0 18px rgba(236,240,241,.7);
             }
-            /* [DESAIN BARU] Tombol yang berfungsi sebagai judul */
             #generate-btn-slot {
                 background: linear-gradient(45deg,#ffd700,#ffa500) !important;
                 border: none !important; color: #2c3e50 !important;
@@ -59,7 +73,7 @@
                 box-shadow: 0 0 10px #ffd700, inset 0 0 5px rgba(255,255,255,.7);
                 transition: all .3s ease;
                 width: 100%; padding: 10px; border-radius: 8px; cursor: pointer;
-                font-size: 1rem; /* Ukuran font agar teks terlihat jelas */
+                font-size: 1rem;
                 display: flex; align-items: center; justify-content: center; gap: 8px;
             }
             #generate-btn-slot:hover {
@@ -70,10 +84,9 @@
                 background: #34495e !important; color: #7f8c8d !important;
                 cursor: not-allowed; transform: none; box-shadow: none;
             }
-            /* [DESAIN BARU] Mengatur ukuran ikon di dalam tombol */
             #generate-btn-slot i.bi {
                 font-size: 1.1rem;
-                font-weight: bold !important; /* Membuat ikon terlihat lebih tebal */
+                font-weight: bold !important;
             }
         `;
 
@@ -82,9 +95,9 @@
         styleElement.innerHTML = widgetStyles;
         document.head.appendChild(styleElement);
 
-        // 6. Buat HTML untuk widget (tanpa judul H3)
+        // 6. Buat HTML untuk widget
         let reelHTML = '';
-        const numbers = '0123456789'.repeat(10); // Perbanyak angka untuk putaran lebih lama
+        const numbers = '0123456789'.repeat(10);
         for(let i = 0; i < numbers.length; i++) {
             reelHTML += `<div>${numbers[i]}</div>`;
         }
@@ -110,8 +123,8 @@
 
         const digitHeight = 50; 
         let isSpinning = false;
-        const baseSpinDuration = 1000; // Durasi putaran dasar sebelum reel pertama berhenti
-        const extraDelayPerReel = 500; // Jeda tambahan untuk setiap reel berikutnya
+        const baseSpinDuration = 1000;
+        const extraDelayPerReel = 500;
 
         // Inisialisasi posisi awal reel ke posisi acak
         reels.forEach(reel => {
@@ -119,45 +132,55 @@
             const randomNumber = Math.floor(Math.random() * 10);
             const startPosition = -((10 * 5) + randomNumber) * digitHeight;
             reel.style.transform = `translateY(${startPosition}px)`;
-            setTimeout(() => { reel.style.transition = ''; }, 100);
         });
 
         generateBtn.addEventListener('click', () => {
             if(isSpinning) return;
             isSpinning = true;
 
-            // [DESAIN BARU] Ubah teks tombol saat berputar
             generateBtn.disabled = true;
             generateBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> MEMUTAR...';
             
             reels.forEach((reel, index) => {
-                // [ANIMASI MULUS] Logika baru yang sepenuhnya independen
-                reel.classList.add('spinning');
-                
-                // Tentukan tujuan putaran yang jauh di bawah
-                const spinAmount = 80 + Math.floor(Math.random() * 10);
-                const spinDestination = -(spinAmount * digitHeight);
-                reel.style.transform = `translateY(${spinDestination}px)`;
+                // [ANIMASI FINAL] Logika baru dengan @keyframes
+                // 1. Mulai animasi putaran tak terbatas yang mulus
+                reel.classList.add('is-spinning');
 
-                // Atur waktu berhenti yang unik untuk setiap reel
+                // 2. Atur waktu berhenti yang unik untuk setiap reel
                 setTimeout(() => {
-                    reel.classList.remove('spinning');
+                    // Ambil posisi visual reel saat ini
+                    const computedStyle = window.getComputedStyle(reel);
+                    const matrix = new DOMMatrix(computedStyle.transform);
+                    const currentY = matrix.m42;
+                    
+                    // Hentikan animasi @keyframes
+                    reel.classList.remove('is-spinning');
+                    
+                    // Tahan posisi visual saat ini agar tidak melompat
+                    reel.style.transform = `translateY(${currentY}px)`;
+
+                    // Hitung angka acak dan posisi akhir
                     const randomNumber = Math.floor(Math.random() * 10);
                     const targetPosition = -((10 * 5) + randomNumber) * digitHeight;
-                    reel.style.transform = `translateY(${targetPosition}px)`;
+
+                    // Beri jeda sangat singkat agar browser bisa memproses,
+                    // lalu perintahkan untuk berhenti dengan transisi 'bounce'
+                    setTimeout(() => {
+                        reel.style.transform = `translateY(${targetPosition}px)`;
+                    }, 50);
+
                 }, baseSpinDuration + (index * extraDelayPerReel));
             });
 
             // Aktifkan kembali tombol setelah semua animasi selesai
-            const totalDuration = baseSpinDuration + ((reels.length - 1) * extraDelayPerReel) + 1200; // Tambah 1.2s untuk durasi animasi 'bounce'
+            const totalDuration = baseSpinDuration + ((reels.length - 1) * extraDelayPerReel) + 1200;
             setTimeout(() => {
                 generateBtn.disabled = false;
-                // [DESAIN BARU] Kembalikan teks dan ikon tombol ke semula
                 generateBtn.innerHTML = '<i class="bi bi-arrow-clockwise"></i> 4D GENERATOR';
                 isSpinning = false;
             }, totalDuration);
         });
         
-        console.log('Widget Generator 4D (v4 - Desain Baru) berhasil dimuat.');
+        console.log('Widget Generator 4D (v5 - Animasi @keyframes) berhasil dimuat.');
     });
 })();

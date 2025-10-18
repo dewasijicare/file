@@ -25,7 +25,7 @@
         canvas.style.position = 'absolute';
         canvas.style.top = '0';
         canvas.style.left = '0';
-        canvas.style.zIndex = '-1';
+        canvas.style.zIndex = '9999';
         canvas.style.pointerEvents = 'none';
 
         // Tempatkan canvas di dalam body, tapi di urutan pertama agar pasti di belakang
@@ -126,3 +126,4 @@
         console.log('Efek partikel glowing (versi interaktif & scroll) berhasil dimuat.');
     });
 })();
+

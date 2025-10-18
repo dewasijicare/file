@@ -3,9 +3,8 @@
     document.addEventListener('DOMContentLoaded', () => {
 
         // --- PENGATURAN EFEK ---
-        const particleCount = 8; // Jumlah partikel sedikit disesuaikan untuk performa scroll
+        const particleCount = 8;
         const particleSpeed = 0.3;
-        // [PERUBAHAN] Warna dibuat lebih terang dengan meningkatkan transparansi (alpha)
         const particleColors = [
             'rgba(255, 255, 255, 0.9)', // Putih
             'rgba(255, 255, 255, 0.9)', // Putih (dibuat lebih banyak)
@@ -15,21 +14,27 @@
             'rgba(255, 100, 100, 0.8)' // Merah lebih terang
         ];
         // -------------------------
+        
+        // [SOLUSI FINAL] Buat sebuah div container yang terisolasi
+        const particleContainer = document.createElement('div');
+        particleContainer.id = 'particle-container';
+        particleContainer.style.position = 'fixed'; // Gunakan 'fixed' agar tidak terpengaruh scroll
+        particleContainer.style.top = '0';
+        particleContainer.style.left = '0';
+        particleContainer.style.width = '100vw'; // Gunakan 'vw' untuk viewport width
+        particleContainer.style.height = '100vh'; // Gunakan 'vh' untuk viewport height
+        particleContainer.style.zIndex = '9999'; // Letakkan di belakang
+        particleContainer.style.pointerEvents = 'none';
 
         // 1. Membuat Canvas
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        
-        canvas.id = 'glowing-particles-canvas';
-        // [PERUBAHAN] Posisi diubah menjadi 'absolute' agar ikut scroll
-        canvas.style.position = 'absolute';
-        canvas.style.top = '0';
-        canvas.style.left = '0';
-        canvas.style.zIndex = '9999';
-        canvas.style.pointerEvents = 'none';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
 
-        // Tempatkan canvas di dalam body, tapi di urutan pertama agar pasti di belakang
-        document.body.insertBefore(canvas, document.body.firstChild);
+        // Masukkan canvas ke dalam container, lalu masukkan container ke dalam body
+        particleContainer.appendChild(canvas);
+        document.body.appendChild(particleContainer);
 
         let particlesArray;
 
@@ -46,29 +51,17 @@
             // Memperbarui posisi partikel
             update() {
                 this.speedX += (Math.random() - 0.5) * 0.05;
-
                 if (this.speedX > particleSpeed) this.speedX = particleSpeed;
                 if (this.speedX < -particleSpeed) this.speedX = -particleSpeed;
 
                 this.x += this.speedX;
                 this.y += this.speedY;
 
-                // [PERUBAHAN] Logika respawn partikel sekarang sadar posisi scroll
-                const topOfScreen = window.scrollY;
-                const bottomOfScreen = window.scrollY + window.innerHeight;
-
-                // Jika partikel jatuh ke bawah layar, pindahkan ke atas layar
-                if (this.y > bottomOfScreen + this.size) {
-                    this.y = topOfScreen - this.size;
+                // Logika respawn untuk canvas 'fixed'
+                if (this.y > canvas.height + this.size) {
+                    this.y = 0 - this.size;
                     this.x = Math.random() * canvas.width;
                 }
-                // Jika partikel tertinggal di atas layar (saat scroll ke bawah), pindahkan ke bawah layar
-                if (this.y < topOfScreen - this.size) {
-                    this.y = bottomOfScreen + this.size;
-                    this.x = Math.random() * canvas.width;
-                }
-                
-                // Jika partikel keluar ke samping, munculkan lagi dari sisi sebaliknya
                 if (this.x > canvas.width + this.size) {
                     this.x = 0 - this.size;
                 }
@@ -76,11 +69,10 @@
                     this.x = canvas.width + this.size;
                 }
             }
-            // Menggambar partikel di canvas
+            // Menggambar partikel
             draw() {
                 ctx.fillStyle = this.color;
                 ctx.shadowColor = this.color;
-                // [PERUBAHAN] Efek glowing dibuat lebih kuat lagi
                 ctx.shadowBlur = 20;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
@@ -90,9 +82,8 @@
 
         // 3. Fungsi untuk inisialisasi
         function init() {
-            // [PERUBAHAN] Ukuran canvas sekarang mengikuti TINGGI TOTAL HALAMAN
-            canvas.width = document.body.scrollWidth;
-            canvas.height = document.body.scrollHeight;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
             particlesArray = [];
             for (let i = 0; i < particleCount; i++) {
                 particlesArray.push(new Particle());
@@ -109,21 +100,15 @@
             requestAnimationFrame(animate);
         }
 
-        // Jalankan semuanya
-        // Beri sedikit jeda agar layout halaman selesai dihitung
-        setTimeout(() => {
-            init();
-            animate();
-        }, 100);
+        init();
+        animate();
 
-        // Buat canvas responsif jika ukuran window atau konten berubah
         let resizeTimer;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(init, 250);
+            resizeTimer = setTimeout(init, 100);
         });
         
-        console.log('Efek partikel glowing (versi interaktif & scroll) berhasil dimuat.');
+        console.log('Efek partikel glowing (v3 - Isolasi) berhasil dimuat.');
     });
 })();
-

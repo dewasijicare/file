@@ -76,6 +76,34 @@
         #profile-page-container .profile-label i { margin-right: 12px; color: #00eaff; font-size: 1.2em; }
         #profile-page-container .profile-value { color: #fff; font-weight: 700; word-break: break-all; text-align: right; flex-grow: 1; }
         #profile-page-container .profile-row-stacked .profile-value { text-align: left; background-color: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 5px; width: 100%; }
+
+        /* [CSS BARU] STYLE UNTUK MODAL KONFIRMASI */
+        #confirmModal .modal-header .modal-title { color: #00eaff !important; text-shadow: 0 0 5px #00eaff; }
+        #confirmModal #invoice-content .text-center .display-6,
+        #confirmModal #invoice-content .text-center small { color: #ffd700 !important; }
+        #confirmModal #invoice-content .badge { background-color: #ffd700 !important; color: #1a252f !important; font-weight: bold; }
+        #confirmModal #invoice-content tfoot { background-color: rgba(0, 170, 255, .1) !important; color: #ecf0f1 !important; }
+        #confirmModal #invoice-content tfoot th { font-weight: 700; }
+        #confirmModal .modal-footer .btn-outline-primary {
+            background: linear-gradient(45deg, #c0392b, #e74c3c) !important;
+            border: none !important;
+            color: #fff !important;
+            box-shadow: 0 0 10px #e74c3c, inset 0 0 5px rgba(255, 255, 255, .4);
+        }
+        #confirmModal .modal-footer .btn-outline-primary:hover {
+            box-shadow: 0 0 20px #e74c3c, 0 0 30px #c0392b, inset 0 0 5px rgba(255, 255, 255, .4) !important;
+            transform: scale(1.05);
+        }
+        #confirmModal .modal-footer .btn-danger {
+            background: linear-gradient(45deg, #0077ff, #00eaff) !important;
+            border: none !important;
+            color: #fff !important;
+            box-shadow: 0 0 10px #00eaff, inset 0 0 5px rgba(255,255,255,.4) !important;
+        }
+        #confirmModal .modal-footer .btn-danger:hover {
+             box-shadow: 0 0 20px #00eaff, 0 0 30px #0077ff, inset 0 0 5px rgba(255,255,255,.4) !important;
+             transform: scale(1.05);
+        }
     `;
     const styleElement = document.createElement('style');
     document.head.appendChild(styleElement);
@@ -106,16 +134,13 @@
     function updateDepositFormUI(depositForm) { if(!depositForm)return;const receiverBankSpan=document.getElementById('receiver-bank');if(receiverBankSpan&&!receiverBankSpan.dataset.iconApplied){const bankName=receiverBankSpan.textContent.trim().toUpperCase();if(BANK_ICONS[bankName]){receiverBankSpan.innerHTML=`<img src="${BANK_ICONS[bankName]}" alt="${bankName}" style="height: 40px; vertical-align: middle;">`}receiverBankSpan.dataset.iconApplied='true'}for(const[key,iconClass]of Object.entries(ICON_MAPPINGS)){const isLabelForInput=!key.includes('receiver');const element=isLabelForInput?depositForm.querySelector(`label[for="${key}"]`):document.getElementById(key);if(element&&!element.querySelector('i.bi')){const iconEl=document.createElement('i');iconEl.className=`bi ${iconClass}`;element.prepend(iconEl,document.createTextNode(' '))}}const qrCodeImg=document.getElementById('receiver-qrcode');if(qrCodeImg){qrCodeImg.classList.remove('bg-white');qrCodeImg.style.setProperty('border-color','#00aaff','important');qrCodeImg.style.setProperty('background-color','transparent','important')} }
     function styleWithdrawForm() { const withdrawCard=document.querySelector('#withdraw-form')?.closest('.card.shadow');if(!withdrawCard||withdrawCard.dataset.tabsApplied==='true')return;const mainTitle=withdrawCard.querySelector('h1.text-center');const historyTitle=Array.from(withdrawCard.querySelectorAll('h1, h2, h3')).find(el=>el.textContent.includes('RIWAYAT WITHDRAW'));if(mainTitle&&historyTitle){const navTabs=document.createElement('ul');navTabs.className='nav nav-tabs';navTabs.innerHTML=`<li class="nav-item"><a class="nav-link active" href="#">Withdraw</a></li><li class="nav-item"><a class="nav-link" href="#">Riwayat</a></li>`;const contentWrapper=document.createElement('div');contentWrapper.className='border border-top-0 px-3 pb-3 pt-2';Array.from(withdrawCard.children).forEach(child=>{if(child!==mainTitle){contentWrapper.appendChild(child.cloneNode(true))}});while(withdrawCard.firstChild){withdrawCard.removeChild(withdrawCard.firstChild)}withdrawCard.appendChild(mainTitle);withdrawCard.appendChild(navTabs);withdrawCard.appendChild(contentWrapper);const newHistoryTitle=contentWrapper.querySelector('h1, h2, h3');if(newHistoryTitle&&newHistoryTitle.textContent.includes('RIWAYAT WITHDRAW')){newHistoryTitle.style.display='none'}withdrawCard.dataset.tabsApplied='true'}const withdrawForm=withdrawCard.querySelector('#withdraw-form');if(withdrawForm){const bankLabel=withdrawForm.querySelector('label[for="agentmemberbankid"]');if(bankLabel&&!bankLabel.querySelector('i.bi')){bankLabel.innerHTML='<i class="bi bi-wallet2"></i> Bank / e-Wallet'}const amountLabel=withdrawForm.querySelector('label[for="amount"]');if(amountLabel&&!amountLabel.querySelector('i.bi')){amountLabel.innerHTML='<i class="bi bi-cash-coin"></i> '+amountLabel.textContent}} }
 
-    // --- [FUNGSI YANG DIPERBARUI] ---
     function styleBettingPage() {
-        // Cari kontainer utama dengan class my-5 atau my-3 (jika sudah diubah sebelumnya)
         const bettingContainer = document.querySelector('#select-market')?.closest('.container[class*="my-"]');
         if (!bettingContainer) return;
-
-        // [PERUBAHAN 3]: Mengurangi margin bawah dari container utama menjadi lebih rapat
+    
         bettingContainer.classList.remove('my-5');
-        bettingContainer.classList.add('my-3'); // my-3 = margin atas & bawah 1rem
-
+        bettingContainer.classList.add('my-3'); 
+    
         if (!bettingContainer.dataset.styledOnce) {
             bettingContainer.id = 'betting-page-container';
             const marketLabel = document.querySelector('label[for="select-market"]');
@@ -154,14 +179,14 @@
             });
             bettingContainer.dataset.styledOnce = 'true';
         }
-
+    
         bettingContainer.querySelectorAll('div[id^="panel-"]:not([data-panel-styled="true"])').forEach(panel => {
             panel.dataset.panelStyled = 'true';
             panel.classList.remove('bg-dark', 'border', 'rounded-3', 'p-1', 'p-3');
             if (!panel.classList.contains('card')) panel.classList.add('card', 'mb-3');
             const cardHeader = panel.querySelector('.card-header');
             const cardBody = panel.querySelector('.card-body');
-
+    
             if (!cardHeader && !cardBody) {
                 const infoDiv = panel.querySelector('.mb-3');
                 const title = infoDiv ? (infoDiv.querySelector('strong')?.textContent.trim() || 'Panel Permainan') : 'Panel Permainan';
@@ -176,26 +201,22 @@
                 panel.appendChild(newCardHeader);
                 panel.appendChild(newCardBody);
             }
-            
-            // [PERUBAHAN 1 & 2]: Menyesuaikan padding deskripsi & menghapus judul duplikat
+    
             const infoDivInsideBody = panel.querySelector('.card-body > .mb-3');
             if (infoDivInsideBody) {
-                // 1. Hapus margin kiri `.ms-3` agar rata dengan konten di bawahnya
                 const descriptionWrapper = infoDivInsideBody.querySelector('.ms-3');
                 if (descriptionWrapper) {
                     descriptionWrapper.classList.remove('ms-3');
                 }
-
-                // Hapus judul duplikat
+    
                 const duplicateTitle = infoDivInsideBody.querySelector('strong');
                 if (duplicateTitle && duplicateTitle.nextElementSibling && duplicateTitle.nextElementSibling.matches('div')) {
                     duplicateTitle.style.display = 'none';
                 }
-
-                // 2. Tambah jarak atas (margin-top) agar tidak mepet dengan header card
+    
                 infoDivInsideBody.style.marginTop = '0.5rem';
             }
-
+    
             if (panel.id === 'panel-closed') {
                 panel.classList.add('panel-closed-themed');
             }
@@ -227,7 +248,7 @@
     function styleQuickLogin() { document.querySelectorAll('#row-quicklogin:not([data-styled="true"])').forEach(card => { card.dataset.styled = 'true'; const form = card.querySelector('form'); if (!form) return; const usernameDiv = form.querySelector('label[for="username"]')?.parentElement; const passwordDiv = form.querySelector('label[for="password"]')?.parentElement; const buttonDiv = form.querySelector('.d-flex.gap-1.my-3'); if (!usernameDiv || !passwordDiv || !buttonDiv) return; const newInputsHTML = ` <div class="row g-2 mb-3"> <div class="col-md-6"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-person-fill"></i></span> <input type="text" name="userName" id="username" class="form-control" placeholder="Username"> </div> </div> <div class="col-md-6"> <div class="input-wrapper"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-key-fill"></i></span> <input type="password" name="password" id="password" class="form-control" placeholder="Password"> </div> </div> </div> </div> `; buttonDiv.insertAdjacentHTML('beforebegin', newInputsHTML); usernameDiv.remove(); passwordDiv.remove(); const newPasswordInput = card.querySelector('#password'); if (newPasswordInput) { addPasswordToggle(newPasswordInput); } }); }
     function styleLoginPage() { const loginForm = document.querySelector('#maincontent form[action="/login"]'); if (!loginForm) return; const loginCard = loginForm.closest('.card.shadow'); if (!loginCard || loginCard.dataset.layoutStyled === 'true') return; loginCard.dataset.layoutStyled = 'true'; const usernameGroup = loginForm.querySelector('input[name="userName"]')?.closest('.form-group, .mb-3'); const passwordGroup = loginForm.querySelector('input[name="password"]')?.closest('.form-group, .mb-3'); const buttonContainer = loginForm.querySelector('button[type="submit"]')?.parentElement; if (usernameGroup && passwordGroup && buttonContainer) { const newInputsHTML = ` <div class="row g-2 mb-3"> <div class="col-md-6"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-person-fill"></i></span> <input type="text" name="userName" required="required" class="form-control" placeholder="User Name"> </div> </div> <div class="col-md-6"> <div class="input-wrapper"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-key-fill"></i></span> <input type="password" name="password" required="required" class="form-control" placeholder="Password"> </div> </div> </div> </div> `; buttonContainer.insertAdjacentHTML('beforebegin', newInputsHTML); usernameGroup.remove(); passwordGroup.remove(); } }
     function styleRegisterPage() { const form = document.querySelector('form[action="/register"]'); if (!form || form.dataset.styled === 'true') return; form.dataset.styled = 'true'; const card = form.closest('.card.shadow'); const mainRow = card ? card.querySelector('.row.mb-3') : null; const buttonWrapper = card ? card.querySelector('.d-grid.gap-3.mb-3') : null; if (!card || !mainRow || !buttonWrapper) return; mainRow.before(form); form.append(mainRow); form.append(buttonWrapper); form.querySelectorAll('h3').forEach(h3 => h3.remove()); form.querySelectorAll('.form-group').forEach(group => { const label = group.querySelector('label'); const input = group.querySelector('input, select'); if (!label || !input) return; const icon = label.querySelector('i.bi'); const placeholderText = label.textContent.replace(/\(.*\)/g, '').replace(/(\r\n|\n|\r)/gm, " ").trim(); let newElement; if (icon) { const inputGroup = document.createElement('div'); inputGroup.className = 'input-group mb-2'; const iconSpan = document.createElement('span'); iconSpan.className = 'input-group-text'; iconSpan.appendChild(icon.cloneNode(true)); inputGroup.appendChild(iconSpan); inputGroup.appendChild(input); newElement = inputGroup; } else { const simpleDiv = document.createElement('div'); simpleDiv.className = 'mb-2'; simpleDiv.appendChild(input); newElement = simpleDiv; } if (input.tagName.toLowerCase() !== 'select') { input.placeholder = placeholderText; } else { if (!input.querySelector('option[value=""]')) { const defaultOption = document.createElement('option'); defaultOption.value = ""; defaultOption.textContent = placeholderText || "Pilih Opsi"; defaultOption.disabled = true; defaultOption.selected = true; input.prepend(defaultOption); } } input.classList.add('form-control'); if (input.type === 'password') { const wrapper = document.createElement('div'); wrapper.className = 'input-wrapper'; wrapper.appendChild(newElement); group.replaceWith(wrapper); } else { group.replaceWith(newElement); } }); const passwordInput = form.querySelector('#password'); const confirmPasswordInput = form.querySelector('#confirmpassword'); if (passwordInput && confirmPasswordInput) { const passwordWrapper = passwordInput.closest('.input-wrapper'); confirmPasswordInput.closest('.input-wrapper')?.querySelector('.password-toggle-icon')?.remove(); if (passwordWrapper && !passwordWrapper.querySelector('.password-toggle-icon')) { const toggleIcon = document.createElement('i'); toggleIcon.className = 'bi bi-eye-fill password-toggle-icon'; toggleIcon.addEventListener('click', () => { const isPassword = passwordInput.type === 'password'; const newType = isPassword ? 'text' : 'password'; passwordInput.type = newType; confirmPasswordInput.type = newType; toggleIcon.className = isPassword ? 'bi bi-eye-slash-fill password-toggle-icon' : 'bi bi-eye-fill password-toggle-icon'; }); passwordWrapper.appendChild(toggleIcon); passwordInput.dataset.toggleAdded = 'true'; confirmPasswordInput.dataset.toggleAdded = 'true'; } } }
-   
+    
     function styleProfilePage() {
         const title = Array.from(document.querySelectorAll('h1.text-center')).find(h1 => h1.textContent.trim() === 'Profil Akun');
         if (!title) return;
@@ -246,7 +267,7 @@
             if (!labelEl) return;
             let labelText = labelEl.textContent.trim();
             let valueText = '';
-            if (labelText === 'Nama Lengkap' || labelText === 'Credit') { return; } // [PERUBAHAN] Hapus juga Credit
+            if (labelText === 'Nama Lengkap' || labelText === 'Credit') { return; }
             if (labelText === 'Nama') { labelText = 'Username'; }
             if (labelText === 'Rekening Bank') {
                 const inputs = group.querySelectorAll('input.form-control');
@@ -274,7 +295,6 @@
         formGroups.forEach(group => group.remove());
     }
 
-    // [FUNGSI BARU] FUNGSI UNTUK MENATA HALAMAN GANTI PASSWORD
     function styleChangePasswordPage() {
         const form = document.querySelector('form[action="/change-password"]');
         if (!form || form.dataset.styled === 'true') return;
@@ -305,16 +325,14 @@
 
             input.placeholder = placeholderText;
             inputGroup.appendChild(iconSpan);
-            inputGroup.appendChild(input.cloneNode(true)); // Salin inputnya
+            inputGroup.appendChild(input.cloneNode(true));
 
             const wrapper = document.createElement('div');
             wrapper.className = 'input-wrapper';
             wrapper.appendChild(inputGroup);
 
-            // Ganti form group lama dengan yang baru
             group.replaceWith(wrapper);
            
-            // Tambahkan kembali toggle password ke input yang baru
             const newPasswordInput = wrapper.querySelector('input');
             addPasswordToggle(newPasswordInput);
         });
@@ -332,6 +350,15 @@
             sidebarLogout.classList.remove('nav-link');
             sidebarLogout.classList.add('btn', 'btn-danger', 'mx-3', 'my-2');
             sidebarLogout.dataset.styled = 'true';
+        }
+    }
+
+    // [FUNGSI BARU] Menambahkan gaya pada modal konfirmasi
+    function styleConfirmationModal() {
+        const modalTitle = document.querySelector('#confirmModal .modal-title');
+        // Cek apakah modal ada dan belum ditambahkan ikon
+        if (modalTitle && !modalTitle.querySelector('i.bi')) {
+            modalTitle.innerHTML = `<i class="bi bi-patch-check-fill"></i> ${modalTitle.textContent}`;
         }
     }
 
@@ -359,6 +386,7 @@
            
             styleWithdrawForm();
             styleRtpModal();
+            styleConfirmationModal(); // [PANGGILAN FUNGSI BARU]
            
             document.querySelectorAll('input[type="password"]:not([data-toggle-added="true"])').forEach(input => {
                 addPasswordToggle(input);
@@ -370,7 +398,7 @@
             styleRegisterPage(); 
             styleProfilePage();
             styleLogoutButton();
-            styleChangePasswordPage(); // [PEMANGGILAN FUNGSI BARU]
+            styleChangePasswordPage();
         };
        
         observer = new MutationObserver(observerCallback);

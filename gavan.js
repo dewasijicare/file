@@ -67,7 +67,6 @@
         #betting-page-container button[onclick="addRow(event)"]:hover { background-color: rgba(255, 215, 0, 0.2) !important; color: #fff !important; }
         #betting-page-container select#select-market { border-color: #ffd700 !important; }
         #betting-page-container select#select-market:focus { border-color: #ffd700 !important; box-shadow: 0 0 10px rgba(255, 215, 0, 0.6) !important; }
-        #betting-page-container .table-input tr.table-warning th { background-color: rgba(0, 170, 255, .1) !important; color: #ecf0f1 !important; border-bottom: 2px solid #00aaff !important; }
 
         /* CSS KHUSUS UNTUK HALAMAN PROFIL */
         #profile-page-container .profile-row { display: flex; align-items: center; background-color: #1a252f; padding: 12px 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #34495e; }
@@ -506,3 +505,4 @@
         }
     });
 })();
+

@@ -106,7 +106,8 @@
         }
 
         /* [CSS BARU] Perbaikan warna teks deskripsi permainan */
-        #betting-page-container div[id^="panel-"] .card-body small {
+        #betting-page-container div[id^="panel-"] .card-body small,
+        #betting-page-container div[id^="panel-"] .card-body small p {
             color: #bdc3c7 !important;
         }
     `;
@@ -130,25 +131,35 @@
         }
     }
     
-    // [FUNGSI BARU] Untuk inisialisasi input bet agar memiliki format
+    // [FUNGSI DIPERBARUI] Untuk inisialisasi input bet agar memiliki format
     function initializeBetFormatting() {
-        document.querySelectorAll('#betting-page-container input[type="number"][name^="bet"]:not([data-bet-formatted]), #betting-page-container input[inputmode="numeric"][name^="bet"]:not([data-bet-formatted])').forEach(originalInput => {
-            if (originalInput.offsetParent === null || originalInput.type === 'hidden') return; 
-    
+        document.querySelectorAll('#betting-page-container input[type="number"][name^="bet"], #betting-page-container input[inputmode="numeric"][name^="bet"]').forEach(originalInput => {
+            // Cek apakah input sudah diformat atau merupakan input tersembunyi
+            if (originalInput.dataset.betFormatted === 'true' || originalInput.offsetParent === null || originalInput.type === 'hidden') return;
+            
             originalInput.dataset.betFormatted = 'true';
             
-            const displayInput = originalInput.cloneNode(true);
-            
-            displayInput.type = 'text';
-            displayInput.inputMode = 'numeric';
-            displayInput.pattern = '[0-9,]*';
-            displayInput.removeAttribute('name'); 
-            displayInput.value = formatNumberWithCommas(originalInput.value);
+            // Cari apakah sudah ada display input sebelumnya
+            let displayInput = originalInput.previousElementSibling;
+            if (!displayInput || !displayInput.classList.contains('display-input')) {
+                displayInput = originalInput.cloneNode(true);
+                displayInput.classList.add('display-input'); // Tambahkan class untuk identifikasi
+                displayInput.type = 'text';
+                displayInput.inputMode = 'numeric';
+                displayInput.pattern = '[0-9,]*';
+                displayInput.removeAttribute('name'); 
+                originalInput.parentNode.insertBefore(displayInput, originalInput);
+            }
     
             originalInput.style.display = 'none';
-            originalInput.parentNode.insertBefore(displayInput, originalInput);
+            displayInput.value = formatNumberWithCommas(originalInput.value);
+
+            // Hapus event listener lama agar tidak menumpuk
+            const newDisplayInput = displayInput.cloneNode(true);
+            displayInput.parentNode.replaceChild(newDisplayInput, displayInput);
+            displayInput = newDisplayInput;
             
-            displayInput.addEventListener('input', () => {
+            const handleInput = () => {
                 const rawValue = displayInput.value.replace(/,/g, '');
                 
                 if (/^\d*$/.test(rawValue)) {
@@ -163,17 +174,23 @@
                     const newLength = displayInput.value.length;
                     
                     if(newLength > originalLength) {
-                        displayInput.setSelectionRange(cursorPosition + (newLength - originalLength), cursorPosition + (newLength - originalLength));
+                        const newCursorPosition = cursorPosition + (newLength - originalLength);
+                        displayInput.setSelectionRange(newCursorPosition, newCursorPosition);
                     } else {
                          displayInput.setSelectionRange(cursorPosition, cursorPosition);
                     }
                 } else {
                     displayInput.value = formatNumberWithCommas(originalInput.value);
                 }
-            });
-             displayInput.addEventListener('blur', () => {
+            };
+            
+            const handleBlur = () => {
+                displayInput.value = formatNumberWithCommas(originalInput.value);
                 originalInput.dispatchEvent(new Event('change', { bubbles: true }));
-            });
+            };
+
+            displayInput.addEventListener('input', handleInput);
+            displayInput.addEventListener('blur', handleBlur);
         });
     }
 

@@ -77,7 +77,7 @@
         #profile-page-container .profile-value { color: #fff; font-weight: 700; word-break: break-all; text-align: right; flex-grow: 1; }
         #profile-page-container .profile-row-stacked .profile-value { text-align: left; background-color: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 5px; width: 100%; }
 
-        /* [CSS BARU] STYLE UNTUK MODAL KONFIRMASI */
+        /* STYLE UNTUK MODAL KONFIRMASI */
         #confirmModal .modal-header .modal-title { color: #00eaff !important; text-shadow: 0 0 5px #00eaff; }
         #confirmModal #invoice-content .text-center .display-6,
         #confirmModal #invoice-content .text-center small { color: #ffd700 !important; }
@@ -104,6 +104,11 @@
              box-shadow: 0 0 20px #00eaff, 0 0 30px #0077ff, inset 0 0 5px rgba(255,255,255,.4) !important;
              transform: scale(1.05);
         }
+
+        /* [CSS BARU] Perbaikan warna teks deskripsi permainan */
+        #betting-page-container div[id^="panel-"] .card-body small {
+            color: #bdc3c7 !important;
+        }
     `;
     const styleElement = document.createElement('style');
     document.head.appendChild(styleElement);
@@ -112,6 +117,65 @@
     // --- KUMPULAN FUNGSI ---
     let intervalsInitialized = false;
     let observer;
+
+    // [FUNGSI BARU] Untuk format angka dengan koma
+    function formatNumberWithCommas(val) {
+        if (val === null || val === undefined) return '';
+        let stringVal = val.toString().replace(/,/g, '');
+        if (isNaN(stringVal) || stringVal.trim() === '') return '';
+        try {
+            return Number(stringVal).toLocaleString('en-US');
+        } catch (e) {
+            return stringVal;
+        }
+    }
+    
+    // [FUNGSI BARU] Untuk inisialisasi input bet agar memiliki format
+    function initializeBetFormatting() {
+        document.querySelectorAll('#betting-page-container input[type="number"][name^="bet"]:not([data-bet-formatted]), #betting-page-container input[inputmode="numeric"][name^="bet"]:not([data-bet-formatted])').forEach(originalInput => {
+            if (originalInput.offsetParent === null || originalInput.type === 'hidden') return; 
+    
+            originalInput.dataset.betFormatted = 'true';
+            
+            const displayInput = originalInput.cloneNode(true);
+            
+            displayInput.type = 'text';
+            displayInput.inputMode = 'numeric';
+            displayInput.pattern = '[0-9,]*';
+            displayInput.removeAttribute('name'); 
+            displayInput.value = formatNumberWithCommas(originalInput.value);
+    
+            originalInput.style.display = 'none';
+            originalInput.parentNode.insertBefore(displayInput, originalInput);
+            
+            displayInput.addEventListener('input', () => {
+                const rawValue = displayInput.value.replace(/,/g, '');
+                
+                if (/^\d*$/.test(rawValue)) {
+                    originalInput.value = rawValue;
+                    
+                    const cursorPosition = displayInput.selectionStart;
+                    const originalLength = displayInput.value.length;
+                    
+                    const formattedValue = formatNumberWithCommas(rawValue);
+                    displayInput.value = formattedValue;
+                    
+                    const newLength = displayInput.value.length;
+                    
+                    if(newLength > originalLength) {
+                        displayInput.setSelectionRange(cursorPosition + (newLength - originalLength), cursorPosition + (newLength - originalLength));
+                    } else {
+                         displayInput.setSelectionRange(cursorPosition, cursorPosition);
+                    }
+                } else {
+                    displayInput.value = formatNumberWithCommas(originalInput.value);
+                }
+            });
+             displayInput.addEventListener('blur', () => {
+                originalInput.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+        });
+    }
 
     function setupPersistentCountdownIntervals() { if (intervalsInitialized) return; setInterval(() => { document.querySelectorAll('#carousel-togel .togel-countdown-timer').forEach(timer => { const now = new Date().getTime(); const closingTime = parseInt(timer.dataset.time, 10); const status = parseInt(timer.dataset.status, 10); if (status !== 1 || !closingTime || isNaN(closingTime) || (closingTime - now) <= 0) { timer.classList.remove('show-warning-text', 'closing-soon'); if (!timer.classList.contains('is-closed')) { timer.textContent = "TUTUP"; timer.classList.add('is-closed'); } return; } const diff = closingTime - now; if (diff < 1800000) { timer.classList.add('closing-soon'); let blinkCounter = parseInt(timer.dataset.blinkCounter || '0', 10); if (blinkCounter < 5) { timer.classList.add('show-warning-text'); } else { timer.classList.remove('show-warning-text'); } timer.dataset.blinkCounter = (blinkCounter + 1) % 10; } else { timer.classList.remove('closing-soon', 'show-warning-text'); if (timer.dataset.blinkCounter) { delete timer.dataset.blinkCounter; } } }); }, 1000); intervalsInitialized = true; }
     function initializeSwipeableHeaderMenu() { const menuNav = document.querySelector('nav.menubar.d-xl-none'); if (!menuNav || menuNav.dataset.styled === 'true') return; const originalContainer = menuNav.querySelector('#category-navbar .owl-stage-outer'); if (!originalContainer) return; const allItems = Array.from(originalContainer.querySelectorAll('.owl-item:not(.cloned) > .item')); if (allItems.length === 0) return; const homeItem = allItems.find(item => item.querySelector('a[href="/"]')); const otherItems = allItems.filter(item => item !== homeItem); if (!homeItem || otherItems.length === 0) return; const wrapper = document.createElement('div'); wrapper.className = 'custom-header-wrapper'; const homeDiv = document.createElement('div'); homeDiv.className = 'home-link-fixed'; homeDiv.appendChild(homeItem.cloneNode(true)); const scrollableDiv = document.createElement('div'); scrollableDiv.className = 'scrollable-menu-container'; const owlCarouselDiv = document.createElement('div'); owlCarouselDiv.className = 'owl-carousel other-items-carousel'; otherItems.forEach(item => { owlCarouselDiv.appendChild(item.cloneNode(true)); }); scrollableDiv.appendChild(owlCarouselDiv); wrapper.appendChild(homeDiv); wrapper.appendChild(scrollableDiv); const parentContainer = menuNav.querySelector('.container'); parentContainer.innerHTML = ''; parentContainer.appendChild(wrapper); const newCarousel = $(parentContainer).find('.other-items-carousel'); if (newCarousel.length > 0) { newCarousel.owlCarousel({ autoWidth: true, loop: true, margin: 15, nav: false, dots: false, autoplay: true, autoplayTimeout: 4000, autoplayHoverPause: true, }); } menuNav.dataset.styled = 'true'; }
@@ -353,10 +417,8 @@
         }
     }
 
-    // [FUNGSI BARU] Menambahkan gaya pada modal konfirmasi
     function styleConfirmationModal() {
         const modalTitle = document.querySelector('#confirmModal .modal-title');
-        // Cek apakah modal ada dan belum ditambahkan ikon
         if (modalTitle && !modalTitle.querySelector('i.bi')) {
             modalTitle.innerHTML = `<i class="bi bi-patch-check-fill"></i> ${modalTitle.textContent}`;
         }
@@ -386,7 +448,8 @@
            
             styleWithdrawForm();
             styleRtpModal();
-            styleConfirmationModal(); // [PANGGILAN FUNGSI BARU]
+            styleConfirmationModal(); 
+            initializeBetFormatting(); // [PANGGILAN FUNGSI BARU]
            
             document.querySelectorAll('input[type="password"]:not([data-toggle-added="true"])').forEach(input => {
                 addPasswordToggle(input);

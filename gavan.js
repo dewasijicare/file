@@ -58,7 +58,7 @@
        
         /* CSS KHUSUS UNTUK TABEL BETTING */
         /* [FIX] Atur warna header tabel .table-warning */
-        #betting-page-container .table-input .table-warning th {
+        #betting-page-container .table-input tr.table-warning th {
             background-color: rgba(0, 170, 255, .1) !important;
             color: #ecf0f1 !important;
             border-bottom: 2px solid #00aaff !important;
@@ -87,11 +87,11 @@
         #confirmModal .modal-header .modal-title { color: #00eaff !important; text-shadow: 0 0 5px #00eaff; }
         #confirmModal #invoice-content .text-center .display-6,
         #confirmModal #invoice-content .text-center small { color: #ffd700 !important; }
-M       #confirmModal #invoice-content .badge { background-color: #ffd700 !important; color: #1a252f !important; font-weight: bold; }
+        #confirmModal #invoice-content .badge { background-color: #ffd700 !important; color: #1a252f !important; font-weight: bold; }
         #confirmModal #invoice-content tfoot { background-color: rgba(0, 170, 255, .1) !important; color: #ecf0f1 !important; }
         #confirmModal #invoice-content tfoot th { font-weight: 700; }
         #confirmModal .modal-footer .btn-outline-primary {
-            background: linear-gradient(45deg, #c0392b, #e74c3c) !important;
+  D         background: linear-gradient(45deg, #c0392b, #e74c3c) !important;
             border: none !important;
             color: #fff !important;
             box-shadow: 0 0 10px #e74c3c, inset 0 0 5px rgba(255, 255, 255, .4);
@@ -105,7 +105,7 @@ M       #confirmModal #invoice-content .badge { background-color: #ffd700 !im
             border: none !important;
             color: #fff !important;
             box-shadow: 0 0 10px #00eaff, inset 0 0 5px rgba(255,255,255,.4) !important;
-css     }
+        }
         #confirmModal .modal-footer .btn-danger:hover {
              box-shadow: 0 0 20px #00eaff, 0 0 30px #0077ff, inset 0 0 5px rgba(255,255,255,.4) !important;
              transform: scale(1.05);
@@ -114,7 +114,7 @@ css     }
         /* [CSS BARU] Perbaikan warna teks deskripsi permainan */
         #betting-page-container div[id^="panel-"] .card-body small,
         #betting-page-container div[id^="panel-"] .card-body small p {
-            color: #bdc3c7 !important;
+    _         color: #bdc3c7 !important;
         }
     `;
     const styleElement = document.createElement('style');
@@ -163,7 +163,7 @@ css     }
             // Hapus event listener lama agar tidak menumpuk
             const newDisplayInput = displayInput.cloneNode(true);
             displayInput.parentNode.replaceChild(newDisplayInput, displayInput);
-            displayInput = newDisplayInput;
+s           displayInput = newDisplayInput;
             
             const handleInput = () => {
                 const rawValue = displayInput.value.replace(/,/g, '');
@@ -183,11 +183,11 @@ css     }
                         const newCursorPosition = cursorPosition + (newLength - originalLength);
                         displayInput.setSelectionRange(newCursorPosition, newCursorPosition);
                     } else {
-                         displayInput.setSelectionRange(cursorPosition, cursorPosition);
+          A              displayInput.setSelectionRange(cursorPosition, cursorPosition);
                     }
                 } else {
                     displayInput.value = formatNumberWithCommas(originalInput.value);
-                }
+A             }
             };
             
             const handleBlur = () => {
@@ -256,7 +256,7 @@ css     }
                     row.addEventListener('click', (e) => {
                         if (e.target.matches('button[name="category"]')) {
                             row.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-                            e.target.classList.add('active');
+i                         e.target.classList.add('active');
                         }
                     });
                 }
@@ -277,12 +277,12 @@ css     }
             if (!cardHeader && !cardBody) {
                 const infoDiv = panel.querySelector('.mb-3');
                 const title = infoDiv ? (infoDiv.querySelector('strong')?.textContent.trim() || 'Panel Permainan') : 'Panel Permainan';
-                const newCardHeader = document.createElement('div');
+                 const newCardHeader = document.createElement('div');
                 newCardHeader.className = 'card-header';
                 newCardHeader.innerHTML = `<i class="bi bi-joystick"></i> ${title}`;
                 const newCardBody = document.createElement('div');
                 newCardBody.className = 'card-body';
-                while (panel.firstChild) {
+s               while (panel.firstChild) {
                     newCardBody.appendChild(panel.firstChild);
                 }
                 panel.appendChild(newCardHeader);
@@ -294,7 +294,7 @@ css     }
                 const descriptionWrapper = infoDivInsideBody.querySelector('.ms-3');
                 if (descriptionWrapper) {
                     descriptionWrapper.classList.remove('ms-3');
-                }
+Two             }
     
                 const duplicateTitle = infoDivInsideBody.querySelector('strong');
                 if (duplicateTitle && duplicateTitle.nextElementSibling && duplicateTitle.nextElementSibling.matches('div')) {
@@ -302,13 +302,13 @@ css     }
                 }
     
                 infoDivInsideBody.style.marginTop = '0.5rem';
-T         }
+            }
     
             if (panel.id === 'panel-closed') {
                 panel.classList.add('panel-closed-themed');
             }
             panel.querySelectorAll('.table-input thead.table-warning').forEach(thead => {
-                thead.classList.remove('table-warning');
+s               thead.classList.remove('table-warning');
             });
             panel.querySelectorAll('.fa-plus').forEach(icon => {
                 icon.className = 'bi bi-plus-lg';
@@ -322,13 +322,13 @@ T         }
                 input.inputMode = 'numeric';
             });
             panel.querySelectorAll('button[type="reset"].btn-outline-danger').forEach(resetButton => {
-                resetButton.classList.remove('btn-outline-danger');
+s               resetButton.classList.remove('btn-outline-danger');
                 resetButton.classList.add('btn-danger');
             });
             const addRowButton = panel.querySelector('button[onclick="addRow(event)"]');
             if (addRowButton) {
                 addRowButton.classList.remove('btn-outline-primary');
-            }
+A         }
         });
     }
 
@@ -359,23 +359,23 @@ T         }
             if (labelText === 'Rekening Bank') {
                 const inputs = group.querySelectorAll('input.form-control');
                 valueText = Array.from(inputs).map(input => input.value).join(' - ');
-ci       } else {
+            } else {
                 const input = group.querySelector('input.form-control');
                 if (input) { valueText = input.value; }
             }
             const iconClass = iconMapping[labelText];
-            if (!iconClass) return;
+ci         if (!iconClass) return;
             const row = document.createElement('div');
             const isStacked = stackedLayoutLabels.includes(labelText);
             row.className = isStacked ? 'profile-row profile-row-stacked' : 'profile-row';
-s           const newLabel = document.createElement('div');
+            const newLabel = document.createElement('div');
             newLabel.className = 'profile-label';
             newLabel.innerHTML = `<i class="bi ${iconClass}"></i> <span>${labelText}</span>`;
             const newValue = document.createElement('div');
             newValue.className = 'profile-value';
             newValue.textContent = valueText || '-';
-s           row.appendChild(newLabel);
-            row.appendChild(newValue);
+            row.appendChild(newLabel);
+M           row.appendChild(newValue);
             newContentWrapper.appendChild(row);
         });
         profileForm.prepend(newContentWrapper);
@@ -394,7 +394,7 @@ s           row.appendChild(newLabel);
         };
 
         form.querySelectorAll('.form-group').forEach(group => {
-i           const label = group.querySelector('label');
+            const label = group.querySelector('label');
             const input = group.querySelector('input');
             if (!label || !input) return;
 
@@ -407,7 +407,7 @@ i           const label = group.querySelector('label');
             inputGroup.className = 'input-group mb-3';
            
             const iconSpan = document.createElement('span');
-Two           iconSpan.className = 'input-group-text';
+            iconSpan.className = 'input-group-text';
             iconSpan.innerHTML = `<i class="bi ${iconClass}"></i>`;
 
             input.placeholder = placeholderText;
@@ -418,7 +418,7 @@ Two           iconSpan.className = 'input-group-text';
             wrapper.className = 'input-wrapper';
             wrapper.appendChild(inputGroup);
 
-nbsp         group.replaceWith(wrapper);
+            group.replaceWith(wrapper);
            
             const newPasswordInput = wrapper.querySelector('input');
             addPasswordToggle(newPasswordInput);
@@ -427,11 +427,11 @@ nbsp         group.replaceWith(wrapper);
 
     function styleLogoutButton() {
         const profileFormLogout = document.querySelector('form a[href="/logout"]');
-Player         if (profileFormLogout && !profileFormLogout.dataset.styled) {
+        if (profileFormLogout && !profileFormLogout.dataset.styled) {
              profileFormLogout.classList.remove('btn-outline-primary');
              profileFormLogout.classList.add('btn-danger');
              profileFormLogout.dataset.styled = 'true';
-        }
+T       }
         const sidebarLogout = document.querySelector('#sidebar a[href*="logout"]');
         if (sidebarLogout && !sidebarLogout.dataset.styled) {
             sidebarLogout.classList.remove('nav-link');
@@ -444,7 +444,7 @@ Player         if (profileFormLogout && !profileFormLogout.dataset.styled) {
         const modalTitle = document.querySelector('#confirmModal .modal-title');
         if (modalTitle && !modalTitle.querySelector('i.bi')) {
             modalTitle.innerHTML = `<i class="bi bi-patch-check-fill"></i> ${modalTitle.textContent}`;
-        }
+ci     }
     }
 
     // --- INISIALISASI SKRIP ---
@@ -455,22 +455,22 @@ Player         if (profileFormLogout && !profileFormLogout.dataset.styled) {
         injectGacorGame();
        
         const observerCallback = () => {
-            initializeSwipeableHeaderMenu();
+s           initializeSwipeableHeaderMenu();
             updateProfileElements();
             addSidebarBalanceToggle();
             addMainBalanceToggle();
             styleMemberStatusPanel();
             styleTogelTutorialPage();
-s           initializeTogelCarousel();
+            initializeTogelCarousel();
            
             const depositForm = document.querySelector('#deposit-form');
             if (depositForm) {
                 initializeDepositForm(depositForm);
                 updateDepositFormUI(depositForm);
-    x       }
+            }
            
             styleWithdrawForm();
-            styleRtpModal();
+s           styleRtpModal();
             styleConfirmationModal(); 
             initializeBetFormatting(); // [PANGGILAN FUNGSI BARU]
            
@@ -481,11 +481,11 @@ s           initializeTogelCarousel();
             styleBettingPage(); 
             styleQuickLogin();
             styleLoginPage();
-            styleRegisterPage();s 
+            styleRegisterPage(); 
             styleProfilePage();
             styleLogoutButton();
             styleChangePasswordPage();
-        };
+s     };
        
         observer = new MutationObserver(observerCallback);
         observer.observe(document.body, { childList: true, subtree: true });
@@ -493,19 +493,19 @@ s           initializeTogelCarousel();
         observerCallback(); 
        
         document.body.addEventListener('change', (event) => {
-x           if (event.target.id === 'agentmemberbankid') {
+            if (event.target.id === 'agentmemberbankid') {
                 const receiverBankSpan = document.getElementById('receiver-bank');
                 if (receiverBankSpan) delete receiverBankSpan.dataset.iconApplied;
             }
         });
        
         const sidebar = document.getElementById("sidebar");
-sv       if (sidebar) {
+        if (sidebar) {
             const toggleButton = document.getElementById("custom-sidebar-toggle");
             const toggleObserver = new MutationObserver(() => {
                 if (toggleButton) {
                     sidebar.classList.contains("active") ? toggleButton.classList.add("show") : toggleButton.classList.remove("show");
-sv             }
+A             }
             });
             toggleObserver.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
         }

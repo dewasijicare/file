@@ -55,7 +55,7 @@
         #betting-page-container .form-check-input:checked { background-color: #00eaff; border-color: #00eaff; box-shadow: 0 0 10px #00eaff; }
         #panel-closed.panel-closed-themed { background: linear-gradient(45deg, #c0392b, #e74c3c) !important; border: 1px solid #e74c3c !important; box-shadow: 0 0 20px rgba(231, 76, 60, 0.6) !important; border-radius: 15px !important; padding: 5rem 1rem !important; }
         #panel-closed.panel-closed-themed strong { font-size: 1.5rem; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
-        
+       
         /* CSS KHUSUS UNTUK TABEL BETTING */
         #betting-page-container .card-body { padding: 1.25rem; padding-top: 0 !important; }
         #betting-page-container .info-description, #betting-page-container .bet-type-toggle { margin-bottom: 0 !important; }
@@ -105,11 +105,117 @@
     function initializeDepositForm(depositForm) { if(!depositForm||depositForm.dataset.initialized==='true')return;const nameContainer=document.getElementById('receiver-name')?.closest('div');const numberContainer=document.getElementById('receiver-number')?.closest('div');if(nameContainer&&numberContainer&&nameContainer.parentElement===numberContainer.parentElement){nameContainer.parentElement.insertBefore(nameContainer,numberContainer)}if(numberContainer){const numberSpan=document.getElementById('receiver-number');if(numberSpan&&!numberContainer.querySelector('.copy-btn')){const newCopyButton=document.createElement('button');newCopyButton.type='button';newCopyButton.className='btn copy-btn';newCopyButton.innerHTML='<i class="bi bi-copy"></i> Copy';newCopyButton.addEventListener('click',e=>{e.preventDefault();navigator.clipboard.writeText(numberSpan.textContent.trim()).then(()=>{newCopyButton.innerHTML='<i class="bi bi-check-lg"></i> Copied';newCopyButton.classList.add('copy-btn-success');setTimeout(()=>{newCopyButton.innerHTML='<i class="bi bi-copy"></i> Copy';newCopyButton.classList.remove('copy-btn-success')},1500)})});const labelEl=document.getElementById('receiver-number-label');const contentWrapper=document.createElement('div');contentWrapper.append(labelEl,' ',numberSpan);numberContainer.innerHTML='';numberContainer.append(contentWrapper,newCopyButton);numberContainer.style.display='flex';numberContainer.style.justifyContent='space-between';numberContainer.style.alignItems='center'}}const oldCopyButton=depositForm.querySelector('button[onclick*="copyReceiverNumber"]');if(oldCopyButton)oldCopyButton.style.display='none';depositForm.dataset.initialized='true' }
     function updateDepositFormUI(depositForm) { if(!depositForm)return;const receiverBankSpan=document.getElementById('receiver-bank');if(receiverBankSpan&&!receiverBankSpan.dataset.iconApplied){const bankName=receiverBankSpan.textContent.trim().toUpperCase();if(BANK_ICONS[bankName]){receiverBankSpan.innerHTML=`<img src="${BANK_ICONS[bankName]}" alt="${bankName}" style="height: 40px; vertical-align: middle;">`}receiverBankSpan.dataset.iconApplied='true'}for(const[key,iconClass]of Object.entries(ICON_MAPPINGS)){const isLabelForInput=!key.includes('receiver');const element=isLabelForInput?depositForm.querySelector(`label[for="${key}"]`):document.getElementById(key);if(element&&!element.querySelector('i.bi')){const iconEl=document.createElement('i');iconEl.className=`bi ${iconClass}`;element.prepend(iconEl,document.createTextNode(' '))}}const qrCodeImg=document.getElementById('receiver-qrcode');if(qrCodeImg){qrCodeImg.classList.remove('bg-white');qrCodeImg.style.setProperty('border-color','#00aaff','important');qrCodeImg.style.setProperty('background-color','transparent','important')} }
     function styleWithdrawForm() { const withdrawCard=document.querySelector('#withdraw-form')?.closest('.card.shadow');if(!withdrawCard||withdrawCard.dataset.tabsApplied==='true')return;const mainTitle=withdrawCard.querySelector('h1.text-center');const historyTitle=Array.from(withdrawCard.querySelectorAll('h1, h2, h3')).find(el=>el.textContent.includes('RIWAYAT WITHDRAW'));if(mainTitle&&historyTitle){const navTabs=document.createElement('ul');navTabs.className='nav nav-tabs';navTabs.innerHTML=`<li class="nav-item"><a class="nav-link active" href="#">Withdraw</a></li><li class="nav-item"><a class="nav-link" href="#">Riwayat</a></li>`;const contentWrapper=document.createElement('div');contentWrapper.className='border border-top-0 px-3 pb-3 pt-2';Array.from(withdrawCard.children).forEach(child=>{if(child!==mainTitle){contentWrapper.appendChild(child.cloneNode(true))}});while(withdrawCard.firstChild){withdrawCard.removeChild(withdrawCard.firstChild)}withdrawCard.appendChild(mainTitle);withdrawCard.appendChild(navTabs);withdrawCard.appendChild(contentWrapper);const newHistoryTitle=contentWrapper.querySelector('h1, h2, h3');if(newHistoryTitle&&newHistoryTitle.textContent.includes('RIWAYAT WITHDRAW')){newHistoryTitle.style.display='none'}withdrawCard.dataset.tabsApplied='true'}const withdrawForm=withdrawCard.querySelector('#withdraw-form');if(withdrawForm){const bankLabel=withdrawForm.querySelector('label[for="agentmemberbankid"]');if(bankLabel&&!bankLabel.querySelector('i.bi')){bankLabel.innerHTML='<i class="bi bi-wallet2"></i> Bank / e-Wallet'}const amountLabel=withdrawForm.querySelector('label[for="amount"]');if(amountLabel&&!amountLabel.querySelector('i.bi')){amountLabel.innerHTML='<i class="bi bi-cash-coin"></i> '+amountLabel.textContent}} }
-    function styleBettingPage() { const bettingContainer = document.querySelector('#select-market')?.closest('.container.my-5'); if (!bettingContainer) return; if (!bettingContainer.dataset.styledOnce) { bettingContainer.id = 'betting-page-container'; const marketLabel = document.querySelector('label[for="select-market"]'); if (marketLabel && !marketLabel.querySelector('i')) { marketLabel.innerHTML = `<i class="bi bi-bullseye"></i> ${marketLabel.textContent}`; } const websiteBtn = document.getElementById('info-website'); if (websiteBtn) { websiteBtn.innerHTML = 'Website <i class="bi bi-arrow-up-right-square"></i>'; websiteBtn.classList.remove('btn-outline-primary'); websiteBtn.classList.add('btn', 'btn-secondary'); } const categoryButtons = bettingContainer.querySelectorAll('button[name="category"]'); if (categoryButtons.length > 0) { const firstButton = categoryButtons[0]; const row = firstButton.closest('.row'); if (row && !row.classList.contains('category-buttons')) { row.classList.add('category-buttons'); categoryButtons.forEach(btn => { btn.classList.remove('btn-primary', 'btn-outline-primary', 'btn-outline-info', 'rounded-3'); btn.classList.add('btn'); if (btn.id === 'btn-4D') { btn.classList.add('active'); } }); row.addEventListener('click', (e) => { if (e.target.matches('button[name="category"]')) { row.querySelectorAll('button').forEach(b => b.classList.remove('active')); e.target.classList.add('active'); } }); } } bettingContainer.querySelectorAll('.btn-group[role="group"]').forEach(group => { group.classList.add('bet-type-toggle'); }); bettingContainer.dataset.styledOnce = 'true'; } bettingContainer.querySelectorAll('div[id^="panel-"]:not([data-panel-styled="true"])').forEach(panel => { panel.dataset.panelStyled = 'true'; panel.classList.remove('bg-dark', 'border', 'rounded-3', 'p-1', 'p-3'); if (!panel.classList.contains('card')) panel.classList.add('card', 'mb-3'); const cardHeader = panel.querySelector('.card-header'); const cardBody = panel.querySelector('.card-body'); if (!cardHeader && !cardBody) { const infoDiv = panel.querySelector('.mb-3'); const title = infoDiv ? (infoDiv.querySelector('strong')?.textContent.trim() || 'Panel Permainan') : 'Panel Permainan'; const newCardHeader = document.createElement('div'); newCardHeader.className = 'card-header'; newCardHeader.innerHTML = `<i class="bi bi-joystick"></i> ${title}`; const newCardBody = document.createElement('div'); newCardBody.className = 'card-body'; while (panel.firstChild) { newCardBody.appendChild(panel.firstChild); } panel.appendChild(newCardHeader); panel.appendChild(newCardBody); } if (panel.id === 'panel-closed') { panel.classList.add('panel-closed-themed'); } panel.querySelectorAll('.table-input thead.table-warning').forEach(thead => { thead.classList.remove('table-warning'); }); panel.querySelectorAll('.fa-plus').forEach(icon => { icon.className = 'bi bi-plus-lg'; }); panel.querySelectorAll('input[name="digit"]:not([type="tel"])').forEach(input => { input.type = 'tel'; input.pattern = '[0-9]*'; }); panel.querySelectorAll('input[name^="bet"]:not([type="number"])').forEach(input => { input.type = 'number'; input.inputMode = 'numeric'; }); panel.querySelectorAll('button[type="reset"].btn-outline-danger').forEach(resetButton => { resetButton.classList.remove('btn-outline-danger'); resetButton.classList.add('btn-danger'); }); const addRowButton = panel.querySelector('button[onclick="addRow(event)"]'); if (addRowButton) { addRowButton.classList.remove('btn-outline-primary'); } }); }
+    
+    // --- [FUNGSI YANG DIPERBARUI] ---
+    function styleBettingPage() {
+        const bettingContainer = document.querySelector('#select-market')?.closest('.container.my-5');
+        if (!bettingContainer) return;
+
+        // [PERUBAHAN 1]: Mengurangi margin bawah dari container utama
+        bettingContainer.style.marginBottom = '2rem'; 
+
+        if (!bettingContainer.dataset.styledOnce) {
+            bettingContainer.id = 'betting-page-container';
+            const marketLabel = document.querySelector('label[for="select-market"]');
+            if (marketLabel && !marketLabel.querySelector('i')) {
+                marketLabel.innerHTML = `<i class="bi bi-bullseye"></i> ${marketLabel.textContent}`;
+            }
+            const websiteBtn = document.getElementById('info-website');
+            if (websiteBtn) {
+                websiteBtn.innerHTML = 'Website <i class="bi bi-arrow-up-right-square"></i>';
+                websiteBtn.classList.remove('btn-outline-primary');
+                websiteBtn.classList.add('btn', 'btn-secondary');
+            }
+            const categoryButtons = bettingContainer.querySelectorAll('button[name="category"]');
+            if (categoryButtons.length > 0) {
+                const firstButton = categoryButtons[0];
+                const row = firstButton.closest('.row');
+                if (row && !row.classList.contains('category-buttons')) {
+                    row.classList.add('category-buttons');
+                    categoryButtons.forEach(btn => {
+                        btn.classList.remove('btn-primary', 'btn-outline-primary', 'btn-outline-info', 'rounded-3');
+                        btn.classList.add('btn');
+                        if (btn.id === 'btn-4D') {
+                            btn.classList.add('active');
+                        }
+                    });
+                    row.addEventListener('click', (e) => {
+                        if (e.target.matches('button[name="category"]')) {
+                            row.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+                            e.target.classList.add('active');
+                        }
+                    });
+                }
+            }
+            bettingContainer.querySelectorAll('.btn-group[role="group"]').forEach(group => {
+                group.classList.add('bet-type-toggle');
+            });
+            bettingContainer.dataset.styledOnce = 'true';
+        }
+        bettingContainer.querySelectorAll('div[id^="panel-"]:not([data-panel-styled="true"])').forEach(panel => {
+            panel.dataset.panelStyled = 'true';
+            panel.classList.remove('bg-dark', 'border', 'rounded-3', 'p-1', 'p-3');
+            if (!panel.classList.contains('card')) panel.classList.add('card', 'mb-3');
+            const cardHeader = panel.querySelector('.card-header');
+            const cardBody = panel.querySelector('.card-body');
+            
+            if (!cardHeader && !cardBody) {
+                const infoDiv = panel.querySelector('.mb-3');
+                const title = infoDiv ? (infoDiv.querySelector('strong')?.textContent.trim() || 'Panel Permainan') : 'Panel Permainan';
+                const newCardHeader = document.createElement('div');
+                newCardHeader.className = 'card-header';
+                newCardHeader.innerHTML = `<i class="bi bi-joystick"></i> ${title}`;
+                const newCardBody = document.createElement('div');
+                newCardBody.className = 'card-body';
+                while (panel.firstChild) {
+                    newCardBody.appendChild(panel.firstChild);
+                }
+                panel.appendChild(newCardHeader);
+                panel.appendChild(newCardBody);
+            }
+
+            // [PERUBAHAN 2]: Cari dan sembunyikan judul duplikat di dalam card-body
+            const infoDivInsideBody = panel.querySelector('.card-body > .mb-3');
+            if (infoDivInsideBody) {
+                const duplicateTitle = infoDivInsideBody.querySelector('strong');
+                // Pastikan itu adalah judul yang benar dengan mengecek elemen setelahnya
+                if (duplicateTitle && duplicateTitle.nextElementSibling && duplicateTitle.nextElementSibling.classList.contains('ms-3')) {
+                    duplicateTitle.style.display = 'none';
+                }
+            }
+            
+            if (panel.id === 'panel-closed') {
+                panel.classList.add('panel-closed-themed');
+            }
+            panel.querySelectorAll('.table-input thead.table-warning').forEach(thead => {
+                thead.classList.remove('table-warning');
+            });
+            panel.querySelectorAll('.fa-plus').forEach(icon => {
+                icon.className = 'bi bi-plus-lg';
+            });
+            panel.querySelectorAll('input[name="digit"]:not([type="tel"])').forEach(input => {
+                input.type = 'tel';
+                input.pattern = '[0-9]*';
+            });
+            panel.querySelectorAll('input[name^="bet"]:not([type="number"])').forEach(input => {
+                input.type = 'number';
+                input.inputMode = 'numeric';
+            });
+            panel.querySelectorAll('button[type="reset"].btn-outline-danger').forEach(resetButton => {
+                resetButton.classList.remove('btn-outline-danger');
+                resetButton.classList.add('btn-danger');
+            });
+            const addRowButton = panel.querySelector('button[onclick="addRow(event)"]');
+            if (addRowButton) {
+                addRowButton.classList.remove('btn-outline-primary');
+            }
+        });
+    }
+
     function styleQuickLogin() { document.querySelectorAll('#row-quicklogin:not([data-styled="true"])').forEach(card => { card.dataset.styled = 'true'; const form = card.querySelector('form'); if (!form) return; const usernameDiv = form.querySelector('label[for="username"]')?.parentElement; const passwordDiv = form.querySelector('label[for="password"]')?.parentElement; const buttonDiv = form.querySelector('.d-flex.gap-1.my-3'); if (!usernameDiv || !passwordDiv || !buttonDiv) return; const newInputsHTML = ` <div class="row g-2 mb-3"> <div class="col-md-6"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-person-fill"></i></span> <input type="text" name="userName" id="username" class="form-control" placeholder="Username"> </div> </div> <div class="col-md-6"> <div class="input-wrapper"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-key-fill"></i></span> <input type="password" name="password" id="password" class="form-control" placeholder="Password"> </div> </div> </div> </div> `; buttonDiv.insertAdjacentHTML('beforebegin', newInputsHTML); usernameDiv.remove(); passwordDiv.remove(); const newPasswordInput = card.querySelector('#password'); if (newPasswordInput) { addPasswordToggle(newPasswordInput); } }); }
     function styleLoginPage() { const loginForm = document.querySelector('#maincontent form[action="/login"]'); if (!loginForm) return; const loginCard = loginForm.closest('.card.shadow'); if (!loginCard || loginCard.dataset.layoutStyled === 'true') return; loginCard.dataset.layoutStyled = 'true'; const usernameGroup = loginForm.querySelector('input[name="userName"]')?.closest('.form-group, .mb-3'); const passwordGroup = loginForm.querySelector('input[name="password"]')?.closest('.form-group, .mb-3'); const buttonContainer = loginForm.querySelector('button[type="submit"]')?.parentElement; if (usernameGroup && passwordGroup && buttonContainer) { const newInputsHTML = ` <div class="row g-2 mb-3"> <div class="col-md-6"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-person-fill"></i></span> <input type="text" name="userName" required="required" class="form-control" placeholder="User Name"> </div> </div> <div class="col-md-6"> <div class="input-wrapper"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-key-fill"></i></span> <input type="password" name="password" required="required" class="form-control" placeholder="Password"> </div> </div> </div> </div> `; buttonContainer.insertAdjacentHTML('beforebegin', newInputsHTML); usernameGroup.remove(); passwordGroup.remove(); } }
     function styleRegisterPage() { const form = document.querySelector('form[action="/register"]'); if (!form || form.dataset.styled === 'true') return; form.dataset.styled = 'true'; const card = form.closest('.card.shadow'); const mainRow = card ? card.querySelector('.row.mb-3') : null; const buttonWrapper = card ? card.querySelector('.d-grid.gap-3.mb-3') : null; if (!card || !mainRow || !buttonWrapper) return; mainRow.before(form); form.append(mainRow); form.append(buttonWrapper); form.querySelectorAll('h3').forEach(h3 => h3.remove()); form.querySelectorAll('.form-group').forEach(group => { const label = group.querySelector('label'); const input = group.querySelector('input, select'); if (!label || !input) return; const icon = label.querySelector('i.bi'); const placeholderText = label.textContent.replace(/\(.*\)/g, '').replace(/(\r\n|\n|\r)/gm, " ").trim(); let newElement; if (icon) { const inputGroup = document.createElement('div'); inputGroup.className = 'input-group mb-2'; const iconSpan = document.createElement('span'); iconSpan.className = 'input-group-text'; iconSpan.appendChild(icon.cloneNode(true)); inputGroup.appendChild(iconSpan); inputGroup.appendChild(input); newElement = inputGroup; } else { const simpleDiv = document.createElement('div'); simpleDiv.className = 'mb-2'; simpleDiv.appendChild(input); newElement = simpleDiv; } if (input.tagName.toLowerCase() !== 'select') { input.placeholder = placeholderText; } else { if (!input.querySelector('option[value=""]')) { const defaultOption = document.createElement('option'); defaultOption.value = ""; defaultOption.textContent = placeholderText || "Pilih Opsi"; defaultOption.disabled = true; defaultOption.selected = true; input.prepend(defaultOption); } } input.classList.add('form-control'); if (input.type === 'password') { const wrapper = document.createElement('div'); wrapper.className = 'input-wrapper'; wrapper.appendChild(newElement); group.replaceWith(wrapper); } else { group.replaceWith(newElement); } }); const passwordInput = form.querySelector('#password'); const confirmPasswordInput = form.querySelector('#confirmpassword'); if (passwordInput && confirmPasswordInput) { const passwordWrapper = passwordInput.closest('.input-wrapper'); confirmPasswordInput.closest('.input-wrapper')?.querySelector('.password-toggle-icon')?.remove(); if (passwordWrapper && !passwordWrapper.querySelector('.password-toggle-icon')) { const toggleIcon = document.createElement('i'); toggleIcon.className = 'bi bi-eye-fill password-toggle-icon'; toggleIcon.addEventListener('click', () => { const isPassword = passwordInput.type === 'password'; const newType = isPassword ? 'text' : 'password'; passwordInput.type = newType; confirmPasswordInput.type = newType; toggleIcon.className = isPassword ? 'bi bi-eye-slash-fill password-toggle-icon' : 'bi bi-eye-fill password-toggle-icon'; }); passwordWrapper.appendChild(toggleIcon); passwordInput.dataset.toggleAdded = 'true'; confirmPasswordInput.dataset.toggleAdded = 'true'; } } }
-    
+   
     function styleProfilePage() {
         const title = Array.from(document.querySelectorAll('h1.text-center')).find(h1 => h1.textContent.trim() === 'Profil Akun');
         if (!title) return;
@@ -175,12 +281,12 @@
 
             const iconClass = iconMapping[input.id];
             if (!iconClass) return;
-            
+           
             const placeholderText = label.textContent.trim();
-            
+           
             const inputGroup = document.createElement('div');
             inputGroup.className = 'input-group mb-3';
-            
+           
             const iconSpan = document.createElement('span');
             iconSpan.className = 'input-group-text';
             iconSpan.innerHTML = `<i class="bi ${iconClass}"></i>`;
@@ -195,7 +301,7 @@
 
             // Ganti form group lama dengan yang baru
             group.replaceWith(wrapper);
-            
+           
             // Tambahkan kembali toggle password ke input yang baru
             const newPasswordInput = wrapper.querySelector('input');
             addPasswordToggle(newPasswordInput);
@@ -223,7 +329,7 @@
         createSidebarToggleButton();
         runAllOtherScripts();
         injectGacorGame();
-        
+       
         const observerCallback = () => {
             initializeSwipeableHeaderMenu();
             updateProfileElements();
@@ -232,16 +338,16 @@
             styleMemberStatusPanel();
             styleTogelTutorialPage();
             initializeTogelCarousel();
-            
+           
             const depositForm = document.querySelector('#deposit-form');
             if (depositForm) {
                 initializeDepositForm(depositForm);
                 updateDepositFormUI(depositForm);
             }
-            
+           
             styleWithdrawForm();
             styleRtpModal();
-            
+           
             document.querySelectorAll('input[type="password"]:not([data-toggle-added="true"])').forEach(input => {
                 addPasswordToggle(input);
             });
@@ -254,19 +360,19 @@
             styleLogoutButton();
             styleChangePasswordPage(); // [PEMANGGILAN FUNGSI BARU]
         };
-        
+       
         observer = new MutationObserver(observerCallback);
         observer.observe(document.body, { childList: true, subtree: true });
-        
+       
         observerCallback(); 
-        
+       
         document.body.addEventListener('change', (event) => {
             if (event.target.id === 'agentmemberbankid') {
                 const receiverBankSpan = document.getElementById('receiver-bank');
                 if (receiverBankSpan) delete receiverBankSpan.dataset.iconApplied;
             }
         });
-        
+       
         const sidebar = document.getElementById("sidebar");
         if (sidebar) {
             const toggleButton = document.getElementById("custom-sidebar-toggle");

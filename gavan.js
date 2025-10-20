@@ -105,14 +105,16 @@
     function initializeDepositForm(depositForm) { if(!depositForm||depositForm.dataset.initialized==='true')return;const nameContainer=document.getElementById('receiver-name')?.closest('div');const numberContainer=document.getElementById('receiver-number')?.closest('div');if(nameContainer&&numberContainer&&nameContainer.parentElement===numberContainer.parentElement){nameContainer.parentElement.insertBefore(nameContainer,numberContainer)}if(numberContainer){const numberSpan=document.getElementById('receiver-number');if(numberSpan&&!numberContainer.querySelector('.copy-btn')){const newCopyButton=document.createElement('button');newCopyButton.type='button';newCopyButton.className='btn copy-btn';newCopyButton.innerHTML='<i class="bi bi-copy"></i> Copy';newCopyButton.addEventListener('click',e=>{e.preventDefault();navigator.clipboard.writeText(numberSpan.textContent.trim()).then(()=>{newCopyButton.innerHTML='<i class="bi bi-check-lg"></i> Copied';newCopyButton.classList.add('copy-btn-success');setTimeout(()=>{newCopyButton.innerHTML='<i class="bi bi-copy"></i> Copy';newCopyButton.classList.remove('copy-btn-success')},1500)})});const labelEl=document.getElementById('receiver-number-label');const contentWrapper=document.createElement('div');contentWrapper.append(labelEl,' ',numberSpan);numberContainer.innerHTML='';numberContainer.append(contentWrapper,newCopyButton);numberContainer.style.display='flex';numberContainer.style.justifyContent='space-between';numberContainer.style.alignItems='center'}}const oldCopyButton=depositForm.querySelector('button[onclick*="copyReceiverNumber"]');if(oldCopyButton)oldCopyButton.style.display='none';depositForm.dataset.initialized='true' }
     function updateDepositFormUI(depositForm) { if(!depositForm)return;const receiverBankSpan=document.getElementById('receiver-bank');if(receiverBankSpan&&!receiverBankSpan.dataset.iconApplied){const bankName=receiverBankSpan.textContent.trim().toUpperCase();if(BANK_ICONS[bankName]){receiverBankSpan.innerHTML=`<img src="${BANK_ICONS[bankName]}" alt="${bankName}" style="height: 40px; vertical-align: middle;">`}receiverBankSpan.dataset.iconApplied='true'}for(const[key,iconClass]of Object.entries(ICON_MAPPINGS)){const isLabelForInput=!key.includes('receiver');const element=isLabelForInput?depositForm.querySelector(`label[for="${key}"]`):document.getElementById(key);if(element&&!element.querySelector('i.bi')){const iconEl=document.createElement('i');iconEl.className=`bi ${iconClass}`;element.prepend(iconEl,document.createTextNode(' '))}}const qrCodeImg=document.getElementById('receiver-qrcode');if(qrCodeImg){qrCodeImg.classList.remove('bg-white');qrCodeImg.style.setProperty('border-color','#00aaff','important');qrCodeImg.style.setProperty('background-color','transparent','important')} }
     function styleWithdrawForm() { const withdrawCard=document.querySelector('#withdraw-form')?.closest('.card.shadow');if(!withdrawCard||withdrawCard.dataset.tabsApplied==='true')return;const mainTitle=withdrawCard.querySelector('h1.text-center');const historyTitle=Array.from(withdrawCard.querySelectorAll('h1, h2, h3')).find(el=>el.textContent.includes('RIWAYAT WITHDRAW'));if(mainTitle&&historyTitle){const navTabs=document.createElement('ul');navTabs.className='nav nav-tabs';navTabs.innerHTML=`<li class="nav-item"><a class="nav-link active" href="#">Withdraw</a></li><li class="nav-item"><a class="nav-link" href="#">Riwayat</a></li>`;const contentWrapper=document.createElement('div');contentWrapper.className='border border-top-0 px-3 pb-3 pt-2';Array.from(withdrawCard.children).forEach(child=>{if(child!==mainTitle){contentWrapper.appendChild(child.cloneNode(true))}});while(withdrawCard.firstChild){withdrawCard.removeChild(withdrawCard.firstChild)}withdrawCard.appendChild(mainTitle);withdrawCard.appendChild(navTabs);withdrawCard.appendChild(contentWrapper);const newHistoryTitle=contentWrapper.querySelector('h1, h2, h3');if(newHistoryTitle&&newHistoryTitle.textContent.includes('RIWAYAT WITHDRAW')){newHistoryTitle.style.display='none'}withdrawCard.dataset.tabsApplied='true'}const withdrawForm=withdrawCard.querySelector('#withdraw-form');if(withdrawForm){const bankLabel=withdrawForm.querySelector('label[for="agentmemberbankid"]');if(bankLabel&&!bankLabel.querySelector('i.bi')){bankLabel.innerHTML='<i class="bi bi-wallet2"></i> Bank / e-Wallet'}const amountLabel=withdrawForm.querySelector('label[for="amount"]');if(amountLabel&&!amountLabel.querySelector('i.bi')){amountLabel.innerHTML='<i class="bi bi-cash-coin"></i> '+amountLabel.textContent}} }
-    
+
     // --- [FUNGSI YANG DIPERBARUI] ---
     function styleBettingPage() {
-        const bettingContainer = document.querySelector('#select-market')?.closest('.container.my-5');
+        // Cari kontainer utama dengan class my-5 atau my-3 (jika sudah diubah sebelumnya)
+        const bettingContainer = document.querySelector('#select-market')?.closest('.container[class*="my-"]');
         if (!bettingContainer) return;
 
-        // [PERUBAHAN 1]: Mengurangi margin bawah dari container utama
-        bettingContainer.style.marginBottom = '2rem'; 
+        // [PERUBAHAN 3]: Mengurangi margin bawah dari container utama menjadi lebih rapat
+        bettingContainer.classList.remove('my-5');
+        bettingContainer.classList.add('my-3'); // my-3 = margin atas & bawah 1rem
 
         if (!bettingContainer.dataset.styledOnce) {
             bettingContainer.id = 'betting-page-container';
@@ -152,13 +154,14 @@
             });
             bettingContainer.dataset.styledOnce = 'true';
         }
+
         bettingContainer.querySelectorAll('div[id^="panel-"]:not([data-panel-styled="true"])').forEach(panel => {
             panel.dataset.panelStyled = 'true';
             panel.classList.remove('bg-dark', 'border', 'rounded-3', 'p-1', 'p-3');
             if (!panel.classList.contains('card')) panel.classList.add('card', 'mb-3');
             const cardHeader = panel.querySelector('.card-header');
             const cardBody = panel.querySelector('.card-body');
-            
+
             if (!cardHeader && !cardBody) {
                 const infoDiv = panel.querySelector('.mb-3');
                 const title = infoDiv ? (infoDiv.querySelector('strong')?.textContent.trim() || 'Panel Permainan') : 'Panel Permainan';
@@ -173,17 +176,26 @@
                 panel.appendChild(newCardHeader);
                 panel.appendChild(newCardBody);
             }
-
-            // [PERUBAHAN 2]: Cari dan sembunyikan judul duplikat di dalam card-body
+            
+            // [PERUBAHAN 1 & 2]: Menyesuaikan padding deskripsi & menghapus judul duplikat
             const infoDivInsideBody = panel.querySelector('.card-body > .mb-3');
             if (infoDivInsideBody) {
+                // 1. Hapus margin kiri `.ms-3` agar rata dengan konten di bawahnya
+                const descriptionWrapper = infoDivInsideBody.querySelector('.ms-3');
+                if (descriptionWrapper) {
+                    descriptionWrapper.classList.remove('ms-3');
+                }
+
+                // Hapus judul duplikat
                 const duplicateTitle = infoDivInsideBody.querySelector('strong');
-                // Pastikan itu adalah judul yang benar dengan mengecek elemen setelahnya
-                if (duplicateTitle && duplicateTitle.nextElementSibling && duplicateTitle.nextElementSibling.classList.contains('ms-3')) {
+                if (duplicateTitle && duplicateTitle.nextElementSibling && duplicateTitle.nextElementSibling.matches('div')) {
                     duplicateTitle.style.display = 'none';
                 }
+
+                // 2. Tambah jarak atas (margin-top) agar tidak mepet dengan header card
+                infoDivInsideBody.style.marginTop = '0.5rem';
             }
-            
+
             if (panel.id === 'panel-closed') {
                 panel.classList.add('panel-closed-themed');
             }

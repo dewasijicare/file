@@ -1,66 +1,97 @@
 (function() {
-    // CSS untuk styling panel member baru (lebih ringkas)
+    // CSS untuk styling panel member baru (lebih ringkas, layout horizontal atas)
     const panelStyles = `
         /* Target panel yang sudah diberi class baru */
         #member-status-panel.gavan-member-panel-enhanced {
-            background: linear-gradient(135deg, #f1c40f, #e67e22) !important; /* Gradient Kuning-Oranye */
-            border: 1px solid #f39c12 !important; /* Border oranye sedikit gelap */
-            box-shadow: 0 0 15px rgba(243, 156, 18, 0.5) !important; /* Glow oranye (sedikit redup) */
-            border-radius: 12px !important; /* Sedikit lebih kecil radiusnya */
-            /* === PENGURANGAN PADDING === */
-            padding: 0.8rem 1rem !important; /* Padding atas/bawah dikurangi */
+            background: linear-gradient(135deg, #f1c40f, #e67e22) !important;
+            border: 1px solid #f39c12 !important;
+            box-shadow: 0 0 12px rgba(243, 156, 18, 0.4) !important; /* Glow lebih halus */
+            border-radius: 10px !important; /* Radius lebih kecil */
+            /* === PADDING LEBIH KECIL === */
+            padding: 0.6rem 0.8rem !important;
             /* ========================= */
-            color: #2c3e50 !important; /* Teks gelap agar kontras */
-            text-align: center;
+            color: #2c3e50 !important;
             display: flex;
             flex-direction: column;
-            /* === PENGURANGAN GAP === */
-            gap: 0.4rem !important; /* Jarak antar elemen lebih kecil */
+            /* === GAP LEBIH KECIL === */
+            gap: 0.4rem !important; /* Jarak antara top-area dan buttons */
             /* ======================= */
-            transition: all 0.3s ease;
+            transition: all 0.2s ease; /* Transisi lebih cepat */
         }
 
         #member-status-panel.gavan-member-panel-enhanced:hover {
-             box-shadow: 0 4px 20px rgba(230, 126, 34, 0.6) !important; /* Glow sedikit beda saat hover */
-             transform: translateY(-2px); /* Efek angkat sedikit */
+             box-shadow: 0 3px 18px rgba(230, 126, 34, 0.5) !important;
+             transform: translateY(-1px); /* Angkat sedikit saja */
         }
 
-        /* Styling untuk ID Pengguna */
+        /* === AREA ATAS (SALDO & ID) === */
+        .gmp-top-area {
+            display: flex;
+            justify-content: space-between; /* Saldo kiri, ID kanan */
+            align-items: center; /* Sejajar vertikal */
+            width: 100%;
+        }
+        /* ============================ */
+
+        /* Area Saldo (di kiri) */
+        .gmp-balance-area {
+            text-align: left;
+        }
+
+        /* Area ID (di kanan) */
+        .gmp-user-id-area {
+            text-align: right;
+        }
+
+        /* Styling untuk ID Pengguna (di kanan) */
         .gmp-user-id {
-            font-size: 0.85em; /* Sedikit lebih kecil */
+            font-size: 0.8em; /* Lebih kecil */
             font-weight: 500;
-            color: rgba(44, 62, 80, 0.85);
-            /* margin-bottom: 0.1rem; (Gap sudah cukup) */
+            color: rgba(44, 62, 80, 0.8);
+            line-height: 1.1; /* Rapatkan */
         }
+         .gmp-user-id strong { /* Jika ID dibungkus strong */
+              font-weight: 600;
+              color: #2c3e50;
+         }
 
-        /* Styling untuk label Saldo */
+
+        /* Styling untuk label Saldo (di kiri) */
         .gmp-balance-label {
-            font-size: 0.9em; /* Sedikit lebih kecil */
+            font-size: 0.8em; /* Lebih kecil */
             font-weight: 600;
-            margin-bottom: 0; /* Hapus margin bawah */
-             color: #2c3e50;
+            margin-bottom: 0;
+            color: #2c3e50;
+            line-height: 1.1; /* Rapatkan */
         }
 
-        /* Styling untuk Nilai Saldo */
+        /* Styling untuk Nilai Saldo (di kiri) */
         .gmp-balance-value {
-            /* === PENGURANGAN FONT SALDO === */
-            font-size: 1.9em !important; /* Ukuran font saldo dikurangi */
-            /* ============================ */
+            font-size: 1.6em !important; /* Ukuran font saldo lebih kecil lagi */
             font-weight: 700 !important;
-            line-height: 1.1 !important; /* Line height lebih rapat */
+            line-height: 1 !important; /* Sangat rapat */
             color: #2c3e50 !important;
-            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4);
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
             display: inline-flex;
-            align-items: center;
+            align-items: baseline; /* Sejajarkan baseline teks */
+            white-space: nowrap; /* Jangan pindah baris */
         }
+         .gmp-balance-value .currency-label {
+             font-size: 0.5em;
+             vertical-align: baseline;
+             margin-left: 4px;
+             font-weight: 500;
+             opacity: 0.9;
+         }
+
 
         /* Styling ikon mata (Toggle Saldo) */
         .gmp-balance-value .balance-toggle-icon {
-            font-size: 0.7em !important;
-            margin-left: 8px !important; /* Jarak ikon sedikit dikurangi */
+            font-size: 0.8em !important; /* Icon sedikit lebih besar relatif thd saldo */
+            margin-left: 6px !important;
             cursor: pointer;
             color: #2c3e50 !important;
-            vertical-align: middle;
+            vertical-align: middle; /* Tengah vertikal */
         }
          .gmp-balance-value .balance-toggle-icon:hover {
              color: #000 !important;
@@ -70,38 +101,46 @@
          .gmp-buttons-container {
              display: flex;
              justify-content: space-between;
-             gap: 0.6rem; /* Jarak antar tombol sedikit dikurangi */
+             /* === GAP TOMBOL LEBIH KECIL === */
+             gap: 0.5rem !important;
+             /* ============================ */
              width: 100%;
-             /* === PENGURANGAN MARGIN TOMBOL === */
-             margin-top: 0.5rem !important; /* Jarak dari saldo dikurangi */
-             /* =============================== */
+             margin-top: 0.4rem !important; /* Jarak dari atas dikurangi */
          }
 
-         /* Styling tombol aksi (Deposit/Withdraw) */
+         /* Styling tombol aksi (Deposit/Withdraw) - LEBIH KECIL */
          .gmp-action-btn {
              flex: 1;
-             padding: 0.5rem 0.8rem !important; /* Padding tombol dikurangi */
-             font-size: 0.85em !important; /* Font tombol dikurangi */
+             /* === PADDING & FONT LEBIH KECIL === */
+             padding: 0.25rem 0.5rem !important;
+             font-size: 0.75em !important;
+             /* ================================= */
              display: flex;
              align-items: center;
              justify-content: center;
-             gap: 6px; /* Jarak ikon & teks tombol dikurangi */
-             border-radius: 6px !important; /* Sudut tombol lebih kecil */
+             gap: 4px; /* Jarak ikon & teks lebih kecil */
+             border-radius: 5px !important; /* Sudut lebih kecil */
+             white-space: nowrap; /* Jangan pindah baris teks tombol */
          }
          /* Override jika perlu */
           .gmp-action-btn.btn-primary {
-             box-shadow: 0 0 8px rgba(0, 234, 255, 0.8), inset 0 0 4px rgba(255,255,255,.3) !important;
+             box-shadow: 0 0 6px rgba(0, 234, 255, 0.7), inset 0 0 3px rgba(255,255,255,.2) !important;
           }
            .gmp-action-btn.btn-secondary {
-             background: linear-gradient(45deg,#465a70,#34495e)!important; /* Warna secondary lebih gelap */
+             background: linear-gradient(45deg,#465a70,#34495e)!important;
              border-color: #566573 !important;
              color: #ecf0f1 !important;
-             box-shadow: 0 0 8px rgba(52, 73, 94, 0.7),inset 0 0 4px rgba(255,255,255,.1) !important;
+             box-shadow: 0 0 6px rgba(52, 73, 94, 0.6),inset 0 0 3px rgba(255,255,255,.1) !important;
           }
            .gmp-action-btn.btn-secondary:hover {
-             transform: scale(1.05);
+             transform: scale(1.03); /* Hover lebih halus */
              background: linear-gradient(45deg,#566573,#465a70)!important;
-             box-shadow: 0 0 12px #566573, 0 0 18px #7f8c8d, inset 0 0 4px rgba(255,255,255,.2) !important;
+             box-shadow: 0 0 10px #566573, 0 0 15px #7f8c8d, inset 0 0 4px rgba(255,255,255,.2) !important;
+          }
+
+          /* Pastikan ikon di tombol tidak terlalu besar */
+          .gmp-action-btn i.bi {
+              font-size: 1.1em; /* Sesuaikan ukuran ikon di tombol */
           }
 
     `;
@@ -122,14 +161,18 @@
 
         panel.innerHTML = ''; // Kosongkan panel
 
-        // === PERUBAHAN LABEL ===
+        // === STRUKTUR HTML BARU (Horizontal Atas) ===
         panel.innerHTML = `
-            <div class="gmp-user-id">ID: ${userId}</div>
-            <div class="gmp-balance-area">
-                 <div class="gmp-balance-label">Saldo Aktif</div>
-                 <div class="gmp-balance-value">
-                    <span class="balance-value">${originalBalanceValue}</span>
-                    <span style="font-size: 0.5em; vertical-align: middle; margin-left: 5px;"> IDR</span>
+            <div class="gmp-top-area">
+                <div class="gmp-balance-area">
+                    <div class="gmp-balance-label">Saldo Aktif</div>
+                    <div class="gmp-balance-value">
+                        <span class="balance-value">${originalBalanceValue}</span>
+                        <span class="currency-label"> IDR</span>
+                        </div>
+                </div>
+                <div class="gmp-user-id-area">
+                    <div class="gmp-user-id">ID: <strong>${userId}</strong></div>
                     </div>
             </div>
             <div class="gmp-buttons-container">
@@ -137,7 +180,7 @@
                 <a href="/withdraw" class="btn btn-secondary gmp-action-btn"><i class="bi bi-cash-coin"></i> Withdraw</a>
             </div>
         `;
-        // =======================
+        // ============================================
 
         const balanceValueContainer = panel.querySelector('.gmp-balance-value');
         if (balanceValueContainer) {
@@ -165,15 +208,13 @@
                      sidebarIcon.className = newToggleIcon.className;
                      if(state === 'hidden') sidebarValue.textContent = '•••••';
                      else {
-                         // Coba format nilai sidebar jika perlu (asumsi nilai sama)
-                         const sidebarOriginalValue = originalBalanceValue.replace(/[^\d.]/g, ''); // Ambil angka saja
-                         sidebarValue.textContent = formatNumberWithCommas(sidebarOriginalValue); // Gunakan fungsi format jika ada
+                         const sidebarOriginalValue = originalBalanceValue.replace(/[^\d.]/g, '');
+                         sidebarValue.textContent = formatNumberWithCommas(sidebarOriginalValue);
                      }
                  }
             };
 
-            // Event listener di-attach lagi
-             newToggleIcon.addEventListener('click', (e) => {
+            newToggleIcon.addEventListener('click', (e) => {
                  e.preventDefault();
                  e.stopPropagation();
                  const currentState = (localStorage.getItem('balanceVisibility') || 'visible');
@@ -182,30 +223,27 @@
                  updateView(newState);
             });
 
-             updateView(storedState); // Terapkan state awal
+             updateView(storedState);
         }
 
         panel.classList.add('gavan-member-panel-enhanced');
         panel.classList.remove('glassmorphism', 'py-3', 'my-3', 'text-center');
         panel.dataset.enhanced = 'true';
 
-        console.log("Member status panel enhanced (compact).");
+        console.log("Member status panel enhanced (compact horizontal).");
     }
 
-    // Fungsi format angka (diperlukan untuk update sidebar)
      function formatNumberWithCommas(val) {
         if (val === null || val === undefined) return '';
         let stringVal = val.toString().replace(/,/g, '');
         if (isNaN(stringVal) || stringVal.trim() === '') return '';
         try {
-            // Gunakan locale 'id-ID' jika ingin pemisah ribuan titik
             return Number(stringVal).toLocaleString('en-US');
         } catch (e) {
             return stringVal;
         }
     }
 
-    // Fungsi inject CSS (Sama)
     function injectStyles() {
         if (document.getElementById('gavan-panel-styles')) {
             return;
@@ -217,7 +255,6 @@
         console.log("Panel styles injected.");
     }
 
-    // Inisialisasi dan Observer (Sama)
     document.addEventListener('DOMContentLoaded', () => {
         injectStyles();
         styleEnhancedMemberPanel();

@@ -1,5 +1,5 @@
 (function() {
-    // CSS untuk styling panel member baru (Revisi Ukuran Username & Tombol)
+    // CSS untuk styling panel member baru (Layout Grid 2x2 Atas)
     const panelStyles = `
         #member-status-panel.gavan-member-panel-enhanced {
             background: linear-gradient(135deg, #f1c40f, #e67e22) !important;
@@ -10,7 +10,7 @@
             color: #2c3e50 !important;
             display: flex;
             flex-direction: column;
-            gap: 0.4rem !important;
+            gap: 0.5rem !important; /* Jarak antara top-area dan buttons sedikit ditambah */
             transition: all 0.2s ease;
         }
 
@@ -19,60 +19,50 @@
              transform: translateY(-1px);
         }
 
+        /* === AREA ATAS (GRID 2x2) === */
         .gmp-top-area {
-            display: flex;
-            justify-content: space-between;
-            align-items: center; /* Jaga tetap di tengah vertikal */
+            display: grid;
+            grid-template-columns: 1fr auto; /* Kolom kiri isi sisa, Kolom kanan auto */
+            grid-template-rows: auto auto; /* 2 baris, tinggi otomatis */
+            align-items: baseline; /* Sejajarkan baseline teks per baris */
             width: 100%;
-            min-height: 40px; /* Beri sedikit tinggi minimum */
+            row-gap: 0.1rem; /* Jarak vertikal antar baris grid */
+            column-gap: 0.5rem; /* Jarak horizontal antar kolom grid */
         }
+        /* ============================ */
 
-        .gmp-balance-area {
-            text-align: left;
-        }
-
-        .gmp-user-id-area {
-            text-align: right;
-            flex-shrink: 0; /* Jangan biarkan area ID mengecil */
-            margin-left: 10px; /* Jarak antara saldo dan ID */
-        }
-
-        /* Styling untuk label USERNAME (di kanan) */
-        .gmp-user-id-label {
-             font-size: 0.7em; /* Label KECIL */
-             font-weight: 500;
-             color: rgba(44, 62, 80, 0.8);
-             line-height: 1;
-             display: block; /* Agar dibawah username */
-             text-transform: uppercase;
-        }
-
-        /* Styling untuk Nama Username (di kanan) */
-        .gmp-user-id-value {
-             /* === UKURAN USERNAME BESAR & WARNA === */
-             font-size: 1.1em !important; /* Lebih besar dari saldo */
-             font-weight: 700 !important;
-             color: #1a252f !important; /* Warna biru sangat gelap / hampir hitam */
-             line-height: 1.1;
-             display: block; /* Pastikan di baris sendiri */
-             /* Jika terlalu panjang, bisa tambahkan ini: */
-             /* max-width: 120px; /* Batasi lebar */
-             /* overflow: hidden; */
-             /* text-overflow: ellipsis; */
-             /* white-space: nowrap; */
-             /* ==================================== */
-        }
-
-
+        /* Styling untuk label Saldo (Kiri Atas) */
         .gmp-balance-label {
+            grid-column: 1; grid-row: 1; /* Posisi Grid */
             font-size: 0.8em;
             font-weight: 600;
-            margin-bottom: 0;
             color: #2c3e50;
             line-height: 1.1;
+            text-transform: uppercase; /* Uppercase */
+            text-align: left;
+            align-self: end; /* Rata bawah di sel grid */
         }
 
+         /* Styling untuk Nama Username (Kanan Atas) */
+         .gmp-user-id-value {
+             grid-column: 2; grid-row: 1; /* Posisi Grid */
+             /* === UKURAN FONT SAMA DENGAN SALDO === */
+             font-size: 1.6em !important;
+             /* ==================================== */
+             font-weight: 700 !important;
+             color: #1a252f !important; /* Warna gelap */
+             line-height: 1;
+             text-align: right;
+             align-self: end; /* Rata bawah di sel grid */
+             white-space: nowrap;
+             overflow: hidden;
+             text-overflow: ellipsis;
+             max-width: 150px; /* Batasi lebar username jika terlalu panjang */
+        }
+
+        /* Styling untuk Nilai Saldo (Kiri Bawah) */
         .gmp-balance-value {
+            grid-column: 1; grid-row: 2; /* Posisi Grid */
             font-size: 1.6em !important;
             font-weight: 700 !important;
             line-height: 1 !important;
@@ -81,6 +71,8 @@
             display: inline-flex;
             align-items: baseline;
             white-space: nowrap;
+            text-align: left;
+            align-self: start; /* Rata atas di sel grid */
         }
          .gmp-balance-value .currency-label {
              font-size: 0.5em;
@@ -90,6 +82,7 @@
              opacity: 0.9;
          }
 
+        /* Styling ikon mata (Toggle Saldo) */
         .gmp-balance-value .balance-toggle-icon {
             font-size: 0.8em !important;
             margin-left: 6px !important;
@@ -101,14 +94,29 @@
              color: #000 !important;
          }
 
+         /* Teks Kecil di Kanan Bawah (Placeholder ID) */
+        .gmp-user-info-extra {
+            grid-column: 2; grid-row: 2; /* Posisi Grid */
+            font-size: 0.75em;
+            font-weight: 500;
+            color: rgba(44, 62, 80, 0.8);
+            line-height: 1;
+            text-align: right;
+            align-self: start; /* Rata atas di sel grid */
+            text-transform: uppercase;
+        }
+
+
+         /* Kontainer untuk tombol */
          .gmp-buttons-container {
              display: flex;
              justify-content: space-between;
              gap: 0.5rem !important;
              width: 100%;
-             margin-top: 0.4rem !important;
+             margin-top: 0.5rem !important; /* Jarak dari grid atas */
          }
 
+         /* Styling tombol aksi (Deposit/Withdraw) - Kecil */
          .gmp-action-btn {
              flex: 1;
              padding: 0.25rem 0.5rem !important;
@@ -119,12 +127,11 @@
              gap: 4px;
              border-radius: 5px !important;
              white-space: nowrap;
-             border: none !important; /* Hapus border default jika ada */
-             transition: all 0.2s ease !important; /* Efek hover lebih cepat */
+             border: none !important;
+             transition: all 0.2s ease !important;
          }
 
-         /* === WARNA TOMBOL BARU === */
-         /* Tombol Deposit (Primary) - Dark Blue Gradient, White Border */
+         /* Warna Tombol (Sama seperti sebelumnya) */
           .gmp-action-btn.btn-primary {
              background: linear-gradient(45deg, #1a252f, #2c3e50) !important;
              color: #ecf0f1 !important;
@@ -137,23 +144,18 @@
               box-shadow: 0 2px 5px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.15);
               transform: translateY(-1px);
           }
-
-          /* Tombol Withdraw (Secondary) - Dark Gray Solid/Gradient */
            .gmp-action-btn.btn-secondary {
-             background: linear-gradient(45deg, #465a70, #566573) !important; /* Gradient abu gelap */
-             /* background: #495057 !important; */ /* Atau Solid abu gelap */
+             background: linear-gradient(45deg, #465a70, #566573) !important;
              color: #ecf0f1 !important;
              border: 1px solid rgba(255, 255, 255, 0.2) !important;
              box-shadow: 0 1px 3px rgba(0,0,0,0.2), inset 0 1px 0px rgba(255,255,255,0.05);
           }
            .gmp-action-btn.btn-secondary:hover {
              background: linear-gradient(45deg, #566573, #6c757d) !important;
-             /* background: #5a6268 !important; */ /* Hover solid */
              border-color: rgba(255, 255, 255, 0.3) !important;
              box-shadow: 0 2px 5px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1);
              transform: translateY(-1px);
           }
-          /* ========================= */
 
           .gmp-action-btn i.bi {
               font-size: 1.1em;
@@ -174,23 +176,23 @@
         const toggleIconElement = panel.querySelector('.balance-toggle-icon');
 
         let userId = usernameElement ? usernameElement.textContent.replace('Halo,', '').trim() : 'N/A';
+        // Ambil ID number jika ada, jika tidak, kosongkan saja atau beri placeholder
+        let idNumber = ""; // Kosongkan saja jika tidak ada ID terpisah
+        // Jika Anda ingin menampilkan teks statis seperti "Member ID":
+        let idLabelText = "Member ID"; // Atau biarkan kosong: ""
 
         panel.innerHTML = ''; // Kosongkan panel
 
-        // === STRUKTUR HTML BARU (Revisi Label & Layout) ===
+        // === STRUKTUR HTML BARU (Grid 2x2 Atas) ===
         panel.innerHTML = `
             <div class="gmp-top-area">
-                <div class="gmp-balance-area">
-                    <div class="gmp-balance-label">Saldo Aktif</div>
-                    <div class="gmp-balance-value">
-                        <span class="balance-value">${originalBalanceValue}</span>
-                        <span class="currency-label"> IDR</span>
-                        </div>
-                </div>
-                <div class="gmp-user-id-area">
-                    <div class="gmp-user-id-value">${userId}</div>
-                    <div class="gmp-user-id-label">USERNAME</div>
-                </div>
+                <div class="gmp-balance-label">SALDO AKTIF</div>
+                <div class="gmp-user-id-value">${userId}</div>
+                <div class="gmp-balance-value">
+                    <span class="balance-value">${originalBalanceValue}</span>
+                    <span class="currency-label"> IDR</span>
+                    </div>
+                <div class="gmp-user-info-extra">${idLabelText}</div>
             </div>
             <div class="gmp-buttons-container">
                 <a href="/deposit" class="btn btn-primary gmp-action-btn"><i class="bi bi-wallet2"></i> Deposit</a>
@@ -247,7 +249,7 @@
         panel.classList.remove('glassmorphism', 'py-3', 'my-3', 'text-center');
         panel.dataset.enhanced = 'true';
 
-        console.log("Member status panel enhanced (compact horizontal v2).");
+        console.log("Member status panel enhanced (Grid Layout).");
     }
 
      function formatNumberWithCommas(val) {

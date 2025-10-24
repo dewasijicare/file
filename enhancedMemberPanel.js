@@ -1,5 +1,5 @@
 (function() {
-    // CSS untuk styling panel member baru (Layout Grid 2x2 Atas - Diperbaiki)
+    // CSS untuk styling panel member baru (Font Size Saldo & Username Dikecilkan)
     const panelStyles = `
         #member-status-panel.gavan-member-panel-enhanced {
             background: linear-gradient(135deg, #f1c40f, #e67e22) !important;
@@ -19,47 +19,44 @@
              transform: translateY(-1px);
         }
 
-        /* === AREA ATAS (GRID 2x2) === */
         .gmp-top-area {
             display: grid;
-            grid-template-columns: 1fr auto; /* Kolom kiri isi sisa, Kolom kanan auto */
-            grid-template-rows: auto auto; /* 2 baris, tinggi otomatis */
-            align-items: baseline; /* Sejajarkan baseline teks per baris */
+            grid-template-columns: 1fr auto;
+            grid-template-rows: auto auto;
+            align-items: baseline;
             width: 100%;
             row-gap: 0.1rem;
             column-gap: 0.5rem;
         }
-        /* ============================ */
 
-        /* Styling untuk label Saldo (Kiri Atas) */
         .gmp-balance-label {
-            grid-column: 1; grid-row: 1; /* Posisi Grid */
+            grid-column: 1; grid-row: 1;
             font-size: 0.8em;
             font-weight: 600;
             color: #2c3e50;
             line-height: 1.1;
             text-transform: uppercase;
             text-align: left;
-            align-self: end; /* Rata bawah di sel grid */
+            align-self: end;
         }
 
-        /* === PERBAIKAN: Styling untuk label USERNAME (Kanan Atas) === */
         .gmp-user-id-label {
-            grid-column: 2; grid-row: 1; /* Posisi Grid */
-            font-size: 0.8em; /* Ukuran sama dengan label saldo */
+            grid-column: 2; grid-row: 1;
+            font-size: 0.8em;
             font-weight: 600;
-            color: #2c3e50; /* Warna sama dengan label saldo */
+            color: #2c3e50;
             line-height: 1.1;
             text-transform: uppercase;
             text-align: right;
-            align-self: end; /* Rata bawah di sel grid */
+            align-self: end;
         }
-        /* ========================================================= */
 
-        /* Styling untuk Nilai Saldo (Kiri Bawah) */
+        /* Styling untuk Nilai Saldo (Kiri Bawah) - Font Size Dikecilkan */
         .gmp-balance-value {
-            grid-column: 1; grid-row: 2; /* Posisi Grid */
-            font-size: 1.6em !important;
+            grid-column: 1; grid-row: 2;
+            /* === PERUBAHAN FONT SIZE === */
+            font-size: 1.5em !important; /* Dari 1.6em */
+            /* ========================= */
             font-weight: 700 !important;
             line-height: 1 !important;
             color: #2c3e50 !important;
@@ -68,7 +65,7 @@
             align-items: baseline;
             white-space: nowrap;
             text-align: left;
-            align-self: start; /* Rata atas di sel grid */
+            align-self: start;
         }
          .gmp-balance-value .currency-label {
              font-size: 0.5em;
@@ -78,7 +75,6 @@
              opacity: 0.9;
          }
 
-        /* Styling ikon mata (Toggle Saldo) */
         .gmp-balance-value .balance-toggle-icon {
             font-size: 0.8em !important;
             margin-left: 6px !important;
@@ -90,25 +86,23 @@
              color: #000 !important;
          }
 
-        /* === PERBAIKAN: Styling untuk Nama Username (Kanan Bawah) === */
+        /* Styling untuk Nama Username (Kanan Bawah) - Font Size Dikecilkan */
          .gmp-user-id-value {
-             grid-column: 2; grid-row: 2; /* Posisi Grid */
-             font-size: 1.6em !important; /* Ukuran sama dengan nominal saldo */
+             grid-column: 2; grid-row: 2;
+             /* === PERUBAHAN FONT SIZE === */
+             font-size: 1.5em !important; /* Dari 1.6em */
+             /* ========================= */
              font-weight: 700 !important;
-             color: #1a252f !important; /* Warna gelap */
+             color: #1a252f !important;
              line-height: 1 !important;
              text-align: right;
-             align-self: start; /* Rata atas di sel grid */
+             align-self: start;
              white-space: nowrap;
              overflow: hidden;
              text-overflow: ellipsis;
-             max-width: 150px; /* Batasi lebar username jika perlu */
+             max-width: 150px;
         }
-        /* ======================================================== */
 
-        /* CSS untuk .gmp-user-info-extra dihapus karena tidak dipakai lagi */
-
-         /* Kontainer untuk tombol */
          .gmp-buttons-container {
              display: flex;
              justify-content: space-between;
@@ -117,7 +111,6 @@
              margin-top: 0.5rem !important;
          }
 
-         /* Styling tombol aksi (Deposit/Withdraw) - Kecil */
          .gmp-action-btn {
              flex: 1;
              padding: 0.25rem 0.5rem !important;
@@ -132,7 +125,6 @@
              transition: all 0.2s ease !important;
          }
 
-         /* Warna Tombol (Sama seperti sebelumnya) */
           .gmp-action-btn.btn-primary {
              background: linear-gradient(45deg, #1a252f, #2c3e50) !important;
              color: #ecf0f1 !important;
@@ -177,10 +169,10 @@
         const toggleIconElement = panel.querySelector('.balance-toggle-icon');
 
         let userId = usernameElement ? usernameElement.textContent.replace('Halo,', '').trim() : 'N/A';
+        let idLabelText = ""; // Bisa diisi jika ada ID terpisah
 
         panel.innerHTML = ''; // Kosongkan panel
 
-        // === STRUKTUR HTML BARU (Grid 2x2 Atas - Diperbaiki) ===
         panel.innerHTML = `
             <div class="gmp-top-area">
                 <div class="gmp-balance-label">SALDO AKTIF</div>
@@ -196,7 +188,6 @@
                 <a href="/withdraw" class="btn btn-secondary gmp-action-btn"><i class="bi bi-cash-coin"></i> Withdraw</a>
             </div>
         `;
-        // ============================================
 
         const balanceValueContainer = panel.querySelector('.gmp-balance-value');
         if (balanceValueContainer) {
@@ -246,7 +237,7 @@
         panel.classList.remove('glassmorphism', 'py-3', 'my-3', 'text-center');
         panel.dataset.enhanced = 'true';
 
-        console.log("Member status panel enhanced (Grid Layout v2).");
+        console.log("Member status panel enhanced (Font Size Adjusted).");
     }
 
      function formatNumberWithCommas(val) {

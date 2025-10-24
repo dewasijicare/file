@@ -1,5 +1,5 @@
 (function() {
-    // CSS untuk styling panel member baru (Layout Grid 2x2 Atas)
+    // CSS untuk styling panel member baru (Layout Grid 2x2 Atas - Diperbaiki)
     const panelStyles = `
         #member-status-panel.gavan-member-panel-enhanced {
             background: linear-gradient(135deg, #f1c40f, #e67e22) !important;
@@ -10,7 +10,7 @@
             color: #2c3e50 !important;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem !important; /* Jarak antara top-area dan buttons sedikit ditambah */
+            gap: 0.5rem !important;
             transition: all 0.2s ease;
         }
 
@@ -26,8 +26,8 @@
             grid-template-rows: auto auto; /* 2 baris, tinggi otomatis */
             align-items: baseline; /* Sejajarkan baseline teks per baris */
             width: 100%;
-            row-gap: 0.1rem; /* Jarak vertikal antar baris grid */
-            column-gap: 0.5rem; /* Jarak horizontal antar kolom grid */
+            row-gap: 0.1rem;
+            column-gap: 0.5rem;
         }
         /* ============================ */
 
@@ -38,27 +38,23 @@
             font-weight: 600;
             color: #2c3e50;
             line-height: 1.1;
-            text-transform: uppercase; /* Uppercase */
+            text-transform: uppercase;
             text-align: left;
             align-self: end; /* Rata bawah di sel grid */
         }
 
-         /* Styling untuk Nama Username (Kanan Atas) */
-         .gmp-user-id-value {
-             grid-column: 2; grid-row: 1; /* Posisi Grid */
-             /* === UKURAN FONT SAMA DENGAN SALDO === */
-             font-size: 1.6em !important;
-             /* ==================================== */
-             font-weight: 700 !important;
-             color: #1a252f !important; /* Warna gelap */
-             line-height: 1;
-             text-align: right;
-             align-self: end; /* Rata bawah di sel grid */
-             white-space: nowrap;
-             overflow: hidden;
-             text-overflow: ellipsis;
-             max-width: 150px; /* Batasi lebar username jika terlalu panjang */
+        /* === PERBAIKAN: Styling untuk label USERNAME (Kanan Atas) === */
+        .gmp-user-id-label {
+            grid-column: 2; grid-row: 1; /* Posisi Grid */
+            font-size: 0.8em; /* Ukuran sama dengan label saldo */
+            font-weight: 600;
+            color: #2c3e50; /* Warna sama dengan label saldo */
+            line-height: 1.1;
+            text-transform: uppercase;
+            text-align: right;
+            align-self: end; /* Rata bawah di sel grid */
         }
+        /* ========================================================= */
 
         /* Styling untuk Nilai Saldo (Kiri Bawah) */
         .gmp-balance-value {
@@ -94,18 +90,23 @@
              color: #000 !important;
          }
 
-         /* Teks Kecil di Kanan Bawah (Placeholder ID) */
-        .gmp-user-info-extra {
-            grid-column: 2; grid-row: 2; /* Posisi Grid */
-            font-size: 0.75em;
-            font-weight: 500;
-            color: rgba(44, 62, 80, 0.8);
-            line-height: 1;
-            text-align: right;
-            align-self: start; /* Rata atas di sel grid */
-            text-transform: uppercase;
+        /* === PERBAIKAN: Styling untuk Nama Username (Kanan Bawah) === */
+         .gmp-user-id-value {
+             grid-column: 2; grid-row: 2; /* Posisi Grid */
+             font-size: 1.6em !important; /* Ukuran sama dengan nominal saldo */
+             font-weight: 700 !important;
+             color: #1a252f !important; /* Warna gelap */
+             line-height: 1 !important;
+             text-align: right;
+             align-self: start; /* Rata atas di sel grid */
+             white-space: nowrap;
+             overflow: hidden;
+             text-overflow: ellipsis;
+             max-width: 150px; /* Batasi lebar username jika perlu */
         }
+        /* ======================================================== */
 
+        /* CSS untuk .gmp-user-info-extra dihapus karena tidak dipakai lagi */
 
          /* Kontainer untuk tombol */
          .gmp-buttons-container {
@@ -113,7 +114,7 @@
              justify-content: space-between;
              gap: 0.5rem !important;
              width: 100%;
-             margin-top: 0.5rem !important; /* Jarak dari grid atas */
+             margin-top: 0.5rem !important;
          }
 
          /* Styling tombol aksi (Deposit/Withdraw) - Kecil */
@@ -176,23 +177,19 @@
         const toggleIconElement = panel.querySelector('.balance-toggle-icon');
 
         let userId = usernameElement ? usernameElement.textContent.replace('Halo,', '').trim() : 'N/A';
-        // Ambil ID number jika ada, jika tidak, kosongkan saja atau beri placeholder
-        let idNumber = ""; // Kosongkan saja jika tidak ada ID terpisah
-        // Jika Anda ingin menampilkan teks statis seperti "Member ID":
-        let idLabelText = "Member ID"; // Atau biarkan kosong: ""
 
         panel.innerHTML = ''; // Kosongkan panel
 
-        // === STRUKTUR HTML BARU (Grid 2x2 Atas) ===
+        // === STRUKTUR HTML BARU (Grid 2x2 Atas - Diperbaiki) ===
         panel.innerHTML = `
             <div class="gmp-top-area">
                 <div class="gmp-balance-label">SALDO AKTIF</div>
-                <div class="gmp-user-id-value">${userId}</div>
+                <div class="gmp-user-id-label">USERNAME</div>
                 <div class="gmp-balance-value">
                     <span class="balance-value">${originalBalanceValue}</span>
                     <span class="currency-label"> IDR</span>
                     </div>
-                <div class="gmp-user-info-extra">${idLabelText}</div>
+                <div class="gmp-user-id-value">${userId}</div>
             </div>
             <div class="gmp-buttons-container">
                 <a href="/deposit" class="btn btn-primary gmp-action-btn"><i class="bi bi-wallet2"></i> Deposit</a>
@@ -249,7 +246,7 @@
         panel.classList.remove('glassmorphism', 'py-3', 'my-3', 'text-center');
         panel.dataset.enhanced = 'true';
 
-        console.log("Member status panel enhanced (Grid Layout).");
+        console.log("Member status panel enhanced (Grid Layout v2).");
     }
 
      function formatNumberWithCommas(val) {

@@ -1,21 +1,23 @@
 (function() {
-    // CSS untuk styling panel member baru (Font Size Saldo & Username Dikecilkan Lagi)
+    // CSS untuk styling panel member baru (Revisi Warna, Font, Spasi, Background)
     const panelStyles = `
         #member-status-panel.gavan-member-panel-enhanced {
-            background: linear-gradient(135deg, #f1c40f, #e67e22) !important;
-            border: 1px solid #f39c12 !important;
-            box-shadow: 0 0 12px rgba(243, 156, 18, 0.4) !important;
+            /* === WARNA BACKGROUND LEBIH TERANG === */
+            background: linear-gradient(135deg, #f7dc6f, #f1c40f) !important; /* Pale Yellow ke Yellow */
+            border: 1px solid #f3d953 !important; /* Border kuning muda */
+            box-shadow: 0 0 12px rgba(241, 196, 15, 0.4) !important; /* Glow kuning lebih soft */
+            /* ==================================== */
             border-radius: 10px !important;
             padding: 0.6rem 0.8rem !important;
             color: #2c3e50 !important;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem !important;
+            gap: 0.4rem !important; /* Jarak antara top-area dan buttons */
             transition: all 0.2s ease;
         }
 
         #member-status-panel.gavan-member-panel-enhanced:hover {
-             box-shadow: 0 3px 18px rgba(230, 126, 34, 0.5) !important;
+             box-shadow: 0 3px 18px rgba(241, 196, 15, 0.5) !important; /* Shadow kuning saat hover */
              transform: translateY(-1px);
         }
 
@@ -51,46 +53,54 @@
             align-self: end;
         }
 
-        /* Styling untuk Nilai Saldo (Kiri Bawah) - Font Size Dikecilkan Lagi */
+        /* Styling untuk Nilai Saldo (Kiri Bawah) - Font Size & Warna Disesuaikan */
         .gmp-balance-value {
             grid-column: 1; grid-row: 2;
             /* === PERUBAHAN FONT SIZE === */
-            font-size: 1.4em !important; /* Dari 1.5em */
+            font-size: 1.3em !important; /* Dari 1.4em */
             /* ========================= */
             font-weight: 700 !important;
             line-height: 1 !important;
-            color: #2c3e50 !important;
-            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+            /* === PERUBAHAN WARNA === */
+            color: #1a252f !important; /* Warna gelap sama dg username */
+            /* ======================= */
+            text-shadow: none; /* Hapus shadow jika warna sudah gelap */
             display: inline-flex;
             align-items: baseline;
             white-space: nowrap;
             text-align: left;
             align-self: start;
         }
+         /* === PERUBAHAN WARNA CURRENCY === */
          .gmp-balance-value .currency-label {
              font-size: 0.5em;
              vertical-align: baseline;
              margin-left: 4px;
-             font-weight: 500;
+             font-weight: 600; /* Sedikit tebalkan */
+             color: #1a252f !important; /* Warna gelap sama dg username */
              opacity: 0.9;
          }
+         /* ============================== */
 
+        /* Styling ikon mata (Toggle Saldo) - Warna Disesuaikan */
         .gmp-balance-value .balance-toggle-icon {
             font-size: 0.8em !important;
             margin-left: 6px !important;
             cursor: pointer;
-            color: #2c3e50 !important;
+            color: #1a252f !important; /* Warna gelap sama dg username */
             vertical-align: middle;
+            opacity: 0.8; /* Sedikit redupkan ikon */
         }
          .gmp-balance-value .balance-toggle-icon:hover {
-             color: #000 !important;
+             color: #000 !important; /* Warna hover tetap hitam */
+             opacity: 1;
          }
 
-        /* Styling untuk Nama Username (Kanan Bawah) - Font Size Dikecilkan Lagi */
+        /* Styling untuk Nama Username (Kanan Bawah) - Font Size Disesuaikan */
          .gmp-user-id-value {
              grid-column: 2; grid-row: 2;
              /* === PERUBAHAN FONT SIZE === */
-             font-size: 1.4em !important; /* Dari 1.5em */
+             font-size: 1.3em !important; /* Dari 1.4em */
              /* ========================= */
              font-weight: 700 !important;
              color: #1a252f !important;
@@ -100,17 +110,21 @@
              white-space: nowrap;
              overflow: hidden;
              text-overflow: ellipsis;
-             max-width: 140px; /* Lebar maks sedikit dikurangi juga */
+             max-width: 130px; /* Lebar maks sedikit dikurangi lagi */
         }
 
+         /* Kontainer untuk tombol - Margin Atas Dikurangi */
          .gmp-buttons-container {
              display: flex;
              justify-content: space-between;
              gap: 0.5rem !important;
              width: 100%;
-             margin-top: 0.5rem !important;
+             /* === PERUBAHAN MARGIN ATAS === */
+             margin-top: 0.3rem !important; /* Jarak dari grid atas dikurangi */
+             /* =========================== */
          }
 
+         /* Styling tombol aksi (Deposit/Withdraw) - Kecil */
          .gmp-action-btn {
              flex: 1;
              padding: 0.25rem 0.5rem !important;
@@ -125,6 +139,7 @@
              transition: all 0.2s ease !important;
          }
 
+         /* Warna Tombol (Sama seperti sebelumnya) */
           .gmp-action-btn.btn-primary {
              background: linear-gradient(45deg, #1a252f, #2c3e50) !important;
              color: #ecf0f1 !important;
@@ -240,7 +255,7 @@
         panel.classList.remove('glassmorphism', 'py-3', 'my-3', 'text-center');
         panel.dataset.enhanced = 'true';
 
-        console.log("Member status panel enhanced (Font Size Final).");
+        console.log("Member status panel enhanced (Final Adjustments).");
     }
 
      function formatNumberWithCommas(val) {
@@ -284,4 +299,5 @@
          injectStyles();
          styleEnhancedMemberPanel();
     }
+
 })();

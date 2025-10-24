@@ -1,5 +1,5 @@
 (function() {
-    // BLOK CSS LENGKAP
+    // BLOK CSS LENGKAP (bagian #member-status-panel sudah dihapus)
     const gavanThemeStyles = `
         @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
         .input-group-text { background-color: #2c3e50; border-color: #34495e; color: #00eaff; }
@@ -31,11 +31,7 @@
         .invalid-feedback { display: none !important; }
         .form-control.is-invalid { background-image: none !important; padding-right: 0.75rem !important; }
         .balance-toggle-icon { margin-left: 8px; cursor: pointer; vertical-align: middle; }
-        #member-status-panel a { display: inline-flex; align-items: center; }
-        #member-status-panel .balance-toggle-icon { font-size: 24px; color: #FFD700; }
-        #member-status-panel.glassmorphism { border-color: #FFD700 !important; box-shadow: 0 0 20px rgba(255, 215, 0, 0.6) !important; }
-        #member-status-panel.glassmorphism:hover { box-shadow: 0 5px 25px rgba(255, 215, 0, 0.7) !important; }
-        #member-status-panel strong { color: #FFD700 !important; text-shadow: 0 0 5px rgba(255, 215, 0, 0.6) !important; }
+        /* CSS #member-status-panel dihapus dari sini */
         #nav-tab { flex-wrap: nowrap; overflow-x: auto; border-bottom: none !important; padding-bottom: 5px; margin-bottom: -1px; }
         #nav-tab::-webkit-scrollbar { display: none; }
         #nav-tab .nav-link { flex-shrink: 0; color: #bdc3c7 !important; background-color: transparent !important; border: 1px solid transparent !important; border-bottom: none !important; }
@@ -55,7 +51,7 @@
         #betting-page-container .form-check-input:checked { background-color: #00eaff; border-color: #00eaff; box-shadow: 0 0 10px #00eaff; }
         #panel-closed.panel-closed-themed { background: linear-gradient(45deg, #c0392b, #e74c3c) !important; border: 1px solid #e74c3c !important; box-shadow: 0 0 20px rgba(231, 76, 60, 0.6) !important; border-radius: 15px !important; padding: 5rem 1rem !important; }
         #panel-closed.panel-closed-themed strong { font-size: 1.5rem; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
-       
+        
         /* CSS KHUSUS UNTUK TABEL BETTING */
         #betting-page-container .card-body { padding: 1.25rem; padding-top: 0 !important; }
         #betting-page-container .info-description, #betting-page-container .bet-type-toggle { margin-bottom: 0 !important; }
@@ -134,27 +130,24 @@
     // [FUNGSI DIPERBARUI] Untuk inisialisasi input bet agar memiliki format
     function initializeBetFormatting() {
         document.querySelectorAll('#betting-page-container input[type="number"][name^="bet"], #betting-page-container input[inputmode="numeric"][name^="bet"]').forEach(originalInput => {
-            // Cek apakah input sudah diformat atau merupakan input tersembunyi
             if (originalInput.dataset.betFormatted === 'true' || originalInput.offsetParent === null || originalInput.type === 'hidden') return;
             
             originalInput.dataset.betFormatted = 'true';
             
-            // Cari apakah sudah ada display input sebelumnya
             let displayInput = originalInput.previousElementSibling;
             if (!displayInput || !displayInput.classList.contains('display-input')) {
                 displayInput = originalInput.cloneNode(true);
-                displayInput.classList.add('display-input'); // Tambahkan class untuk identifikasi
+                displayInput.classList.add('display-input');
                 displayInput.type = 'text';
                 displayInput.inputMode = 'numeric';
                 displayInput.pattern = '[0-9,]*';
                 displayInput.removeAttribute('name'); 
                 originalInput.parentNode.insertBefore(displayInput, originalInput);
             }
-    
+
             originalInput.style.display = 'none';
             displayInput.value = formatNumberWithCommas(originalInput.value);
 
-            // Hapus event listener lama agar tidak menumpuk
             const newDisplayInput = displayInput.cloneNode(true);
             displayInput.parentNode.replaceChild(newDisplayInput, displayInput);
             displayInput = newDisplayInput;
@@ -198,9 +191,9 @@
     function initializeSwipeableHeaderMenu() { const menuNav = document.querySelector('nav.menubar.d-xl-none'); if (!menuNav || menuNav.dataset.styled === 'true') return; const originalContainer = menuNav.querySelector('#category-navbar .owl-stage-outer'); if (!originalContainer) return; const allItems = Array.from(originalContainer.querySelectorAll('.owl-item:not(.cloned) > .item')); if (allItems.length === 0) return; const homeItem = allItems.find(item => item.querySelector('a[href="/"]')); const otherItems = allItems.filter(item => item !== homeItem); if (!homeItem || otherItems.length === 0) return; const wrapper = document.createElement('div'); wrapper.className = 'custom-header-wrapper'; const homeDiv = document.createElement('div'); homeDiv.className = 'home-link-fixed'; homeDiv.appendChild(homeItem.cloneNode(true)); const scrollableDiv = document.createElement('div'); scrollableDiv.className = 'scrollable-menu-container'; const owlCarouselDiv = document.createElement('div'); owlCarouselDiv.className = 'owl-carousel other-items-carousel'; otherItems.forEach(item => { owlCarouselDiv.appendChild(item.cloneNode(true)); }); scrollableDiv.appendChild(owlCarouselDiv); wrapper.appendChild(homeDiv); wrapper.appendChild(scrollableDiv); const parentContainer = menuNav.querySelector('.container'); parentContainer.innerHTML = ''; parentContainer.appendChild(wrapper); const newCarousel = $(parentContainer).find('.other-items-carousel'); if (newCarousel.length > 0) { newCarousel.owlCarousel({ autoWidth: true, loop: true, margin: 15, nav: false, dots: false, autoplay: true, autoplayTimeout: 4000, autoplayHoverPause: true, }); } menuNav.dataset.styled = 'true'; }
     function initializeTogelCarousel() { const carousel = document.querySelector('#carousel-togel'); if (!carousel || carousel.dataset.initialized === 'true') return; setTimeout(() => { const stage = carousel.querySelector('.owl-stage'); if (!stage || carousel.dataset.initialized === 'true') return; const items = Array.from(stage.querySelectorAll('.owl-item:not(.cloned)')); if (items.length <= 1) return; const sortedItems = items.map(item => { const timer = item.querySelector('.togel-countdown-timer'); const time = timer ? parseInt(timer.dataset.time, 10) : Infinity; const status = timer ? parseInt(timer.dataset.status, 10) : -1; const isClosed = (timer && timer.textContent.trim().toUpperCase() === 'TUTUP') || status !== 1; return { element: item, time: isClosed ? Infinity : time }; }).sort((a, b) => a.time - b.time); stage.innerHTML = ''; sortedItems.forEach(item => stage.appendChild(item.element)); const existingButton = carousel.parentElement.querySelector(".show-more-wrapper"); if (existingButton) existingButton.remove(); const showMoreWrapper = document.createElement("div"); showMoreWrapper.className = "show-more-wrapper"; const showMoreButton = document.createElement("button"); showMoreButton.className = "show-more-button"; showMoreButton.innerHTML = 'Tampilkan Semua Pasaran <i class="bi bi-chevron-down"></i>'; showMoreWrapper.appendChild(showMoreButton); carousel.parentElement.insertBefore(showMoreWrapper, carousel.nextSibling); showMoreButton.addEventListener("click", () => { const isShowingAll = carousel.classList.toggle("show-all"); showMoreButton.innerHTML = isShowingAll ? 'Tutup <i class="bi bi-chevron-up"></i>' : 'Tampilkan Semua Pasaran <i class="bi bi-chevron-down"></i>'; }); carousel.dataset.initialized = 'true'; }, 700); }
     function styleTogelTutorialPage() { const navTab = document.querySelector('#nav-tab'); if (!navTab || navTab.dataset.styled === 'true') return; navTab.dataset.styled = 'true'; }
-    function styleMemberStatusPanel() { const panel = document.querySelector('#member-status-panel'); if (!panel || panel.dataset.styled === 'true') return; const greetingDiv = Array.from(panel.querySelectorAll('div')).find(div => div.textContent.includes('Halo,')); if (greetingDiv) { const usernameStrong = greetingDiv.querySelector('strong'); if (usernameStrong) { greetingDiv.innerHTML = ''; greetingDiv.appendChild(usernameStrong); greetingDiv.style.lineHeight = '1.2em'; } } panel.dataset.styled = 'true'; }
-    function addSidebarBalanceToggle() { const creditSpan = Array.from(document.querySelectorAll("#sidebar span")).find(span => span.textContent.includes("CREDIT:")); if (!creditSpan || creditSpan.dataset.balanceToggleAdded === 'true') return; const textContent = creditSpan.textContent.trim(); const match = textContent.match(/CREDIT:\s*([\d,.]+)/); if (!match) return; const originalValue = match[1]; const currency = textContent.split(originalValue)[1]?.trim() || 'IDR'; creditSpan.innerHTML = `CREDIT: <span class="balance-value">${originalValue}</span> ${currency} `; const valueSpan = creditSpan.querySelector('.balance-value'); const toggleIcon = document.createElement('i'); toggleIcon.className = 'bi bi-eye-fill balance-toggle-icon'; const updateView = (state) => { if (state === 'hidden') { valueSpan.textContent = '•••••'; toggleIcon.className = 'bi bi-eye-slash-fill balance-toggle-icon'; } else { valueSpan.textContent = originalValue; toggleIcon.className = 'bi bi-eye-fill balance-toggle-icon'; } }; toggleIcon.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); const newState = (localStorage.getItem('balanceVisibility') || 'visible') === 'visible' ? 'hidden' : 'visible'; localStorage.setItem('balanceVisibility', newState); updateView(newState); addMainBalanceToggle(true); }); creditSpan.appendChild(toggleIcon); creditSpan.dataset.balanceToggleAdded = 'true'; const savedState = localStorage.getItem('balanceVisibility'); if (savedState) updateView(savedState); }
-    function addMainBalanceToggle(forceUpdate = false) { const panel = document.querySelector('#member-status-panel'); if (!panel) return; const balanceSpan = panel.querySelector('.text-gradient'); const link = panel.querySelector('a'); if (!balanceSpan || !link) return; if (panel.dataset.toggleAdded === 'true' && !forceUpdate) return; const originalValue = (forceUpdate && link.dataset.originalBalance) ? link.dataset.originalBalance : balanceSpan.textContent.trim(); if(!link.dataset.originalBalance) link.dataset.originalBalance = originalValue; const updateView = (state) => { if (state === 'hidden') { balanceSpan.textContent = '•••••'; if (link.querySelector('.balance-toggle-icon')) link.querySelector('.balance-toggle-icon').className = 'bi bi-eye-slash-fill balance-toggle-icon'; } else { balanceSpan.textContent = originalValue; if (link.querySelector('.balance-toggle-icon')) link.querySelector('.balance-toggle-icon').className = 'bi bi-eye-fill balance-toggle-icon'; } }; if (panel.dataset.toggleAdded !== 'true') { const toggleIcon = document.createElement('i'); toggleIcon.className = 'bi bi-eye-fill balance-toggle-icon'; toggleIcon.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); const newState = (localStorage.getItem('balanceVisibility') || 'visible') === 'visible' ? 'hidden' : 'visible'; localStorage.setItem('balanceVisibility', newState); updateView(newState); addSidebarBalanceToggle(); }); link.appendChild(toggleIcon); panel.dataset.toggleAdded = 'true'; } const savedState = localStorage.getItem('balanceVisibility'); if (savedState) updateView(savedState); }
+    // Fungsi styleMemberStatusPanel() DIHAPUS
+    function addSidebarBalanceToggle() { const creditSpan = Array.from(document.querySelectorAll("#sidebar span")).find(span => span.textContent.includes("CREDIT:")); if (!creditSpan || creditSpan.dataset.balanceToggleAdded === 'true') return; const textContent = creditSpan.textContent.trim(); const match = textContent.match(/CREDIT:\s*([\d,.]+)/); if (!match) return; const originalValue = match[1]; const currency = textContent.split(originalValue)[1]?.trim() || 'IDR'; creditSpan.innerHTML = `CREDIT: <span class="balance-value">${originalValue}</span> ${currency} `; const valueSpan = creditSpan.querySelector('.balance-value'); const toggleIcon = document.createElement('i'); toggleIcon.className = 'bi bi-eye-fill balance-toggle-icon'; const updateView = (state) => { if (state === 'hidden') { valueSpan.textContent = '•••••'; toggleIcon.className = 'bi bi-eye-slash-fill balance-toggle-icon'; } else { valueSpan.textContent = originalValue; toggleIcon.className = 'bi bi-eye-fill balance-toggle-icon'; } }; toggleIcon.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); const newState = (localStorage.getItem('balanceVisibility') || 'visible') === 'visible' ? 'hidden' : 'visible'; localStorage.setItem('balanceVisibility', newState); updateView(newState); // Pemanggilan addMainBalanceToggle(true); dihapus karena fungsi addMainBalanceToggle dihapus }); creditSpan.appendChild(toggleIcon); creditSpan.dataset.balanceToggleAdded = 'true'; const savedState = localStorage.getItem('balanceVisibility'); if (savedState) updateView(savedState); }
+    // Fungsi addMainBalanceToggle() DIHAPUS
     function addPasswordToggle(passwordInput) { if (!passwordInput || passwordInput.dataset.toggleAdded === 'true') return; const wrapper = passwordInput.closest('.input-wrapper'); if (!wrapper) { const parent = passwordInput.parentElement; const newWrapper = document.createElement('div'); newWrapper.className = 'input-wrapper'; parent.replaceChild(newWrapper, passwordInput); newWrapper.appendChild(passwordInput); } const finalWrapper = passwordInput.closest('.input-wrapper'); if (!finalWrapper || finalWrapper.querySelector('.password-toggle-icon')) return; const toggleIcon = document.createElement('i'); toggleIcon.className = 'bi bi-eye-fill password-toggle-icon'; toggleIcon.addEventListener('click', () => { const isPassword = passwordInput.type === 'password'; passwordInput.type = isPassword ? 'text' : 'password'; toggleIcon.className = isPassword ? 'bi bi-eye-slash-fill password-toggle-icon' : 'bi bi-eye-fill password-toggle-icon'; }); finalWrapper.appendChild(toggleIcon); passwordInput.dataset.toggleAdded = 'true'; }
     function fetchRtpWithIframe() { return new Promise((e,t)=>{const o=document.createElement("iframe");o.src="/rtp",o.style.display="none",o.onload=function(){try{const a=o.contentDocument||o.contentWindow.document,n=a.querySelectorAll('.row.mb-3.g-1 > div[class*="col-"]');if(0===n.length)return t(new Error("No games found"));const l=Array.from(n).filter(e=>{const t=e.querySelector(".progress-bar-rtp");return t&&parseInt(t.textContent)>=75});if(0===l.length)return t(new Error("No games with RTP >= 75%"));const c=l.map(e=>{const t=e.querySelector("a"),o=e.querySelector(".progress-bar-rtp");return{link:t.dataset.playurl,image:t.querySelector("img").src,name:t.dataset.gamename,percentage:parseInt(o.textContent),colorClass:Array.from(o.classList).find(e=>e.startsWith("bg-"))}});e(c)}catch(e){t(e)}finally{document.body.removeChild(o)}},o.onerror=function(){t(new Error("Failed to load RTP iframe")),document.body.removeChild(o)},document.body.appendChild(o)})}
     function displayGacorGames(container, games) { let e="";games.forEach(t=>{const o=new Date;let a=o.getHours();const n=o.getMinutes();let l=5*Math.ceil((n+1)/5),r=[];l>=60&&(a=(a+1)%24,l=0);for(let e=l;e<60;e+=5)r.push(`${String(a).padStart(2,"0")}:${String(e).padStart(2,"0")}`);0===r.length&&(a=(a+1)%24,r.push(`${String(a).padStart(2,"0")}:00`));const c=r[Math.floor(Math.random()*r.length)];e+=`<a href="${t.link}" target="_blank" class="gacor-card"><img src="${t.image}" alt="${t.name}"><div class="gacor-info"><strong title="${t.name}">${t.name}</strong><div class="gacor-time"><i class="bi bi-clock-fill"></i> Pola Berlaku Jam: ${c}</div><div class="progress mt-2"><div class="progress-bar-rtp ${t.colorClass}" role="progressbar" style="width: ${t.percentage}%">${t.percentage}%</div></div></div></a>`}),container.innerHTML=`<h5><i class="bi bi-stars"></i> GAME GACOR SAAT INI</h5><div class="gacor-card-container">${e}</div>`;const t=container.querySelectorAll(".gacor-info strong");t.forEach(e=>{const t=20;e.textContent.length>t&&(e.textContent=e.textContent.substring(0,t-3)+"...")})}
@@ -218,10 +211,10 @@
     function styleBettingPage() {
         const bettingContainer = document.querySelector('#select-market')?.closest('.container[class*="my-"]');
         if (!bettingContainer) return;
-    
+        
         bettingContainer.classList.remove('my-5');
         bettingContainer.classList.add('my-3'); 
-    
+        
         if (!bettingContainer.dataset.styledOnce) {
             bettingContainer.id = 'betting-page-container';
             const marketLabel = document.querySelector('label[for="select-market"]');
@@ -260,7 +253,7 @@
             });
             bettingContainer.dataset.styledOnce = 'true';
         }
-    
+        
         bettingContainer.querySelectorAll('div[id^="panel-"]:not([data-panel-styled="true"])').forEach(panel => {
             panel.dataset.panelStyled = 'true';
             panel.classList.remove('bg-dark', 'border', 'rounded-3', 'p-1', 'p-3');
@@ -329,7 +322,7 @@
     function styleQuickLogin() { document.querySelectorAll('#row-quicklogin:not([data-styled="true"])').forEach(card => { card.dataset.styled = 'true'; const form = card.querySelector('form'); if (!form) return; const usernameDiv = form.querySelector('label[for="username"]')?.parentElement; const passwordDiv = form.querySelector('label[for="password"]')?.parentElement; const buttonDiv = form.querySelector('.d-flex.gap-1.my-3'); if (!usernameDiv || !passwordDiv || !buttonDiv) return; const newInputsHTML = ` <div class="row g-2 mb-3"> <div class="col-md-6"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-person-fill"></i></span> <input type="text" name="userName" id="username" class="form-control" placeholder="Username"> </div> </div> <div class="col-md-6"> <div class="input-wrapper"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-key-fill"></i></span> <input type="password" name="password" id="password" class="form-control" placeholder="Password"> </div> </div> </div> </div> `; buttonDiv.insertAdjacentHTML('beforebegin', newInputsHTML); usernameDiv.remove(); passwordDiv.remove(); const newPasswordInput = card.querySelector('#password'); if (newPasswordInput) { addPasswordToggle(newPasswordInput); } }); }
     function styleLoginPage() { const loginForm = document.querySelector('#maincontent form[action="/login"]'); if (!loginForm) return; const loginCard = loginForm.closest('.card.shadow'); if (!loginCard || loginCard.dataset.layoutStyled === 'true') return; loginCard.dataset.layoutStyled = 'true'; const usernameGroup = loginForm.querySelector('input[name="userName"]')?.closest('.form-group, .mb-3'); const passwordGroup = loginForm.querySelector('input[name="password"]')?.closest('.form-group, .mb-3'); const buttonContainer = loginForm.querySelector('button[type="submit"]')?.parentElement; if (usernameGroup && passwordGroup && buttonContainer) { const newInputsHTML = ` <div class="row g-2 mb-3"> <div class="col-md-6"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-person-fill"></i></span> <input type="text" name="userName" required="required" class="form-control" placeholder="User Name"> </div> </div> <div class="col-md-6"> <div class="input-wrapper"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-key-fill"></i></span> <input type="password" name="password" required="required" class="form-control" placeholder="Password"> </div> </div> </div> </div> `; buttonContainer.insertAdjacentHTML('beforebegin', newInputsHTML); usernameGroup.remove(); passwordGroup.remove(); } }
     function styleRegisterPage() { const form = document.querySelector('form[action="/register"]'); if (!form || form.dataset.styled === 'true') return; form.dataset.styled = 'true'; const card = form.closest('.card.shadow'); const mainRow = card ? card.querySelector('.row.mb-3') : null; const buttonWrapper = card ? card.querySelector('.d-grid.gap-3.mb-3') : null; if (!card || !mainRow || !buttonWrapper) return; mainRow.before(form); form.append(mainRow); form.append(buttonWrapper); form.querySelectorAll('h3').forEach(h3 => h3.remove()); form.querySelectorAll('.form-group').forEach(group => { const label = group.querySelector('label'); const input = group.querySelector('input, select'); if (!label || !input) return; const icon = label.querySelector('i.bi'); const placeholderText = label.textContent.replace(/\(.*\)/g, '').replace(/(\r\n|\n|\r)/gm, " ").trim(); let newElement; if (icon) { const inputGroup = document.createElement('div'); inputGroup.className = 'input-group mb-2'; const iconSpan = document.createElement('span'); iconSpan.className = 'input-group-text'; iconSpan.appendChild(icon.cloneNode(true)); inputGroup.appendChild(iconSpan); inputGroup.appendChild(input); newElement = inputGroup; } else { const simpleDiv = document.createElement('div'); simpleDiv.className = 'mb-2'; simpleDiv.appendChild(input); newElement = simpleDiv; } if (input.tagName.toLowerCase() !== 'select') { input.placeholder = placeholderText; } else { if (!input.querySelector('option[value=""]')) { const defaultOption = document.createElement('option'); defaultOption.value = ""; defaultOption.textContent = placeholderText || "Pilih Opsi"; defaultOption.disabled = true; defaultOption.selected = true; input.prepend(defaultOption); } } input.classList.add('form-control'); if (input.type === 'password') { const wrapper = document.createElement('div'); wrapper.className = 'input-wrapper'; wrapper.appendChild(newElement); group.replaceWith(wrapper); } else { group.replaceWith(newElement); } }); const passwordInput = form.querySelector('#password'); const confirmPasswordInput = form.querySelector('#confirmpassword'); if (passwordInput && confirmPasswordInput) { const passwordWrapper = passwordInput.closest('.input-wrapper'); confirmPasswordInput.closest('.input-wrapper')?.querySelector('.password-toggle-icon')?.remove(); if (passwordWrapper && !passwordWrapper.querySelector('.password-toggle-icon')) { const toggleIcon = document.createElement('i'); toggleIcon.className = 'bi bi-eye-fill password-toggle-icon'; toggleIcon.addEventListener('click', () => { const isPassword = passwordInput.type === 'password'; const newType = isPassword ? 'text' : 'password'; passwordInput.type = newType; confirmPasswordInput.type = newType; toggleIcon.className = isPassword ? 'bi bi-eye-slash-fill password-toggle-icon' : 'bi bi-eye-fill password-toggle-icon'; }); passwordWrapper.appendChild(toggleIcon); passwordInput.dataset.toggleAdded = 'true'; confirmPasswordInput.dataset.toggleAdded = 'true'; } } }
-    
+        
     function styleProfilePage() {
         const title = Array.from(document.querySelectorAll('h1.text-center')).find(h1 => h1.textContent.trim() === 'Profil Akun');
         if (!title) return;
@@ -394,12 +387,12 @@
 
             const iconClass = iconMapping[input.id];
             if (!iconClass) return;
-           
+            
             const placeholderText = label.textContent.trim();
-           
+            
             const inputGroup = document.createElement('div');
             inputGroup.className = 'input-group mb-3';
-           
+            
             const iconSpan = document.createElement('span');
             iconSpan.className = 'input-group-text';
             iconSpan.innerHTML = `<i class="bi ${iconClass}"></i>`;
@@ -413,7 +406,7 @@
             wrapper.appendChild(inputGroup);
 
             group.replaceWith(wrapper);
-           
+            
             const newPasswordInput = wrapper.querySelector('input');
             addPasswordToggle(newPasswordInput);
         });
@@ -447,27 +440,27 @@
         createSidebarToggleButton();
         runAllOtherScripts();
         injectGacorGame();
-       
+        
         const observerCallback = () => {
             initializeSwipeableHeaderMenu();
             updateProfileElements();
             addSidebarBalanceToggle();
-            addMainBalanceToggle();
-            styleMemberStatusPanel();
+            // Pemanggilan addMainBalanceToggle() DIHAPUS
+            // Pemanggilan styleMemberStatusPanel() DIHAPUS
             styleTogelTutorialPage();
             initializeTogelCarousel();
-           
+            
             const depositForm = document.querySelector('#deposit-form');
             if (depositForm) {
                 initializeDepositForm(depositForm);
                 updateDepositFormUI(depositForm);
             }
-           
+            
             styleWithdrawForm();
             styleRtpModal();
             styleConfirmationModal(); 
-            initializeBetFormatting(); // [PANGGILAN FUNGSI BARU]
-           
+            initializeBetFormatting(); 
+            
             document.querySelectorAll('input[type="password"]:not([data-toggle-added="true"])').forEach(input => {
                 addPasswordToggle(input);
             });
@@ -480,19 +473,19 @@
             styleLogoutButton();
             styleChangePasswordPage();
         };
-       
+        
         observer = new MutationObserver(observerCallback);
         observer.observe(document.body, { childList: true, subtree: true });
-       
+        
         observerCallback(); 
-       
+        
         document.body.addEventListener('change', (event) => {
             if (event.target.id === 'agentmemberbankid') {
                 const receiverBankSpan = document.getElementById('receiver-bank');
                 if (receiverBankSpan) delete receiverBankSpan.dataset.iconApplied;
             }
         });
-       
+        
         const sidebar = document.getElementById("sidebar");
         if (sidebar) {
             const toggleButton = document.getElementById("custom-sidebar-toggle");
@@ -505,4 +498,3 @@
         }
     });
 })();
-

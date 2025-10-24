@@ -1,5 +1,5 @@
 (function() {
-    // CSS untuk styling announcement baru
+    // CSS untuk styling announcement baru (Sama seperti sebelumnya)
     const announcementStyles = `
         #announcement.gavan-themed-announcement {
             background: linear-gradient(145deg, #2c3e50, #1a252f) !important; /* Gradient background */
@@ -8,20 +8,17 @@
             box-shadow: 0 0 15px rgba(0, 170, 255, 0.5) !important; /* Glow effect */
             color: #ecf0f1 !important; /* Warna teks putih keabu-abuan */
             padding: 10px 15px !important; /* Padding internal */
-            margin-top: 1.5rem !important; /* Jarak dari slider */
+            margin-top: 1rem !important; /* Jarak dari panel status */
             margin-bottom: 1rem !important; /* Jarak ke konten bawahnya */
             display: flex;
             align-items: center;
             overflow: hidden; /* Pastikan marquee tidak keluar */
 
-            /* === BARIS BARU UNTUK JARAK KANAN-KIRI === */
+            /* === BARIS UNTUK JARAK KANAN-KIRI === */
             /* Sesuaikan nilai '1rem' jika perlu agar pas */
             margin-left: 1rem !important;
             margin-right: 1rem !important;
-            /* Atau coba gunakan variabel Bootstrap jika tersedia: */
-            /* margin-left: var(--bs-gutter-x, 1rem) !important; */
-            /* margin-right: var(--bs-gutter-x, 1rem) !important; */
-            /* ========================================= */
+            /* ==================================== */
         }
 
         #announcement.gavan-themed-announcement i.fa-solid.fa-bullhorn {
@@ -55,19 +52,25 @@
     // Fungsi untuk memindahkan dan men-style announcement
     function moveAndStyleAnnouncement() {
         const announcement = document.getElementById('announcement');
-        const mainSlider = document.getElementById('main-slider'); // Target slider
+        // === PERUBAHAN TARGET ANCHOR ===
+        const memberPanel = document.getElementById('member-status-panel'); // Target panel status member
+        // ================================
 
         // Jika salah satu tidak ada, atau sudah dipindahkan, hentikan
-        if (!announcement || !mainSlider || announcement.dataset.moved === 'true') {
+        if (!announcement || !memberPanel || announcement.dataset.moved === 'true') {
             return;
         }
 
-        // Cari parent dari slider untuk insert setelahnya
-        const sliderContainer = mainSlider.parentElement;
-        if (!sliderContainer) return;
+        // === PERUBAHAN CARA MENCARI CONTAINER ===
+        // Panel status member sepertinya sudah di dalam container, kita insert setelah panel itu sendiri
+        const targetContainer = memberPanel.parentElement; // Langsung ambil parent dari panel
+        if (!targetContainer) return;
+        // ======================================
 
-        // Pindahkan elemen announcement ke setelah container slider
-        sliderContainer.insertAdjacentElement('afterend', announcement);
+        // === PERUBAHAN POSISI INSERT ===
+        // Pindahkan elemen announcement ke setelah panel status member
+        memberPanel.insertAdjacentElement('afterend', announcement);
+        // ================================
 
         // Hapus class asli dan tambahkan class baru untuk styling
         announcement.classList.remove('bg-primary', 'p-1', 'my-3');
@@ -76,10 +79,10 @@
         // Tandai bahwa elemen sudah dipindahkan
         announcement.dataset.moved = 'true';
 
-        console.log("Announcement moved and styled.");
+        console.log("Member page announcement moved and styled.");
     }
 
-    // Fungsi untuk inject CSS ke head
+    // Fungsi untuk inject CSS ke head (Sama seperti sebelumnya)
     function injectStyles() {
         // Cek apakah style sudah di-inject
         if (document.getElementById('gavan-announcement-styles')) {
@@ -92,7 +95,7 @@
         console.log("Announcement styles injected.");
     }
 
-    // Jalankan saat DOM siap
+    // Jalankan saat DOM siap (Sama seperti sebelumnya)
     document.addEventListener('DOMContentLoaded', () => {
         injectStyles();
         moveAndStyleAnnouncement();
@@ -100,7 +103,9 @@
         // Gunakan MutationObserver untuk menangani jika elemen dimuat dinamis
         const observer = new MutationObserver((mutations) => {
             // Cukup jalankan sekali jika target muncul
-            if (document.getElementById('announcement') && document.getElementById('main-slider')) {
+            // === PERUBAHAN CEK TARGET ===
+            if (document.getElementById('announcement') && document.getElementById('member-status-panel')) {
+            // =============================
                 moveAndStyleAnnouncement();
                 // Optional: Hentikan observer jika sudah selesai
                 // observer.disconnect();
@@ -113,7 +118,7 @@
         moveAndStyleAnnouncement();
     });
 
-    // Panggil langsung jika skrip di-inject setelah DOM load
+    // Panggil langsung jika skrip di-inject setelah DOM load (Sama seperti sebelumnya)
     if (document.readyState === 'complete') {
          injectStyles();
          moveAndStyleAnnouncement();

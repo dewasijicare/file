@@ -110,7 +110,7 @@
              white-space: nowrap;
              overflow: hidden;
              text-overflow: ellipsis;
-             max-width: 150px; /* Lebar maks sedikit dikurangi lagi */
+             max-width: 160px; /* Lebar maks sedikit dikurangi lagi */
         }
 
          /* Kontainer untuk tombol - Margin Atas Dikurangi */
@@ -301,4 +301,5 @@
     }
 
 })();
+
 

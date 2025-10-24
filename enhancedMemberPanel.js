@@ -1,59 +1,65 @@
 (function() {
-    // CSS untuk styling panel member baru
+    // CSS untuk styling panel member baru (lebih ringkas)
     const panelStyles = `
         /* Target panel yang sudah diberi class baru */
         #member-status-panel.gavan-member-panel-enhanced {
             background: linear-gradient(135deg, #f1c40f, #e67e22) !important; /* Gradient Kuning-Oranye */
             border: 1px solid #f39c12 !important; /* Border oranye sedikit gelap */
-            box-shadow: 0 0 20px rgba(243, 156, 18, 0.6) !important; /* Glow oranye */
-            border-radius: 15px !important; /* Sesuaikan dengan style card Anda */
-            padding: 1.25rem !important;
-            color: #2c3e50 !important; /* Teks gelap agar kontras di background terang */
+            box-shadow: 0 0 15px rgba(243, 156, 18, 0.5) !important; /* Glow oranye (sedikit redup) */
+            border-radius: 12px !important; /* Sedikit lebih kecil radiusnya */
+            /* === PENGURANGAN PADDING === */
+            padding: 0.8rem 1rem !important; /* Padding atas/bawah dikurangi */
+            /* ========================= */
+            color: #2c3e50 !important; /* Teks gelap agar kontras */
             text-align: center;
             display: flex;
             flex-direction: column;
-            gap: 0.75rem; /* Jarak antar elemen di dalam panel */
+            /* === PENGURANGAN GAP === */
+            gap: 0.4rem !important; /* Jarak antar elemen lebih kecil */
+            /* ======================= */
             transition: all 0.3s ease;
         }
 
         #member-status-panel.gavan-member-panel-enhanced:hover {
-             box-shadow: 0 5px 30px rgba(230, 126, 34, 0.7) !important; /* Glow lebih terang saat hover */
-             transform: translateY(-3px);
+             box-shadow: 0 4px 20px rgba(230, 126, 34, 0.6) !important; /* Glow sedikit beda saat hover */
+             transform: translateY(-2px); /* Efek angkat sedikit */
         }
 
         /* Styling untuk ID Pengguna */
         .gmp-user-id {
-            font-size: 0.9em;
+            font-size: 0.85em; /* Sedikit lebih kecil */
             font-weight: 500;
-            color: rgba(44, 62, 80, 0.85); /* Sedikit transparan */
-            margin-bottom: 0.25rem;
+            color: rgba(44, 62, 80, 0.85);
+            /* margin-bottom: 0.1rem; (Gap sudah cukup) */
         }
 
         /* Styling untuk label Saldo */
         .gmp-balance-label {
-            font-size: 0.95em;
+            font-size: 0.9em; /* Sedikit lebih kecil */
             font-weight: 600;
-            margin-bottom: 0.1rem;
+            margin-bottom: 0; /* Hapus margin bawah */
              color: #2c3e50;
         }
 
         /* Styling untuk Nilai Saldo */
         .gmp-balance-value {
-            font-size: 2.2em !important; /* Ukuran font saldo besar */
+            /* === PENGURANGAN FONT SALDO === */
+            font-size: 1.9em !important; /* Ukuran font saldo dikurangi */
+            /* ============================ */
             font-weight: 700 !important;
-            line-height: 1.2 !important;
-            color: #2c3e50 !important; /* Warna saldo utama */
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5); /* Shadow tipis agar terbaca */
-            display: inline-flex; /* Agar ikon bisa sejajar */
+            line-height: 1.1 !important; /* Line height lebih rapat */
+            color: #2c3e50 !important;
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4);
+            display: inline-flex;
             align-items: center;
         }
 
         /* Styling ikon mata (Toggle Saldo) */
         .gmp-balance-value .balance-toggle-icon {
-            font-size: 0.7em !important; /* Ukuran ikon relatif terhadap saldo */
-            margin-left: 10px !important;
+            font-size: 0.7em !important;
+            margin-left: 8px !important; /* Jarak ikon sedikit dikurangi */
             cursor: pointer;
-            color: #2c3e50 !important; /* Warna ikon */
+            color: #2c3e50 !important;
             vertical-align: middle;
         }
          .gmp-balance-value .balance-toggle-icon:hover {
@@ -63,39 +69,39 @@
          /* Kontainer untuk tombol */
          .gmp-buttons-container {
              display: flex;
-             justify-content: space-between; /* Tombol di sisi berlawanan */
-             gap: 0.75rem; /* Jarak antar tombol */
-             width: 100%; /* Lebar penuh */
-             margin-top: 0.75rem;
+             justify-content: space-between;
+             gap: 0.6rem; /* Jarak antar tombol sedikit dikurangi */
+             width: 100%;
+             /* === PENGURANGAN MARGIN TOMBOL === */
+             margin-top: 0.5rem !important; /* Jarak dari saldo dikurangi */
+             /* =============================== */
          }
 
          /* Styling tombol aksi (Deposit/Withdraw) */
          .gmp-action-btn {
-             flex: 1; /* Agar kedua tombol sama lebar */
-             /* Menggunakan gaya dari tema utama Anda */
-             /* Pastikan class .btn-primary & .btn-secondary sudah didefinisikan di CSS utama */
-             padding: 0.6rem 1rem !important;
-             font-size: 0.9em !important;
+             flex: 1;
+             padding: 0.5rem 0.8rem !important; /* Padding tombol dikurangi */
+             font-size: 0.85em !important; /* Font tombol dikurangi */
              display: flex;
              align-items: center;
              justify-content: center;
-             gap: 8px; /* Jarak ikon dan teks */
+             gap: 6px; /* Jarak ikon & teks tombol dikurangi */
+             border-radius: 6px !important; /* Sudut tombol lebih kecil */
          }
-         /* Override jika perlu (contoh: pastikan shadow sesuai) */
+         /* Override jika perlu */
           .gmp-action-btn.btn-primary {
-             box-shadow: 0 0 10px #00eaff, inset 0 0 5px rgba(255,255,255,.4) !important;
+             box-shadow: 0 0 8px rgba(0, 234, 255, 0.8), inset 0 0 4px rgba(255,255,255,.3) !important;
           }
            .gmp-action-btn.btn-secondary {
-             /* Gunakan gaya btn-secondary dari tema utama Anda jika berbeda */
-             background: linear-gradient(45deg,#2c3e50,#1a252f)!important;
-             border-color: #34495e !important;
+             background: linear-gradient(45deg,#465a70,#34495e)!important; /* Warna secondary lebih gelap */
+             border-color: #566573 !important;
              color: #ecf0f1 !important;
-             box-shadow: 0 0 10px #34495e,inset 0 0 5px rgba(255,255,255,.2) !important;
+             box-shadow: 0 0 8px rgba(52, 73, 94, 0.7),inset 0 0 4px rgba(255,255,255,.1) !important;
           }
            .gmp-action-btn.btn-secondary:hover {
              transform: scale(1.05);
-             background: linear-gradient(45deg,#34495e,#2c3e50)!important;
-             box-shadow: 0 0 15px #34495e, 0 0 20px #566573, inset 0 0 5px rgba(255,255,255,.3) !important;
+             background: linear-gradient(45deg,#566573,#465a70)!important;
+             box-shadow: 0 0 12px #566573, 0 0 18px #7f8c8d, inset 0 0 4px rgba(255,255,255,.2) !important;
           }
 
     `;
@@ -104,26 +110,23 @@
     function styleEnhancedMemberPanel() {
         const panel = document.getElementById('member-status-panel');
         if (!panel || panel.dataset.enhanced === 'true') {
-            return; // Hentikan jika panel tidak ada atau sudah dimodif
+            return;
         }
 
-        // 1. Simpan elemen penting yang ada
         const usernameElement = panel.querySelector('strong');
         const balanceSpan = panel.querySelector('.text-gradient');
         const originalBalanceValue = balanceSpan ? balanceSpan.textContent.trim() : '0';
-        const toggleIconElement = panel.querySelector('.balance-toggle-icon'); // Simpan ikon yang ada
+        const toggleIconElement = panel.querySelector('.balance-toggle-icon');
 
-        // Ambil ID dari username jika formatnya "Halo, [USERNAME]" atau hanya [USERNAME]
         let userId = usernameElement ? usernameElement.textContent.replace('Halo,', '').trim() : 'N/A';
 
-        // 2. Kosongkan panel
-        panel.innerHTML = '';
+        panel.innerHTML = ''; // Kosongkan panel
 
-        // 3. Buat struktur HTML baru
+        // === PERUBAHAN LABEL ===
         panel.innerHTML = `
             <div class="gmp-user-id">ID: ${userId}</div>
             <div class="gmp-balance-area">
-                 <div class="gmp-balance-label">Total Aset</div>
+                 <div class="gmp-balance-label">Saldo Aktif</div>
                  <div class="gmp-balance-value">
                     <span class="balance-value">${originalBalanceValue}</span>
                     <span style="font-size: 0.5em; vertical-align: middle; margin-left: 5px;"> IDR</span>
@@ -134,18 +137,16 @@
                 <a href="/withdraw" class="btn btn-secondary gmp-action-btn"><i class="bi bi-cash-coin"></i> Withdraw</a>
             </div>
         `;
+        // =======================
 
-        // 4. Tambahkan kembali ikon mata dan fungsionalitasnya
         const balanceValueContainer = panel.querySelector('.gmp-balance-value');
         if (balanceValueContainer) {
             const newToggleIcon = document.createElement('i');
-            // Salin class dari ikon asli atau set default
             newToggleIcon.className = toggleIconElement ? toggleIconElement.className : 'bi bi-eye-fill balance-toggle-icon';
-            newToggleIcon.style.cursor = 'pointer'; // Pastikan cursor pointer
+            newToggleIcon.style.cursor = 'pointer';
 
             balanceValueContainer.appendChild(newToggleIcon);
 
-            // Re-attach event listener untuk toggle
             const valueSpan = balanceValueContainer.querySelector('.balance-value');
             const storedState = localStorage.getItem('balanceVisibility') || 'visible';
 
@@ -155,20 +156,24 @@
                     valueSpan.textContent = '•••••';
                     newToggleIcon.className = 'bi bi-eye-slash-fill balance-toggle-icon';
                  } else {
-                    valueSpan.textContent = originalBalanceValue; // Gunakan nilai asli yang disimpan
+                    valueSpan.textContent = originalBalanceValue;
                     newToggleIcon.className = 'bi bi-eye-fill balance-toggle-icon';
                  }
-                 // Update juga ikon di sidebar jika ada
                  const sidebarIcon = document.querySelector("#sidebar .balance-toggle-icon");
                  const sidebarValue = document.querySelector("#sidebar .balance-value");
                  if(sidebarIcon && sidebarValue){
                      sidebarIcon.className = newToggleIcon.className;
                      if(state === 'hidden') sidebarValue.textContent = '•••••';
-                     else sidebarValue.textContent = originalBalanceValue; // Asumsi format saldo sama
+                     else {
+                         // Coba format nilai sidebar jika perlu (asumsi nilai sama)
+                         const sidebarOriginalValue = originalBalanceValue.replace(/[^\d.]/g, ''); // Ambil angka saja
+                         sidebarValue.textContent = formatNumberWithCommas(sidebarOriginalValue); // Gunakan fungsi format jika ada
+                     }
                  }
             };
 
-            newToggleIcon.addEventListener('click', (e) => {
+            // Event listener di-attach lagi
+             newToggleIcon.addEventListener('click', (e) => {
                  e.preventDefault();
                  e.stopPropagation();
                  const currentState = (localStorage.getItem('balanceVisibility') || 'visible');
@@ -177,21 +182,30 @@
                  updateView(newState);
             });
 
-             // Terapkan state awal saat load
-             updateView(storedState);
+             updateView(storedState); // Terapkan state awal
         }
 
-
-        // 5. Tambahkan class penanda dan styling
         panel.classList.add('gavan-member-panel-enhanced');
-        // Hapus class lama jika ada (glassmorphism mungkin ingin dipertahankan atau dihapus)
-        panel.classList.remove('glassmorphism', 'py-3', 'my-3', 'text-center'); // Hapus class lama yg tidak perlu
-        panel.dataset.enhanced = 'true'; // Tandai sudah dimodif
+        panel.classList.remove('glassmorphism', 'py-3', 'my-3', 'text-center');
+        panel.dataset.enhanced = 'true';
 
-        console.log("Member status panel enhanced.");
+        console.log("Member status panel enhanced (compact).");
     }
 
-    // Fungsi untuk inject CSS ke head
+    // Fungsi format angka (diperlukan untuk update sidebar)
+     function formatNumberWithCommas(val) {
+        if (val === null || val === undefined) return '';
+        let stringVal = val.toString().replace(/,/g, '');
+        if (isNaN(stringVal) || stringVal.trim() === '') return '';
+        try {
+            // Gunakan locale 'id-ID' jika ingin pemisah ribuan titik
+            return Number(stringVal).toLocaleString('en-US');
+        } catch (e) {
+            return stringVal;
+        }
+    }
+
+    // Fungsi inject CSS (Sama)
     function injectStyles() {
         if (document.getElementById('gavan-panel-styles')) {
             return;
@@ -203,26 +217,22 @@
         console.log("Panel styles injected.");
     }
 
-    // Jalankan saat DOM siap dan gunakan Observer
+    // Inisialisasi dan Observer (Sama)
     document.addEventListener('DOMContentLoaded', () => {
         injectStyles();
         styleEnhancedMemberPanel();
 
         const observer = new MutationObserver((mutations) => {
-            // Cek jika panel muncul atau berubah
             const panel = document.getElementById('member-status-panel');
-             // Hanya jalankan jika panel ada TAPI belum di-enhance
             if (panel && !panel.dataset.enhanced) {
                  styleEnhancedMemberPanel();
             }
         });
 
         observer.observe(document.body, { childList: true, subtree: true });
-
-        styleEnhancedMemberPanel(); // Panggil lagi
+        styleEnhancedMemberPanel();
     });
 
-    // Panggil jika skrip di-inject setelah DOM load
     if (document.readyState === 'complete') {
          injectStyles();
          styleEnhancedMemberPanel();

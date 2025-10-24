@@ -1,5 +1,5 @@
 (function() {
-    // CSS untuk styling announcement baru (Sama seperti sebelumnya)
+    // CSS untuk styling announcement baru
     const announcementStyles = `
         #announcement.gavan-themed-announcement {
             background: linear-gradient(145deg, #2c3e50, #1a252f) !important; /* Gradient background */
@@ -8,17 +8,17 @@
             box-shadow: 0 0 15px rgba(0, 170, 255, 0.5) !important; /* Glow effect */
             color: #ecf0f1 !important; /* Warna teks putih keabu-abuan */
             padding: 10px 15px !important; /* Padding internal */
-            margin-top: 1rem !important; /* Jarak dari panel status */
-            margin-bottom: 1rem !important; /* Jarak ke konten bawahnya */
+            /* === PERUBAHAN MARGIN === */
+            margin-top: 1rem !important; /* Jarak dari atas (jika ada elemen lain) */
+            margin-bottom: 1rem !important; /* Jarak ke panel status di bawahnya */
+            /* Hapus margin kiri dan kanan agar lebar mengikuti container */
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            /* ======================== */
             display: flex;
             align-items: center;
             overflow: hidden; /* Pastikan marquee tidak keluar */
-
-            /* === BARIS UNTUK JARAK KANAN-KIRI === */
-            /* Sesuaikan nilai '1rem' jika perlu agar pas */
-            margin-left: 1rem !important;
-            margin-right: 1rem !important;
-            /* ==================================== */
+            width: 100%; /* Pastikan lebar penuh di dalam container */
         }
 
         #announcement.gavan-themed-announcement i.fa-solid.fa-bullhorn {
@@ -52,24 +52,16 @@
     // Fungsi untuk memindahkan dan men-style announcement
     function moveAndStyleAnnouncement() {
         const announcement = document.getElementById('announcement');
-        // === PERUBAHAN TARGET ANCHOR ===
         const memberPanel = document.getElementById('member-status-panel'); // Target panel status member
-        // ================================
 
         // Jika salah satu tidak ada, atau sudah dipindahkan, hentikan
         if (!announcement || !memberPanel || announcement.dataset.moved === 'true') {
             return;
         }
 
-        // === PERUBAHAN CARA MENCARI CONTAINER ===
-        // Panel status member sepertinya sudah di dalam container, kita insert setelah panel itu sendiri
-        const targetContainer = memberPanel.parentElement; // Langsung ambil parent dari panel
-        if (!targetContainer) return;
-        // ======================================
-
         // === PERUBAHAN POSISI INSERT ===
-        // Pindahkan elemen announcement ke setelah panel status member
-        memberPanel.insertAdjacentElement('afterend', announcement);
+        // Pindahkan elemen announcement ke SEBELUM panel status member
+        memberPanel.insertAdjacentElement('beforebegin', announcement);
         // ================================
 
         // Hapus class asli dan tambahkan class baru untuk styling
@@ -79,10 +71,10 @@
         // Tandai bahwa elemen sudah dipindahkan
         announcement.dataset.moved = 'true';
 
-        console.log("Member page announcement moved and styled.");
+        console.log("Member page announcement moved above panel and styled.");
     }
 
-    // Fungsi untuk inject CSS ke head (Sama seperti sebelumnya)
+    // Fungsi untuk inject CSS ke head
     function injectStyles() {
         // Cek apakah style sudah di-inject
         if (document.getElementById('gavan-announcement-styles')) {
@@ -95,7 +87,7 @@
         console.log("Announcement styles injected.");
     }
 
-    // Jalankan saat DOM siap (Sama seperti sebelumnya)
+    // Jalankan saat DOM siap
     document.addEventListener('DOMContentLoaded', () => {
         injectStyles();
         moveAndStyleAnnouncement();
@@ -103,9 +95,7 @@
         // Gunakan MutationObserver untuk menangani jika elemen dimuat dinamis
         const observer = new MutationObserver((mutations) => {
             // Cukup jalankan sekali jika target muncul
-            // === PERUBAHAN CEK TARGET ===
             if (document.getElementById('announcement') && document.getElementById('member-status-panel')) {
-            // =============================
                 moveAndStyleAnnouncement();
                 // Optional: Hentikan observer jika sudah selesai
                 // observer.disconnect();
@@ -118,7 +108,7 @@
         moveAndStyleAnnouncement();
     });
 
-    // Panggil langsung jika skrip di-inject setelah DOM load (Sama seperti sebelumnya)
+    // Panggil langsung jika skrip di-inject setelah DOM load
     if (document.readyState === 'complete') {
          injectStyles();
          moveAndStyleAnnouncement();

@@ -7,12 +7,21 @@
             border-radius: 8px !important; /* Sudut membulat */
             box-shadow: 0 0 15px rgba(0, 170, 255, 0.5) !important; /* Glow effect */
             color: #ecf0f1 !important; /* Warna teks putih keabu-abuan */
-            padding: 10px 15px !important; /* Padding lebih nyaman */
+            padding: 10px 15px !important; /* Padding internal */
             margin-top: 1.5rem !important; /* Jarak dari slider */
             margin-bottom: 1rem !important; /* Jarak ke konten bawahnya */
             display: flex;
             align-items: center;
             overflow: hidden; /* Pastikan marquee tidak keluar */
+
+            /* === BARIS BARU UNTUK JARAK KANAN-KIRI === */
+            /* Sesuaikan nilai '1rem' jika perlu agar pas */
+            margin-left: 1rem !important;
+            margin-right: 1rem !important;
+            /* Atau coba gunakan variabel Bootstrap jika tersedia: */
+            /* margin-left: var(--bs-gutter-x, 1rem) !important; */
+            /* margin-right: var(--bs-gutter-x, 1rem) !important; */
+            /* ========================================= */
         }
 
         #announcement.gavan-themed-announcement i.fa-solid.fa-bullhorn {
@@ -21,11 +30,13 @@
             margin-right: 12px; /* Jarak ikon ke teks */
             font-size: 1.2em; /* Sedikit perbesar ikon */
             animation: pulse-glow 2s infinite ease-in-out; /* Animasi pulse */
+            flex-shrink: 0; /* Pastikan ikon tidak mengecil */
         }
 
         #announcement.gavan-themed-announcement marquee {
             flex-grow: 1; /* Biarkan marquee mengisi sisa ruang */
             color: #ecf0f1 !important; /* Pastikan warna teks marquee */
+            min-width: 0; /* Penting agar flexbox bekerja benar dengan marquee */
         }
 
         /* Animasi pulse untuk ikon */

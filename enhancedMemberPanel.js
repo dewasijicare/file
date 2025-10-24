@@ -1,5 +1,5 @@
 (function() {
-    // CSS untuk styling panel member baru (Font Size Saldo & Username Dikecilkan)
+    // CSS untuk styling panel member baru (Font Size Saldo & Username Dikecilkan Lagi)
     const panelStyles = `
         #member-status-panel.gavan-member-panel-enhanced {
             background: linear-gradient(135deg, #f1c40f, #e67e22) !important;
@@ -51,11 +51,11 @@
             align-self: end;
         }
 
-        /* Styling untuk Nilai Saldo (Kiri Bawah) - Font Size Dikecilkan */
+        /* Styling untuk Nilai Saldo (Kiri Bawah) - Font Size Dikecilkan Lagi */
         .gmp-balance-value {
             grid-column: 1; grid-row: 2;
             /* === PERUBAHAN FONT SIZE === */
-            font-size: 1.5em !important; /* Dari 1.6em */
+            font-size: 1.4em !important; /* Dari 1.5em */
             /* ========================= */
             font-weight: 700 !important;
             line-height: 1 !important;
@@ -86,11 +86,11 @@
              color: #000 !important;
          }
 
-        /* Styling untuk Nama Username (Kanan Bawah) - Font Size Dikecilkan */
+        /* Styling untuk Nama Username (Kanan Bawah) - Font Size Dikecilkan Lagi */
          .gmp-user-id-value {
              grid-column: 2; grid-row: 2;
              /* === PERUBAHAN FONT SIZE === */
-             font-size: 1.5em !important; /* Dari 1.6em */
+             font-size: 1.4em !important; /* Dari 1.5em */
              /* ========================= */
              font-weight: 700 !important;
              color: #1a252f !important;
@@ -100,7 +100,7 @@
              white-space: nowrap;
              overflow: hidden;
              text-overflow: ellipsis;
-             max-width: 150px;
+             max-width: 140px; /* Lebar maks sedikit dikurangi juga */
         }
 
          .gmp-buttons-container {
@@ -156,7 +156,10 @@
 
     `;
 
-    // Fungsi untuk memodifikasi panel member
+    // Fungsi JS lainnya (styleEnhancedMemberPanel, formatNumberWithCommas, injectStyles, event listeners)
+    // tetap SAMA seperti skrip sebelumnya, tidak perlu diubah.
+    // ... (kode JS lengkapnya sama seperti jawaban sebelumnya) ...
+    // --- DI BAWAH INI ADALAH KODE JS LENGKAPNYA (TIDAK BERUBAH DARI SEBELUMNYA) ---
     function styleEnhancedMemberPanel() {
         const panel = document.getElementById('member-status-panel');
         if (!panel || panel.dataset.enhanced === 'true') {
@@ -169,9 +172,9 @@
         const toggleIconElement = panel.querySelector('.balance-toggle-icon');
 
         let userId = usernameElement ? usernameElement.textContent.replace('Halo,', '').trim() : 'N/A';
-        let idLabelText = ""; // Bisa diisi jika ada ID terpisah
+        let idLabelText = "";
 
-        panel.innerHTML = ''; // Kosongkan panel
+        panel.innerHTML = '';
 
         panel.innerHTML = `
             <div class="gmp-top-area">
@@ -237,7 +240,7 @@
         panel.classList.remove('glassmorphism', 'py-3', 'my-3', 'text-center');
         panel.dataset.enhanced = 'true';
 
-        console.log("Member status panel enhanced (Font Size Adjusted).");
+        console.log("Member status panel enhanced (Font Size Final).");
     }
 
      function formatNumberWithCommas(val) {
@@ -281,5 +284,4 @@
          injectStyles();
          styleEnhancedMemberPanel();
     }
-
 })();

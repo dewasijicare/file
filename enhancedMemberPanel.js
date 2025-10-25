@@ -193,7 +193,7 @@
 
         panel.innerHTML = `
             <div class="gmp-top-area">
-                <div class="gmp-balance-label">SALDO AKTIF</div>
+                <div class="gmp-balance-label">SALDO TERSEDIA</div>
                 <div class="gmp-user-id-label">USERNAME</div>
                 <div class="gmp-balance-value">
                     <span class="balance-value">${originalBalanceValue}</span>
@@ -301,5 +301,6 @@
     }
 
 })();
+
 
 

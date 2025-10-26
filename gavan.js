@@ -351,7 +351,6 @@
         }
 
         // [FIX 2: Mengubah layout input dari 1 baris (col-md-6) menjadi 2 baris (col-12)]
-        // Logika ini memindahkan input yang ada, bukan menghapus & membuat baru.
         const usernameGroup = loginForm.querySelector('input[name="userName"]')?.closest('.form-group, .mb-3');
         const passwordGroup = loginForm.querySelector('input[name="password"]')?.closest('.form-group, .mb-3');
         const buttonContainer = loginForm.querySelector('button[type="submit"]')?.parentElement;
@@ -384,6 +383,15 @@
             passwordInputGroup.className = 'input-group';
             passwordInputGroup.innerHTML = '<span class="input-group-text"><i class="bi bi-key-fill"></i></span>';
             passwordInput.placeholder = "Password";
+
+            // [PERBAIKAN DI SINI]
+            // Hapus status 'data-toggle-added' agar MutationObserver mau 
+            // menjalankan addPasswordToggle() lagi pada input yang dipindahkan ini.
+            if (passwordInput.dataset.toggleAdded) {
+                delete passwordInput.dataset.toggleAdded;
+  DITAMBAHKAN_DISINI]
+            }
+
             passwordInputGroup.appendChild(passwordInput); // Memindahkan input asli
             passwordWrapper.appendChild(passwordInputGroup);
             passwordCol.appendChild(passwordWrapper);
@@ -395,9 +403,6 @@
             // 4. Hapus wrapper form-group yang lama (sekarang sudah kosong)
             usernameGroup.remove();
             passwordGroup.remove();
-            
-            // Skrip addPasswordToggle akan otomatis menemukan input password yang dipindahkan
-            // dan menambahkan ikon mata di tempat yang benar.
         }
     }
     function styleRegisterPage() {
@@ -706,6 +711,7 @@
         }
     });
 })();
+
 
 
 

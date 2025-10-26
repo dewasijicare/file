@@ -964,7 +964,7 @@
             } else {
                 newBankSpan.innerHTML = '<i class="bi bi-wallet2"></i>'; // Fallback
             }
-            newBankSpan.appendChild(document.createTextNode('\u00A0' + labelText)); // Tambah spasi
+            newBankSpan.appendChild(document.createTextNode('\u00A0Akun Saya')); // Teks baru: "Akun Saya"
             
             newBankGroup.appendChild(newBankSpan);
             newBankGroup.appendChild(bankSelect); // Pindahkan select
@@ -1101,6 +1101,7 @@
         }
     });
 })();
+
 
 
 

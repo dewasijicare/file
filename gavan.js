@@ -1100,23 +1100,18 @@
         mainContainer.classList.remove('mb-5');
         mainContainer.classList.add('mb-3');
 
-        // --- INI ADALAH BLOK YANG DIPERBAIKI ---
-        // 2. Ekstrak info dari modal (Versi Robust/Pintar)
+        // --- Ambil info modal (versi pintar) ---
         const modalBody = modal.querySelector('.modal-body');
-        // Ambil semua elemen di dalam .card-body
         const allTextNodes = modalBody ? Array.from(modalBody.querySelectorAll('.card-body > *')) : [];
         
-        // Cari elemen berdasarkan teksnya, bukan kelasnya
         const tutupEl = allTextNodes.find(el => el.textContent.includes('Tutup:'));
         const hasilEl = allTextNodes.find(el => el.textContent.includes('Hasil:'));
         const hariEl = allTextNodes.find(el => el.textContent.includes('Hari Aktif:'));
 
-        // Ekstrak teks, atau gunakan fallback yang netral
         const tutup = tutupEl ? tutupEl.textContent.trim() : 'Tutup: -';
         const hasil = hasilEl ? hasilEl.textContent.trim() : 'Hasil: -';
         // Pisahkan label dari nilainya
         const hariText = hariEl ? hariEl.textContent.replace('Hari Aktif:', '').trim() : '-';
-        // --- AKHIR BLOK PERBAIKAN ---
         
         const newGroup = document.createElement('div');
         newGroup.className = 'input-group mb-3';
@@ -1131,19 +1126,20 @@
         newBtn.href = urlLink.href; 
         newBtn.innerHTML = 'Website <i class="bi bi-arrow-up-right-square"></i>';
         
-        // 6. Buat kotak info jadwal (Layout disesuaikan dengan screenshot)
+        // --- KOTAK INFO JADWAL (SUDAH DIPERBARUI) ---
         const scheduleBox = document.createElement('div');
         scheduleBox.className = 'alert alert-primary p-2';
         scheduleBox.style.alignItems = 'center';
         
         scheduleBox.innerHTML = `
             <strong style="color: #fff; font-size: 0.9em; display: block; text-align: center; margin-bottom: 5px;">
-                Hari Aktif: ${hariText}
+                ${hariText}
             </strong>
             <div style="font-size: 0.9em; text-align: center; border-top: 1px solid #34495e; padding-top: 5px;">
                 <span>${tutup}</span> &nbsp;&nbsp;|&nbsp;&nbsp; <span>${hasil}</span>
             </div>
         `;
+        // --- AKHIR PERUBAHAN ---
 
         newGroup.appendChild(oldSelect); 
         newGroup.appendChild(newBtn);    
@@ -1280,6 +1276,7 @@
         }
     });
 })();
+
 
 
 

@@ -274,7 +274,67 @@
     function updateProfileElements(){const e=document.querySelector("#sidebar .bi-person-circle");if(e){const t=document.createElement("img");t.src="https://raw.githubusercontent.com/dewasijicare/images/main/icon_gaban_36x36.png",t.className="gaban-profile-icon",e.parentNode.replaceChild(t,e)}const t=Array.from(document.querySelectorAll("#sidebar span")).find(e=>e.textContent.includes("CREDIT:"));t&&(t.style.color="#FFD700")}
     const BANK_ICONS = {'DANA':'https://adiltoto.org/images/dana_ok.png','OVO':'https://adiltoto.org/images/ovo_ok.png','GOPAY':'https://adiltoto.org/images/gopay_ok.png','LINKAJA':'https://adiltoto.org/images/link_ok.png','BCA':'https://adiltoto.org/images/bca_ok.png','BNI':'https://adiltoto.org/images/bni_ok.png','BRI':'https://adiltoto.org/images/bri_ok.png','MANDIRI':'https://adiltoto.org/images/mandiri_ok.png','SEABANK':'https://adiltoto.org/images/seabank_ok.png','JAGO':'https://adiltoto.org/images/jago_ok.png'};
     const ICON_MAPPINGS = {'receiver-bank-label':'bi-bank2','receiver-name-label':'bi-person-vcard','receiver-number-label':'bi-credit-card-2-front','agentmemberbankid':'bi-wallet2','amount':'bi-cash-coin','promocode':'bi-tag-fill'};
-    function initializeDepositForm(depositForm) { if(!depositForm||depositForm.dataset.initialized==='true')return;const nameContainer=document.getElementById('receiver-name')?.closest('div');const numberContainer=document.getElementById('receiver-number')?.closest('div');if(nameContainer&&numberContainer&&nameContainer.parentElement===numberContainer.parentElement){nameContainer.parentElement.insertBefore(nameContainer,numberContainer)}if(numberContainer){const numberSpan=document.getElementById('receiver-number');if(numberSpan&&!numberContainer.querySelector('.copy-btn')){const newCopyButton=document.createElement('button');newCopyButton.type='button';newCopyButton.className='btn copy-btn';newCopyButton.innerHTML='<i class="bi bi-copy"></i> Copy';newCopyButton.addEventListener('click',e=>{e.preventDefault();navigator.clipboard.writeText(numberSpan.textContent.trim()).then(()=>{newCopyButton.innerHTML='<i class="bi bi-check-lg"></i> Copied';newCopyButton.classList.add('copy-btn-success');setTimeout(()=>{newCopyButton.innerHTML='<i class="bi bi-copy"></i> Copy';newCopyButton.classList.remove('copy-btn-success')},1500)})});const labelEl=document.getElementById('receiver-number-label');const contentWrapper=document.createElement('div');contentWrapper.append(labelEl,' ',numberSpan);numberContainer.innerHTML='';numberContainer.append(contentWrapper,newCopyButton);numberContainer.style.display='flex';numberContainer.style.justifyContent='space-between';numberContainer.style.alignItems='center'}}const oldCopyButton=depositForm.querySelector('button[onclick*="copyReceiverNumber"]');if(oldCopyButton)oldCopyButton.style.display='none';depositForm.dataset.initialized='true' }
+    function initializeDepositForm(depositForm) { 
+        if(!depositForm||depositForm.dataset.initialized==='true')return;
+
+        // --- PERMINTAAN BARU: Hapus label "Bank" dan "Nama Rek" ---
+        const bankLabel = document.getElementById('receiver-bank-label');
+        const nameLabel = document.getElementById('receiver-name-label');
+        if (bankLabel) {
+            bankLabel.remove();
+        }
+        if (nameLabel) {
+            nameLabel.remove();
+        }
+        // --- AKHIR PERUBAHAN ---
+
+        const nameContainer=document.getElementById('receiver-name')?.closest('div');
+        const numberContainer=document.getElementById('receiver-number')?.closest('div');
+        if(nameContainer&&numberContainer&&nameContainer.parentElement===numberContainer.parentElement){
+            nameContainer.parentElement.insertBefore(nameContainer,numberContainer)
+        }
+        if(numberContainer){
+            const numberSpan=document.getElementById('receiver-number');
+            if(numberSpan&&!numberContainer.querySelector('.copy-btn')){
+                const newCopyButton=document.createElement('button');
+                newCopyButton.type='button';
+                newCopyButton.className='btn copy-btn';
+                newCopyButton.innerHTML='<i class="bi bi-copy"></i> Copy';
+                newCopyButton.addEventListener('click',e=>{
+                    e.preventDefault();
+                    navigator.clipboard.writeText(numberSpan.textContent.trim()).then(()=>{
+                        newCopyButton.innerHTML='<i class="bi bi-check-lg"></i> Copied';
+                        newCopyButton.classList.add('copy-btn-success');
+                        setTimeout(()=>{
+                            newCopyButton.innerHTML='<i class="bi bi-copy"></i> Copy';
+                            newCopyButton.classList.remove('copy-btn-success')
+                        },1500)
+                    })
+                });
+                
+                // --- PERMINTAAN BARU: Hapus label "Nomor Rek" ---
+                const labelEl=document.getElementById('receiver-number-label');
+                if (labelEl) {
+                    labelEl.remove(); // Hapus elemen label
+                }
+                // --- AKHIR PERUBAHAN ---
+                
+                const contentWrapper=document.createElement('div');
+                
+                // --- PERUBAHAN: Hanya append 'numberSpan' ---
+                contentWrapper.append(numberSpan); 
+                
+                numberContainer.innerHTML='';
+                numberContainer.append(contentWrapper,newCopyButton);
+                numberContainer.style.display='flex';
+                numberContainer.style.justifyContent='space-between';
+                numberContainer.style.alignItems='center'
+            }
+        }
+        const oldCopyButton=depositForm.querySelector('button[onclick*="copyReceiverNumber"]');
+        if(oldCopyButton)oldCopyButton.style.display='none';
+        depositForm.dataset.initialized='true' 
+    }
     function updateDepositFormUI(depositForm) { if(!depositForm)return;const receiverBankSpan=document.getElementById('receiver-bank');if(receiverBankSpan&&!receiverBankSpan.dataset.iconApplied){const bankName=receiverBankSpan.textContent.trim().toUpperCase();if(BANK_ICONS[bankName]){receiverBankSpan.innerHTML=`<img src="${BANK_ICONS[bankName]}" alt="${bankName}" style="height: 40px; vertical-align: middle;">`}receiverBankSpan.dataset.iconApplied='true'}for(const[key,iconClass]of Object.entries(ICON_MAPPINGS)){const isLabelForInput=!key.includes('receiver');const element=isLabelForInput?depositForm.querySelector(`label[for="${key}"]`):document.getElementById(key);if(element&&!element.querySelector('i.bi')){const iconEl=document.createElement('i');iconEl.className=`bi ${iconClass}`;element.prepend(iconEl,document.createTextNode(' '))}}const qrCodeImg=document.getElementById('receiver-qrcode');if(qrCodeImg){qrCodeImg.classList.remove('bg-white');qrCodeImg.style.setProperty('border-color','#00aaff','important');qrCodeImg.style.setProperty('background-color','transparent','important')} }
     function styleWithdrawForm() { const withdrawCard=document.querySelector('#withdraw-form')?.closest('.card.shadow');if(!withdrawCard||withdrawCard.dataset.tabsApplied==='true')return;const mainTitle=withdrawCard.querySelector('h1.text-center');const historyTitle=Array.from(withdrawCard.querySelectorAll('h1, h2, h3')).find(el=>el.textContent.includes('RIWAYAT WITHDRAW'));if(mainTitle&&historyTitle){const navTabs=document.createElement('ul');navTabs.className='nav nav-tabs';navTabs.innerHTML=`<li class="nav-item"><a class="nav-link active" href="#">Withdraw</a></li><li class="nav-item"><a class="nav-link" href="#">Riwayat</a></li>`;const contentWrapper=document.createElement('div');contentWrapper.className='border border-top-0 px-3 pb-3 pt-2';Array.from(withdrawCard.children).forEach(child=>{if(child!==mainTitle){contentWrapper.appendChild(child.cloneNode(true))}});while(withdrawCard.firstChild){withdrawCard.removeChild(withdrawCard.firstChild)}withdrawCard.appendChild(mainTitle);withdrawCard.appendChild(navTabs);withdrawCard.appendChild(contentWrapper);const newHistoryTitle=contentWrapper.querySelector('h1, h2, h3');if(newHistoryTitle&&newHistoryTitle.textContent.includes('RIWAYAT WITHDRAW')){newHistoryTitle.style.display='none'}withdrawCard.dataset.tabsApplied='true'}const withdrawForm=withdrawCard.querySelector('#withdraw-form');if(withdrawForm){const bankLabel=withdrawForm.querySelector('label[for="agentmemberbankid"]');if(bankLabel&&!bankLabel.querySelector('i.bi')){bankLabel.innerHTML='<i class="bi bi-wallet2"></i> Bank / e-Wallet'}const amountLabel=withdrawForm.querySelector('label[for="amount"]');if(amountLabel&&!amountLabel.querySelector('i.bi')){amountLabel.innerHTML='<i class="bi bi-cash-coin"></i> '+amountLabel.textContent}} }
 
@@ -1101,6 +1161,7 @@
         }
     });
 })();
+
 
 
 

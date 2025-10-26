@@ -166,6 +166,10 @@
             margin-bottom: 1rem !important;
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
         }
+        /* CSS UNTUK MENGECILKAN FONT TABEL RESULT */
+        #maincontent .table-bordered tbody td {
+            font-size: 0.85em; /* 0.85em (sedikit lebih kecil dari normal) */
+        }
         /* CSS UNTUK HILANGKAN BULLET POINT WITHDRAW */
         #withdraw-form div[style*="font-size:0.8em"] ul {
             list-style-type: none;
@@ -1153,36 +1157,66 @@
         mainContainer.dataset.styled = 'true';
     }
     function styleResultTableHighlight() {
-        // Cari baris pertama di tabel result
         const tableBody = document.querySelector('#maincontent .table-bordered tbody');
         if (!tableBody || !tableBody.firstElementChild) return; // Berhenti jika tabel/baris tidak ada
 
-        const firstRow = tableBody.firstElementChild;
-        
-        // 1. Selalu reset style-nya dulu (penting saat pindah ke Halaman 2, 3, dst.)
-        firstRow.style.color = '';
-        firstRow.style.fontWeight = '';
-
-        // 2. Cari link pagination yang sedang "active"
+        // Cek Halaman 1 (untuk sorot kuning)
         const activePageLink = document.querySelector('.pagination .page-item.active a');
-
-        // 3. Cek apakah kita di Halaman 1
         let isPageOne = false;
         if (activePageLink) {
-            // Jika link aktif ada DAN teksnya "1"
-            if (activePageLink.textContent.trim() === '1') {
-                isPageOne = true;
-            }
+            if (activePageLink.textContent.trim() === '1') isPageOne = true;
         } else {
-            // Jika tidak ada pagination SAMA SEKALI (hanya 1 halaman), kita anggap itu halaman 1
-            isPageOne = true;
+            isPageOne = true; // Anggap halaman 1 jika tidak ada pagination
         }
 
-        // 4. Terapkan style HANYA jika di Halaman 1
-        if (isPageOne) {
-            firstRow.style.color = '#FFD700';
-            firstRow.style.fontWeight = 'bold';
-        }
+        // Ambil SEMUA baris
+        const allRows = tableBody.querySelectorAll('tr');
+
+        // Opsi format hari
+        const dayOptions = { weekday: 'long' };
+        const locale = 'id-ID'; // Bahasa Indonesia
+
+        allRows.forEach((row, index) => {
+            const dateCell = row.querySelector('td:first-child');
+            if (!dateCell) return;
+
+            // --- FUNGSI 1: Format Tanggal (REQ BARU) ---
+            const originalDateStr = dateCell.textContent.trim();
+            
+            // Cek jika sudah diformat (agar observer tidak menambah "Minggu, Minggu,")
+            if (dateCell.dataset.dateFormatted !== 'true') {
+                // Format: "26-10-2025"
+                const parts = originalDateStr.split('-');
+                if (parts.length === 3) {
+                    // parts[2] = YYYY, parts[1] = MM (1-based), parts[0] = DD
+                    // new Date(YYYY, MM-1, DD)
+                    try {
+                        const dateObj = new Date(parts[2], parts[1] - 1, parts[0]);
+                        const dayName = dateObj.toLocaleDateString(locale, dayOptions);
+                        
+                        // Gabungkan: "Minggu, 26-10-2025"
+                        dateCell.textContent = `${dayName}, ${originalDateStr}`;
+                        dateCell.dataset.dateFormatted = 'true'; // Tandai sudah diformat
+                    } catch (e) {
+                        console.error("GavanTheme Error (Parsing Date):", e);
+                        // Jika error, biarkan tanggal aslinya
+                    }
+                }
+            }
+            // --- AKHIR FUNGSI TANGGAL ---
+            
+            // --- FUNGSI 2: Sorot Baris ---
+            // Selalu reset style-nya dulu (penting saat pindah ke Halaman 2, 3, dst.)
+            row.style.color = '';
+            row.style.fontWeight = '';
+
+            // Terapkan style HANYA jika ini baris pertama (index 0) DAN di Halaman 1
+            if (index === 0 && isPageOne) {
+                row.style.color = '#FFD700';
+                row.style.fontWeight = 'bold';
+            }
+            // --- AKHIR FUNGSI SOROT ---
+        });
     }
     function styleLogoutButton() {
         const profileFormLogout = document.querySelector('form a[href="/logout"]');
@@ -1276,6 +1310,7 @@
         }
     });
 })();
+
 
 
 

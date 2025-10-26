@@ -327,7 +327,59 @@
     }
 
     function styleQuickLogin() { document.querySelectorAll('#row-quicklogin:not([data-styled="true"])').forEach(card => { card.dataset.styled = 'true'; const form = card.querySelector('form'); if (!form) return; const usernameDiv = form.querySelector('label[for="username"]')?.parentElement; const passwordDiv = form.querySelector('label[for="password"]')?.parentElement; const buttonDiv = form.querySelector('.d-flex.gap-1.my-3'); if (!usernameDiv || !passwordDiv || !buttonDiv) return; const newInputsHTML = ` <div class="row g-2 mb-3"> <div class="col-md-6"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-person-fill"></i></span> <input type="text" name="userName" id="username" class="form-control" placeholder="Username"> </div> </div> <div class="col-md-6"> <div class="input-wrapper"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-key-fill"></i></span> <input type="password" name="password" id="password" class="form-control" placeholder="Password"> </div> </div> </div> </div> `; buttonDiv.insertAdjacentHTML('beforebegin', newInputsHTML); usernameDiv.remove(); passwordDiv.remove(); const newPasswordInput = card.querySelector('#password'); if (newPasswordInput) { addPasswordToggle(newPasswordInput); } }); }
-    function styleLoginPage() { const loginForm = document.querySelector('#maincontent form[action="/login"]'); if (!loginForm) return; const loginCard = loginForm.closest('.card.shadow'); if (!loginCard || loginCard.dataset.layoutStyled === 'true') return; loginCard.dataset.layoutStyled = 'true'; const usernameGroup = loginForm.querySelector('input[name="userName"]')?.closest('.form-group, .mb-3'); const passwordGroup = loginForm.querySelector('input[name="password"]')?.closest('.form-group, .mb-3'); const buttonContainer = loginForm.querySelector('button[type="submit"]')?.parentElement; if (usernameGroup && passwordGroup && buttonContainer) { const newInputsHTML = ` <div class="row g-2 mb-3"> <div class="col-md-6"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-person-fill"></i></span> <input type="text" name="userName" required="required" class="form-control" placeholder="User Name"> </div> </div> <div class="col-md-6"> <div class="input-wrapper"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-key-fill"></i></span> <input type="password" name="password" required="required" class="form-control" placeholder="Password"> </div> </div> </div> </div> `; buttonContainer.insertAdjacentHTML('beforebegin', newInputsHTML); usernameGroup.remove(); passwordGroup.remove(); } }
+    function styleLoginPage() {
+        const loginForm = document.querySelector('#maincontent form[action="/login"]');
+        if (!loginForm) return;
+        const loginCard = loginForm.closest('.card.shadow');
+        if (!loginCard || loginCard.dataset.layoutStyled === 'true') return;
+        loginCard.dataset.layoutStyled = 'true';
+
+        // [MODIFIKASI BARU 1] Bungkus card agar lebarnya pas
+        try {
+            if (!loginCard.parentElement.classList.contains('col-lg-6')) { 
+                const cardParent = loginCard.parentElement; // Ini <div class="container">
+                const newRow = document.createElement('div');
+                newRow.className = 'row';
+                const newCol = document.createElement('div');
+                newCol.className = 'col-lg-6 offset-lg-3'; // Terapkan offset ke kolom BARU ini
+                
+                cardParent.replaceChild(newRow, loginCard); // Ganti card dgn row
+                newRow.appendChild(newCol); // Masukkan col ke row
+                newCol.appendChild(loginCard); // Masukkan card ke col
+            }
+        } catch (e) {
+            console.error("GavanTheme Error (Centering Login):", e);
+        }
+
+        const usernameGroup = loginForm.querySelector('input[name="userName"]')?.closest('.form-group, .mb-3');
+        const passwordGroup = loginForm.querySelector('input[name="password"]')?.closest('.form-group, .mb-3');
+        const buttonContainer = loginForm.querySelector('button[type="submit"]')?.parentElement;
+        if (usernameGroup && passwordGroup && buttonContainer) {
+
+            // [MODIFIKASI BARU 2] Ubah col-md-6 menjadi col-12
+            const newInputsHTML = `
+            <div class="row g-2 mb-3">
+                <div class="col-12">
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                    <input type="text" name="userName" required="required" class="form-control" placeholder="User Name">
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="input-wrapper">
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                      <input type="password" name="password" required="required" class="form-control" placeholder="Password">
+                    </div>
+                  </div>
+                </div>
+            </div>
+            `;
+            buttonContainer.insertAdjacentHTML('beforebegin', newInputsHTML);
+            usernameGroup.remove();
+            passwordGroup.remove();
+        }
+    }
     function styleRegisterPage() {
         const form = document.querySelector('form[action="/register"]');
         if (!form || form.dataset.styled === 'true') return;
@@ -634,6 +686,7 @@
         }
     });
 })();
+
 
 
 

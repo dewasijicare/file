@@ -158,6 +158,11 @@
             color: #ecf0f1; /* Sesuai dengan .form-label */
             font-size: 0.85em;
         }
+        /* CSS UNTUK HILANGKAN BULLET POINT WITHDRAW */
+        #withdraw-form div[style*="font-size:0.8em"] ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
         /* CSS UNTUK HILANGKAN BULLET POINT KETENTUAN */
         #deposit-form div[style*="font-size:0.8em"] ul {
             list-style-type: none;
@@ -688,16 +693,21 @@
         });
     }
     function stylePagePadding() {
-        // Fungsi ini mencari .nav-tabs (yang ada di tab Bank & Riwayat)
-        const navTabs = document.querySelector('.nav-tabs');
-        if (navTabs) {
-            // Kemudian mencari kolom .col-lg-6.col-xl-4 terluarnya
-            const mainColumn = navTabs.closest('.col-lg-6.col-xl-4');
+        // Cari judul halaman "Deposit" ATAU "Withdraw"
+        const depositTitle = Array.from(document.querySelectorAll('h1.text-center')).find(h1 => h1.textContent.trim() === 'Deposit');
+        const withdrawTitle = Array.from(document.querySelectorAll('h1.text-center')).find(h1 => h1.textContent.trim() === 'Withdraw');
+        
+        // Ambil judul yang ditemukan
+        const title = depositTitle || withdrawTitle;
+        
+        if (title) {
+            // Temukan kolom .col-lg-6 terdekat
+            const mainColumn = title.closest('.col-lg-6');
             
-            // Jika kolom ditemukan dan belum diberi padding
+            // Jika kolom ada dan belum diberi padding
             if (mainColumn && !mainColumn.dataset.colPadded) {
-                mainColumn.style.padding = '0 10px'; // Terapkan padding
-                mainColumn.dataset.colPadded = 'true'; // Tandai selesai
+                mainColumn.style.padding = '0 10px'; // Beri padding L/R 10px
+                mainColumn.dataset.colPadded = 'true';
             }
         }
     }
@@ -920,6 +930,87 @@
         // Cek status awal saat load (jika halaman refresh & value tersimpan)
         updateClearButton();
     }
+    function styleWithdrawPage() {
+        // Target form utama
+        const withdrawForm = document.querySelector('#withdraw-form');
+        if (!withdrawForm || withdrawForm.dataset.styled === 'true') {
+            return; // Berhenti jika tidak ada atau sudah di-style
+        }
+
+        // --- REQ 2 (Inner Spacing) ---
+        const card = withdrawForm.closest('.card.p-1');
+        if (card) {
+            card.classList.remove('p-1');
+            card.classList.add('p-3'); // Ganti padding dalam
+        }
+
+        // --- REQ 3 (Bank Column) ---
+        const bankSelect = withdrawForm.querySelector('#agentmemberbankid');
+        const bankGroup = bankSelect ? bankSelect.closest('.form-group') : null;
+        
+        if (bankSelect && bankGroup) {
+            const label = bankGroup.querySelector('label.form-label');
+            const labelIcon = label ? label.querySelector('i.bi') : null;
+            const labelText = label ? label.textContent.trim() : 'Bank / e-Wallet';
+
+            const newBankGroup = document.createElement('div');
+            newBankGroup.className = 'input-group mb-3';
+            
+            const newBankSpan = document.createElement('span');
+            newBankSpan.className = 'input-group-text';
+            
+            if (labelIcon) {
+                newBankSpan.appendChild(labelIcon.cloneNode(true));
+            } else {
+                newBankSpan.innerHTML = '<i class="bi bi-wallet2"></i>'; // Fallback
+            }
+            newBankSpan.appendChild(document.createTextNode('\u00A0' + labelText)); // Tambah spasi
+            
+            newBankGroup.appendChild(newBankSpan);
+            newBankGroup.appendChild(bankSelect); // Pindahkan select
+            bankGroup.replaceWith(newBankGroup);  // Ganti
+
+            // --- REQ 4 (Shorten Options) ---
+            const options = bankSelect.querySelectorAll('option');
+            options.forEach(option => {
+                const originalText = option.textContent;
+                // Format: "BCA - Gaban Toto - 1440387555"
+                const parts = originalText.split(' - '); 
+                if (parts.length === 3) {
+                    option.textContent = `${parts[0].trim()} - ${parts[2].trim()}`; 
+                }
+            });
+        }
+
+        // --- REQ 3 (Jumlah Column) ---
+        const amountInput = withdrawForm.querySelector('#amount');
+        const amountGroup = amountInput ? amountInput.closest('.form-group') : null;
+        
+        if (amountInput && amountGroup) {
+            const label = amountGroup.querySelector('label.form-label');
+            const labelIcon = label ? label.querySelector('i.bi') : null;
+            const placeholderText = label ? label.textContent.trim() : 'Jumlah IDR';
+
+            const newAmountGroup = document.createElement('div');
+            newAmountGroup.className = 'input-group mb-3';
+            
+            const newAmountSpan = document.createElement('span');
+            newAmountSpan.className = 'input-group-text';
+            
+            if (labelIcon) {
+                newAmountSpan.appendChild(labelIcon.cloneNode(true));
+            } else {
+                newAmountSpan.innerHTML = '<i class="bi bi-cash-coin"></i>'; // Fallback
+            }
+            
+            newAmountGroup.appendChild(newAmountSpan);
+            amountInput.placeholder = placeholderText; // Set placeholder
+            newAmountGroup.appendChild(amountInput); // Pindahkan input
+            amountGroup.replaceWith(newAmountGroup); // Ganti
+        }
+        
+        withdrawForm.dataset.styled = 'true'; // Tandai selesai
+    }
     function styleLogoutButton() {
         const profileFormLogout = document.querySelector('form a[href="/logout"]');
         if (profileFormLogout && !profileFormLogout.dataset.styled) {
@@ -967,6 +1058,7 @@
             }
 
             initializePromoSelection();
+            styleWithdrawPage();
             styleWithdrawForm();
             styleRtpModal();
             styleConfirmationModal(); 
@@ -1009,6 +1101,7 @@
         }
     });
 })();
+
 
 
 

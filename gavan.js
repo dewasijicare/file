@@ -1331,6 +1331,19 @@
             styleProfilePage();
             styleLogoutButton();
             styleChangePasswordPage();
+
+            setTimeout(() => {
+                console.log('GavanTheme: Sinyal Siap Dikirim!');
+                // Kirim sinyal bahwa tema sudah siap
+                const themeReadyEvent = new Event('GavanThemeReady');
+                document.dispatchEvent(themeReadyEvent);
+            }, 50);
+
+            // Hentikan observer agar tidak berjalan terus menerus
+            if (observer) {
+                observer.disconnect();
+            }
+            
         };
        
         observer = new MutationObserver(observerCallback);
@@ -1357,6 +1370,7 @@
         }
     });
 })();
+
 
 
 

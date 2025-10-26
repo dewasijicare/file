@@ -361,6 +361,24 @@
             console.error("GavanTheme Error (Layouting Register):", e);
         }
         // [AKHIR DARI KODE BARU]
+        // [MODIFIKASI BARU UNTUK MENGHAPUS KOLOM KIRI & MENGGESER KE TENGAH]
+        try {
+            const emptyColumn = mainRow.querySelector('.col-lg-6:first-child');
+            const contentColumn = mainRow.querySelector('.col-lg-6:last-child');
+            
+            // Cek apakah kolom pertama dan kedua ada, DAN kolom pertama tidak ada inputnya
+            if (emptyColumn && contentColumn && !emptyColumn.querySelector('input, select')) { 
+                emptyColumn.remove(); // Hapus kolom kiri yang kosong
+                contentColumn.classList.add('offset-lg-3'); // Tambahkan offset agar kolom kanan bergeser ke tengah
+            } else if (mainRow.children.length === 1 && mainRow.firstElementChild.classList.contains('col-lg-12')) {
+                // Kasus jika layout aslinya memang 1 kolom penuh, ubah ke 6 dan tengahkan
+                mainRow.firstElementChild.classList.remove('col-lg-12');
+                mainRow.firstElementChild.classList.add('col-lg-6', 'offset-lg-3');
+            }
+        } catch (e) {
+            console.error("GavanTheme Error (Centering Register):", e);
+        }
+        // [AKHIR DARI MODIFIKASI BARU]
 
         mainRow.before(form);
         form.append(mainRow);
@@ -607,5 +625,6 @@
         }
     });
 })();
+
 
 

@@ -166,11 +166,6 @@
             margin-bottom: 1rem !important;
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
         }
-        /* CSS UNTUK SOROT BARIS PERTAMA TABEL RESULT */
-        #maincontent .table-bordered tbody tr:first-child {
-            color: #FFD700; /* Warna kuning sesuai judul */
-            font-weight: bold;
-        }
         /* CSS UNTUK HILANGKAN BULLET POINT WITHDRAW */
         #withdraw-form div[style*="font-size:0.8em"] ul {
             list-style-type: none;
@@ -1147,6 +1142,38 @@
         
         mainContainer.dataset.styled = 'true';
     }
+    function styleResultTableHighlight() {
+        // Cari baris pertama di tabel result
+        const tableBody = document.querySelector('#maincontent .table-bordered tbody');
+        if (!tableBody || !tableBody.firstElementChild) return; // Berhenti jika tabel/baris tidak ada
+
+        const firstRow = tableBody.firstElementChild;
+        
+        // 1. Selalu reset style-nya dulu (penting saat pindah ke Halaman 2, 3, dst.)
+        firstRow.style.color = '';
+        firstRow.style.fontWeight = '';
+
+        // 2. Cari link pagination yang sedang "active"
+        const activePageLink = document.querySelector('.pagination .page-item.active a');
+
+        // 3. Cek apakah kita di Halaman 1
+        let isPageOne = false;
+        if (activePageLink) {
+            // Jika link aktif ada DAN teksnya "1"
+            if (activePageLink.textContent.trim() === '1') {
+                isPageOne = true;
+            }
+        } else {
+            // Jika tidak ada pagination SAMA SEKALI (hanya 1 halaman), kita anggap itu halaman 1
+            isPageOne = true;
+        }
+
+        // 4. Terapkan style HANYA jika di Halaman 1
+        if (isPageOne) {
+            firstRow.style.color = '#FFD700';
+            firstRow.style.fontWeight = 'bold';
+        }
+    }
     function styleLogoutButton() {
         const profileFormLogout = document.querySelector('form a[href="/logout"]');
         if (profileFormLogout && !profileFormLogout.dataset.styled) {
@@ -1196,6 +1223,7 @@
             initializePromoSelection();
             styleWithdrawPage();
             styleResultPage();
+            styleResultTableHighlight();
             styleWithdrawForm();
             styleRtpModal();
             styleConfirmationModal(); 
@@ -1238,6 +1266,7 @@
         }
     });
 })();
+
 
 
 

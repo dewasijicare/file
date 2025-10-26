@@ -334,50 +334,70 @@
         if (!loginCard || loginCard.dataset.layoutStyled === 'true') return;
         loginCard.dataset.layoutStyled = 'true';
 
-        // [MODIFIKASI BARU 1] Bungkus card agar lebarnya pas
+        // [FIX 1: Memperbaiki lebar card agar pas & di tengah]
         try {
             if (!loginCard.parentElement.classList.contains('col-lg-6')) { 
-                const cardParent = loginCard.parentElement; // Ini <div class="container">
+                const cardParent = loginCard.parentElement;
                 const newRow = document.createElement('div');
                 newRow.className = 'row';
                 const newCol = document.createElement('div');
-                newCol.className = 'col-lg-6 offset-lg-3'; // Terapkan offset ke kolom BARU ini
-                
-                cardParent.replaceChild(newRow, loginCard); // Ganti card dgn row
-                newRow.appendChild(newCol); // Masukkan col ke row
-                newCol.appendChild(loginCard); // Masukkan card ke col
+                newCol.className = 'col-lg-6 offset-lg-3';
+                cardParent.replaceChild(newRow, loginCard);
+                newRow.appendChild(newCol);
+                newCol.appendChild(loginCard);
             }
         } catch (e) {
             console.error("GavanTheme Error (Centering Login):", e);
         }
 
+        // [FIX 2: Mengubah layout input dari 1 baris (col-md-6) menjadi 2 baris (col-12)]
+        // Logika ini memindahkan input yang ada, bukan menghapus & membuat baru.
         const usernameGroup = loginForm.querySelector('input[name="userName"]')?.closest('.form-group, .mb-3');
         const passwordGroup = loginForm.querySelector('input[name="password"]')?.closest('.form-group, .mb-3');
         const buttonContainer = loginForm.querySelector('button[type="submit"]')?.parentElement;
-        if (usernameGroup && passwordGroup && buttonContainer) {
+        
+        const usernameInput = usernameGroup ? usernameGroup.querySelector('input') : null;
+        const passwordInput = passwordGroup ? passwordGroup.querySelector('input') : null;
 
-            // [MODIFIKASI BARU 2] Ubah col-md-6 menjadi col-12
-            const newInputsHTML = `
-            <div class="row g-2 mb-3">
-                <div class="col-12">
-                  <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                    <input type="text" name="userName" required="required" class="form-control" placeholder="User Name">
-                  </div>
-                </div>
-                <div class="col-12">
-                  <div class="input-wrapper">
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
-                      <input type="password" name="password" required="required" class="form-control" placeholder="Password">
-                    </div>
-                  </div>
-                </div>
-            </div>
-            `;
-            buttonContainer.insertAdjacentHTML('beforebegin', newInputsHTML);
+        // Cek jika semua elemen ditemukan sebelum melanjutkan
+        if (usernameGroup && passwordGroup && buttonContainer && usernameInput && passwordInput) {
+            const newRow = document.createElement('div');
+            newRow.className = 'row g-2 mb-3';
+            
+            // 1. Proses Username
+            const usernameCol = document.createElement('div');
+            usernameCol.className = 'col-12';
+            const usernameInputGroup = document.createElement('div');
+            usernameInputGroup.className = 'input-group';
+            usernameInputGroup.innerHTML = '<span class="input-group-text"><i class="bi bi-person-fill"></i></span>';
+            usernameInput.placeholder = "User Name";
+            usernameInputGroup.appendChild(usernameInput); // Memindahkan input asli
+            usernameCol.appendChild(usernameInputGroup);
+            newRow.appendChild(usernameCol);
+
+            // 2. Proses Password
+            const passwordCol = document.createElement('div');
+            passwordCol.className = 'col-12';
+            const passwordWrapper = document.createElement('div'); // Wrapper untuk ikon mata
+            passwordWrapper.className = 'input-wrapper';
+            const passwordInputGroup = document.createElement('div');
+            passwordInputGroup.className = 'input-group';
+            passwordInputGroup.innerHTML = '<span class="input-group-text"><i class="bi bi-key-fill"></i></span>';
+            passwordInput.placeholder = "Password";
+            passwordInputGroup.appendChild(passwordInput); // Memindahkan input asli
+            passwordWrapper.appendChild(passwordInputGroup);
+            passwordCol.appendChild(passwordWrapper);
+            newRow.appendChild(passwordCol);
+
+            // 3. Sisipkan baris baru sebelum tombol-tombol
+            buttonContainer.before(newRow);
+            
+            // 4. Hapus wrapper form-group yang lama (sekarang sudah kosong)
             usernameGroup.remove();
             passwordGroup.remove();
+            
+            // Skrip addPasswordToggle akan otomatis menemukan input password yang dipindahkan
+            // dan menambahkan ikon mata di tempat yang benar.
         }
     }
     function styleRegisterPage() {
@@ -686,6 +706,7 @@
         }
     });
 })();
+
 
 
 

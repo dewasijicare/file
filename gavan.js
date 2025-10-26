@@ -662,6 +662,15 @@
     function styleDepositFormFields(depositForm) {
         if (!depositForm) return;
 
+        // --- REQUEST 3 (BARU): Menambahkan padding p-3 ke wrapper ---
+        const contentWrapper = depositForm.parentElement;
+        // Cek elemen wrapper (yang memiliki class .border-top-0)
+        if (contentWrapper && contentWrapper.classList.contains('border-top-0') && !contentWrapper.dataset.padded) {
+            contentWrapper.classList.remove('p-2'); // Hapus padding lama
+            contentWrapper.classList.add('p-3');   // Tambah padding p-3 seperti halaman login
+            contentWrapper.dataset.padded = 'true'; // Tandai selesai
+        }
+
         // --- REQUEST 1 (DIUBAH): Style "Akun Bank" ---
         const agentBankSelect = depositForm.querySelector('#agentmemberbankid');
         // Kita cari elemen pembungkusnya, entah itu .form-group asli atau .profile-row dari skrip lama
@@ -669,7 +678,6 @@
 
         if (agentBankSelect && currentWrapper && !agentBankSelect.dataset.styledAsInputGroup) {
             
-            // Ambil label asli (jika ada) untuk ikon
             const originalLabel = document.querySelector('label[for="agentmemberbankid"]'); 
             const labelIcon = originalLabel ? originalLabel.querySelector('i.bi') : null;
 
@@ -687,10 +695,11 @@
             } else {
                 labelSpan.innerHTML = '<i class="bi bi-wallet2"></i>'; // Fallback
             }
-            // Tambahkan teks label "Akun Saya"
-            labelSpan.appendChild(document.createTextNode(' Akun Saya')); 
+            
+            // --- REQUEST 2 (DIPERBAIKI): Menambahkan spasi label ---
+            labelSpan.innerHTML += ' Akun Saya'; // Gunakan += untuk memastikan ada spasi
 
-            // Bersihkan style lama dari select (jika skrip lama menambahkannya)
+            // Bersihkan style lama dari select
             agentBankSelect.style.backgroundColor = '';
             agentBankSelect.style.border = '';
             agentBankSelect.style.color = '';
@@ -702,11 +711,29 @@
 
             currentWrapper.replaceWith(newInputGroup); // Ganti elemen lama
             agentBankSelect.dataset.styledAsInputGroup = 'true'; // Tandai selesai
-            // Hapus penanda lama (jika ada)
             if (agentBankSelect.dataset.styled) delete agentBankSelect.dataset.styled;
         }
 
-        // --- REQUEST 2: Style "Jumlah" --- (Logika ini sudah benar, biarkan)
+        // --- REQUEST 1 (BARU): Memperpendek teks opsi dropdown ---
+        if (agentBankSelect && !agentBankSelect.dataset.optionsShortened) {
+            const options = agentBankSelect.querySelectorAll('option');
+            options.forEach(option => {
+                const originalText = option.textContent;
+                // Memecah teks "BCA - Gaban Toto - 1440387555"
+                const parts = originalText.split(' - '); 
+                
+                // Jika formatnya 3 bagian (Bank - Nama - Nomor)
+                if (parts.length === 3) {
+                    const bank = parts[0].trim();
+                    const number = parts[2].trim();
+                    option.textContent = `${bank} - ${number}`; // Gabungkan lagi tanpa nama
+                }
+            });
+            agentBankSelect.dataset.optionsShortened = 'true'; // Tandai selesai
+        }
+
+
+        // --- REQUEST 2 (LAMA): Style "Jumlah" (Biarkan, sudah benar) ---
         const amountInput = depositForm.querySelector('#amount');
         if (amountInput && !amountInput.dataset.styled) {
             const amountGroup = amountInput.closest('.form-group');
@@ -737,7 +764,7 @@
             }
         }
 
-        // --- REQUEST 3: Style "Kode Promo" --- (Logika ini sudah benar, biarkan)
+        // --- REQUEST 3 (LAMA): Style "Kode Promo" (Biarkan, sudah benar) ---
         const promoInput = depositForm.querySelector('#promocode');
         if (promoInput && !promoInput.dataset.styled) {
             const promoGroup = promoInput.closest('.form-group');
@@ -767,7 +794,7 @@
             }
         }
 
-        // --- REQUEST 4: Style "Pilihan Promo" --- (Logika ini sudah benar, biarkan)
+        // --- REQUEST 4 (LAMA): Style "Pilihan Promo" (Biarkan, sudah benar) ---
         const promoButtonContainer = depositForm.querySelector('.row.g-2.mb-3');
         if (promoButtonContainer && !promoButtonContainer.dataset.styled) {
             const purpleButtons = promoButtonContainer.querySelectorAll('button.promo-button.btn-purple-moon');
@@ -904,6 +931,7 @@
         }
     });
 })();
+
 
 
 

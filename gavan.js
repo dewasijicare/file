@@ -130,6 +130,11 @@
             color: #ecf0f1; /* Sesuai dengan .form-label */
             font-size: 0.85em;
         }
+        /* CSS UNTUK HILANGKAN BULLET POINT KETENTUAN */
+        #deposit-form div[style*="font-size:0.8em"] ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
         /* [CSS BARU] Perbaikan warna teks deskripsi permainan */
         #betting-page-container div[id^="panel-"] .card-body small,
         #betting-page-container div[id^="panel-"] .card-body small p {
@@ -657,52 +662,51 @@
     function styleDepositFormFields(depositForm) {
         if (!depositForm) return;
 
-        // --- REQUEST 1: Style "Akun Bank" ---
+        // --- REQUEST 1 (DIUBAH): Style "Akun Bank" ---
         const agentBankSelect = depositForm.querySelector('#agentmemberbankid');
-        if (agentBankSelect && !agentBankSelect.dataset.styled) {
-            const agentBankGroup = agentBankSelect.closest('.form-group');
-            if (agentBankGroup) {
-                const label = agentBankGroup.querySelector('label.form-label');
-                const labelText = label ? label.textContent.trim() : 'Akun Bank';
-                const labelIcon = label ? label.querySelector('i.bi') : null;
+        // Kita cari elemen pembungkusnya, entah itu .form-group asli atau .profile-row dari skrip lama
+        const currentWrapper = agentBankSelect ? agentBankSelect.closest('.form-group, .profile-row') : null;
 
-                const newRow = document.createElement('div');
-                newRow.className = 'profile-row profile-row-stacked mb-3';
-                newRow.setAttribute('bis_skin_checked', '1');
+        if (agentBankSelect && currentWrapper && !agentBankSelect.dataset.styledAsInputGroup) {
+            
+            // Ambil label asli (jika ada) untuk ikon
+            const originalLabel = document.querySelector('label[for="agentmemberbankid"]'); 
+            const labelIcon = originalLabel ? originalLabel.querySelector('i.bi') : null;
 
-                const newLabel = document.createElement('div');
-                newLabel.className = 'profile-label';
-                newLabel.setAttribute('bis_skin_checked', '1');
-                
-                if (labelIcon) {
-                    newLabel.appendChild(labelIcon.cloneNode(true));
-                } else {
-                    newLabel.innerHTML = '<i class="bi bi-wallet2"></i>'; // Fallback
-                }
-                newLabel.appendChild(document.createElement('span')).textContent = ` ${labelText}`;
+            // Buat input-group baru
+            const newInputGroup = document.createElement('div');
+            newInputGroup.className = 'input-group mb-3';
+            newInputGroup.setAttribute('bis_skin_checked', '1');
 
-                const newValue = document.createElement('div');
-                newValue.className = 'profile-value';
-                newValue.setAttribute('bis_skin_checked', '1');
-                newValue.style.padding = '0';
-                newValue.style.border = 'none';
-                
-                // Style select agar menyatu
-                agentBankSelect.style.backgroundColor = 'transparent';
-                agentBankSelect.style.border = 'none';
-                agentBankSelect.style.color = 'white';
-                agentBankSelect.style.marginTop = '-5px';
-                
-                newValue.appendChild(agentBankSelect); // Pindahkan select
-                newRow.appendChild(newLabel);
-                newRow.appendChild(newValue);
-
-                agentBankGroup.replaceWith(newRow); // Ganti form-group lama
-                agentBankSelect.dataset.styled = 'true'; // Tandai selesai
+            // Buat span label
+            const labelSpan = document.createElement('span');
+            labelSpan.className = 'input-group-text';
+            
+            if (labelIcon) {
+                labelSpan.appendChild(labelIcon.cloneNode(true));
+            } else {
+                labelSpan.innerHTML = '<i class="bi bi-wallet2"></i>'; // Fallback
             }
+            // Tambahkan teks label "Akun Saya"
+            labelSpan.appendChild(document.createTextNode(' Akun Saya')); 
+
+            // Bersihkan style lama dari select (jika skrip lama menambahkannya)
+            agentBankSelect.style.backgroundColor = '';
+            agentBankSelect.style.border = '';
+            agentBankSelect.style.color = '';
+            agentBankSelect.style.marginTop = '';
+            
+            // Susun
+            newInputGroup.appendChild(labelSpan);
+            newInputGroup.appendChild(agentBankSelect); // Pindahkan select
+
+            currentWrapper.replaceWith(newInputGroup); // Ganti elemen lama
+            agentBankSelect.dataset.styledAsInputGroup = 'true'; // Tandai selesai
+            // Hapus penanda lama (jika ada)
+            if (agentBankSelect.dataset.styled) delete agentBankSelect.dataset.styled;
         }
 
-        // --- REQUEST 2: Style "Jumlah" ---
+        // --- REQUEST 2: Style "Jumlah" --- (Logika ini sudah benar, biarkan)
         const amountInput = depositForm.querySelector('#amount');
         if (amountInput && !amountInput.dataset.styled) {
             const amountGroup = amountInput.closest('.form-group');
@@ -733,7 +737,7 @@
             }
         }
 
-        // --- REQUEST 3: Style "Kode Promo" ---
+        // --- REQUEST 3: Style "Kode Promo" --- (Logika ini sudah benar, biarkan)
         const promoInput = depositForm.querySelector('#promocode');
         if (promoInput && !promoInput.dataset.styled) {
             const promoGroup = promoInput.closest('.form-group');
@@ -763,7 +767,7 @@
             }
         }
 
-        // --- REQUEST 4: Style "Pilihan Promo" ---
+        // --- REQUEST 4: Style "Pilihan Promo" --- (Logika ini sudah benar, biarkan)
         const promoButtonContainer = depositForm.querySelector('.row.g-2.mb-3');
         if (promoButtonContainer && !promoButtonContainer.dataset.styled) {
             const purpleButtons = promoButtonContainer.querySelectorAll('button.promo-button.btn-purple-moon');
@@ -900,6 +904,7 @@
         }
     });
 })();
+
 
 
 

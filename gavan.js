@@ -114,14 +114,15 @@
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            color: #bdc3c7;
-            display: none; /* Sembunyi by default */
+            color: #e74c3c; /* <--- WARNA BARU (MERAH TEMA) */
+            display: none; 
             font-size: 1.1rem;
             z-index: 5;
             line-height: 1;
+            transition: color 0.2s ease;
         }
         .promo-clear-btn:hover {
-            color: #fff;
+            color: #f5b7b1; /* <--- WARNA HOVER BARU (MERAH MUDA) */
         }
         /* Kelas 'visible' akan ditambah/dihapus oleh JavaScript */
         .promo-clear-btn.visible {
@@ -686,15 +687,22 @@
             addPasswordToggle(newPasswordInput);
         });
     }
+    function stylePagePadding() {
+        // Fungsi ini mencari .nav-tabs (yang ada di tab Bank & Riwayat)
+        const navTabs = document.querySelector('.nav-tabs');
+        if (navTabs) {
+            // Kemudian mencari kolom .col-lg-6.col-xl-4 terluarnya
+            const mainColumn = navTabs.closest('.col-lg-6.col-xl-4');
+            
+            // Jika kolom ditemukan dan belum diberi padding
+            if (mainColumn && !mainColumn.dataset.colPadded) {
+                mainColumn.style.padding = '0 10px'; // Terapkan padding
+                mainColumn.dataset.colPadded = 'true'; // Tandai selesai
+            }
+        }
+    }
     function styleDepositFormFields(depositForm) {
         if (!depositForm) return;
-
-        // --- REQUEST 2 (BARU): Padding di container terluar (kolom) ---
-        const mainColumn = depositForm.closest('.col-lg-6.col-xl-4');
-        if (mainColumn && !mainColumn.dataset.colPadded) {
-            mainColumn.style.padding = '0 10px'; // 0 top/bottom, 10px left/right
-            mainColumn.dataset.colPadded = 'true';
-        }
 
         // --- REQUEST (LAMA): Menambahkan padding p-3 ke wrapper ---
         const contentWrapper = depositForm.parentElement;
@@ -949,6 +957,7 @@
             styleMemberStatusPanel();
             styleTogelTutorialPage();
             initializeTogelCarousel();
+            stylePagePadding();
            
             const depositForm = document.querySelector('#deposit-form');
             if (depositForm) {
@@ -1000,6 +1009,7 @@
         }
     });
 })();
+
 
 
 

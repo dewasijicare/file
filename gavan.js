@@ -159,12 +159,17 @@
             font-size: 0.85em;
         }
         /* CSS UNTUK JUDUL HALAMAN STATIS (RESULT, DLL) */
-        #maincontent .container h3.text-center {
+        #maincontent .container .text-center h3 {
             color: #FFD700 !important;
             text-transform: uppercase !important;
             margin-top: 1.5rem !important;
             margin-bottom: 1rem !important;
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+        }
+        /* CSS UNTUK SOROT BARIS PERTAMA TABEL RESULT */
+        #maincontent .table-bordered tbody tr:first-child {
+            color: #FFD700; /* Warna kuning sesuai judul */
+            font-weight: bold;
         }
         /* CSS UNTUK HILANGKAN BULLET POINT WITHDRAW */
         #withdraw-form div[style*="font-size:0.8em"] ul {
@@ -764,21 +769,18 @@
         // Cari judul halaman "Deposit", "Withdraw", ATAU "Result Togel"
         const depositTitle = Array.from(document.querySelectorAll('h1.text-center')).find(h1 => h1.textContent.trim() === 'Deposit');
         const withdrawTitle = Array.from(document.querySelectorAll('h1.text-center')).find(h1 => h1.textContent.trim() === 'Withdraw');
-        
-        // --- SELEKTOR DIPERBAIKI ---
-        // Mencari h3 di dalam #maincontent yang teksnya "Result Togel"
         const resultTitle = Array.from(document.querySelectorAll('#maincontent h3')).find(h3 => h3.textContent.trim() === 'Result Togel');
         
-        // Ambil judul yang ditemukan
         const title = depositTitle || withdrawTitle || resultTitle;
         
         if (title) {
-            // Temukan kolom .col-lg-6 terdekat
-            const mainColumn = title.closest('.col-lg-6');
+            // --- SELEKTOR DIPERBARUI & PADDING DITAMBAH ---
+            // Mencari kolom terluar (col-lg-6, col-lg-6 col-xl-4, dll)
+            const mainColumn = title.closest('[class*="col-lg-"]');
             
-            // Jika kolom ada dan belum diberi padding
             if (mainColumn && !mainColumn.dataset.colPadded) {
-                mainColumn.style.padding = '0 10px'; // Beri padding L/R 10px
+                // Beri padding L/R 12px
+                mainColumn.style.padding = '0 12px'; 
                 mainColumn.dataset.colPadded = 'true';
             }
         }
@@ -1084,52 +1086,46 @@
         withdrawForm.dataset.styled = 'true'; // Tandai selesai
     }
     function styleResultPage() {
-        // --- SELEKTOR DIPERBAIKI ---
-        // Target judul "Result Togel" (tanpa kelas, di dalam #maincontent)
         const title = Array.from(document.querySelectorAll('#maincontent h3')).find(h => h.textContent.trim() === 'Result Togel');
-        if (!title) return; // Berhenti jika bukan halaman Result
+        if (!title) return; 
 
-        // --- SELEKTOR DIPERBAIKI ---
-        // Target <div class="mb-5"> yang berisi dropdown, link, dan tombol
-        // Kita ambil dari title -> parent (div.text-center) -> next sibling (div.mb-5)
         const mainContainer = title.parentElement.nextElementSibling; 
         
         if (!mainContainer || !mainContainer.classList.contains('mb-5') || mainContainer.dataset.styled === 'true') {
-            return; // Berhenti jika tidak ada, atau sudah di-style
+            return; 
         }
 
-        // 1. Ambil semua elemen yang kita butuhkan
         const oldSelect = mainContainer.querySelector('select[name="m"]');
         const urlLink = mainContainer.querySelector('a[target="_blank"]');
         const scheduleBtn = mainContainer.querySelector('button[data-bs-target="#scheduleModal"]');
         const modal = document.querySelector('#scheduleModal');
 
-        // Pastikan semua elemen ada sebelum lanjut
         if (!oldSelect || !urlLink || !scheduleBtn || !modal) return;
 
-        // 2. Ekstrak info dari modal
+        // --- PERUBAHAN (REQ 3): Mengurangi Jarak ---
+        // Hapus margin bottom 5 (terlalu besar) dan ganti jadi 3
+        mainContainer.classList.remove('mb-5');
+        mainContainer.classList.add('mb-3');
+        // --- AKHIR PERUBAHAN ---
+
         const cardTexts = modal.querySelectorAll('.card-text');
         const tutup = Array.from(cardTexts).find(p => p.textContent.includes('Tutup:'))?.textContent.trim() || 'Tutup: -';
         const hasil = Array.from(cardTexts).find(p => p.textContent.includes('Hasil:'))?.textContent.trim() || 'Hasil: -';
         const hari = modal.querySelector('.col.w-100')?.textContent.trim() || 'Setiap hari';
         
-        // 3. Buat Input Group baru (Dropdown + Tombol)
         const newGroup = document.createElement('div');
         newGroup.className = 'input-group mb-3';
 
-        // 4. Pindahkan dan style dropdown
-        oldSelect.className = 'form-select'; // Hapus style lama, ganti class
-        oldSelect.style = ''; // Hapus inline style 'width'
-        oldSelect.style.borderColor = '#ffd700'; // Beri border emas
+        oldSelect.className = 'form-select'; 
+        oldSelect.style = ''; 
+        oldSelect.style.borderColor = '#ffd700'; 
         
-        // 5. Buat tombol "Website"
         const newBtn = document.createElement('a');
-        newBtn.className = 'btn btn-secondary'; // Di-style jadi kuning oleh CSS tema
+        newBtn.className = 'btn btn-secondary'; 
         newBtn.target = '_blank';
-        newBtn.href = urlLink.href; // Ambil URL dari link teks lama
+        newBtn.href = urlLink.href; 
         newBtn.innerHTML = 'Website <i class="bi bi-arrow-up-right-square"></i>';
         
-        // 6. Buat kotak info jadwal
         const scheduleBox = document.createElement('div');
         scheduleBox.className = 'alert alert-primary d-flex justify-content-between flex-wrap p-2';
         scheduleBox.style.alignItems = 'center';
@@ -1140,18 +1136,15 @@
             </div>
         `;
 
-        // 7. Susun ulang
-        newGroup.appendChild(oldSelect); // Masukkan select ke grup
-        newGroup.appendChild(newBtn);    // Masukkan tombol ke grup
+        newGroup.appendChild(oldSelect); 
+        newGroup.appendChild(newBtn);    
         
-        mainContainer.innerHTML = '';      // Kosongkan container lama
-        mainContainer.appendChild(newGroup); // Tambah grup baru
-        mainContainer.appendChild(scheduleBox); // Tambah info jadwal
+        mainContainer.innerHTML = '';      
+        mainContainer.appendChild(newGroup); 
+        mainContainer.appendChild(scheduleBox); 
 
-        // 8. Hapus modal
         modal.remove();
         
-        // 9. Tandai selesai
         mainContainer.dataset.styled = 'true';
     }
     function styleLogoutButton() {
@@ -1245,6 +1238,7 @@
         }
     });
 })();
+
 
 
 

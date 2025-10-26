@@ -334,7 +334,7 @@
         if (!loginCard || loginCard.dataset.layoutStyled === 'true') return;
         loginCard.dataset.layoutStyled = 'true';
 
-        // [FIX 1: Memperbaiki lebar card agar pas & di tengah]
+        // [PERBAIKAN 1: Memperbaiki lebar card agar pas & di tengah]
         try {
             if (!loginCard.parentElement.classList.contains('col-lg-6')) { 
                 const cardParent = loginCard.parentElement;
@@ -350,15 +350,23 @@
             console.error("GavanTheme Error (Centering Login):", e);
         }
 
-        // [FIX 2: Mengubah layout input dari 1 baris (col-md-6) menjadi 2 baris (col-12)]
-        const usernameGroup = loginForm.querySelector('input[name="userName"]')?.closest('.form-group, .mb-3');
-        const passwordGroup = loginForm.querySelector('input[name="password"]')?.closest('.form-group, .mb-3');
-        const buttonContainer = loginForm.querySelector('button[type="submit"]')?.parentElement;
+        // [PERBAIKAN 2: Mengubah layout default menjadi 2 baris (col-12)]
         
-        const usernameInput = usernameGroup ? usernameGroup.querySelector('input') : null;
-        const passwordInput = passwordGroup ? passwordGroup.querySelector('input') : null;
+        // Selector baru yang lebih kuat untuk menemukan elemen default
+        const usernameLabel = loginForm.querySelector('label[for="username"]');
+        const passwordLabel = loginForm.querySelector('label[for="password"]');
+        
+        // Grup pembungkus elemen (yang berisi label dan input)
+        const usernameGroup = usernameLabel ? usernameLabel.parentElement : null;
+        const passwordGroup = passwordLabel ? passwordLabel.parentElement : null;
+        
+        // Input-nya sendiri
+        const usernameInput = loginForm.querySelector('input[name="userName"]');
+        const passwordInput = loginForm.querySelector('input[name="password"]');
+        
+        const buttonContainer = loginForm.querySelector('button[type="submit"]')?.parentElement;
 
-        // Cek jika semua elemen ditemukan sebelum melanjutkan
+        // Cek jika semua elemen default ditemukan
         if (usernameGroup && passwordGroup && buttonContainer && usernameInput && passwordInput) {
             const newRow = document.createElement('div');
             newRow.className = 'row g-2 mb-3';
@@ -377,19 +385,16 @@
             // 2. Proses Password
             const passwordCol = document.createElement('div');
             passwordCol.className = 'col-12';
-            const passwordWrapper = document.createElement('div'); // Wrapper untuk ikon mata
+            const passwordWrapper = document.createElement('div');
             passwordWrapper.className = 'input-wrapper';
             const passwordInputGroup = document.createElement('div');
             passwordInputGroup.className = 'input-group';
             passwordInputGroup.innerHTML = '<span class="input-group-text"><i class="bi bi-key-fill"></i></span>';
             passwordInput.placeholder = "Password";
-
-            // [PERBAIKAN DI SINI]
-            // Hapus status 'data-toggle-added' agar MutationObserver mau 
-            // menjalankan addPasswordToggle() lagi pada input yang dipindahkan ini.
+            
+            // Hapus penanda lama (jika ada) agar ikon mata dibuat ulang
             if (passwordInput.dataset.toggleAdded) {
                 delete passwordInput.dataset.toggleAdded;
-  DITAMBAHKAN_DISINI]
             }
 
             passwordInputGroup.appendChild(passwordInput); // Memindahkan input asli
@@ -400,7 +405,7 @@
             // 3. Sisipkan baris baru sebelum tombol-tombol
             buttonContainer.before(newRow);
             
-            // 4. Hapus wrapper form-group yang lama (sekarang sudah kosong)
+            // 4. Hapus wrapper default yang lama (yang berisi label)
             usernameGroup.remove();
             passwordGroup.remove();
         }
@@ -711,6 +716,7 @@
         }
     });
 })();
+
 
 
 

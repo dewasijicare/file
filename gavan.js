@@ -1097,16 +1097,26 @@
 
         if (!oldSelect || !urlLink || !scheduleBtn || !modal) return;
 
-        // --- PERUBAHAN (REQ 3): Mengurangi Jarak ---
-        // Hapus margin bottom 5 (terlalu besar) dan ganti jadi 3
         mainContainer.classList.remove('mb-5');
         mainContainer.classList.add('mb-3');
-        // --- AKHIR PERUBAHAN ---
 
-        const cardTexts = modal.querySelectorAll('.card-text');
-        const tutup = Array.from(cardTexts).find(p => p.textContent.includes('Tutup:'))?.textContent.trim() || 'Tutup: -';
-        const hasil = Array.from(cardTexts).find(p => p.textContent.includes('Hasil:'))?.textContent.trim() || 'Hasil: -';
-        const hari = modal.querySelector('.col.w-100')?.textContent.trim() || 'Setiap hari';
+        // --- INI ADALAH BLOK YANG DIPERBAIKI ---
+        // 2. Ekstrak info dari modal (Versi Robust/Pintar)
+        const modalBody = modal.querySelector('.modal-body');
+        // Ambil semua elemen di dalam .card-body
+        const allTextNodes = modalBody ? Array.from(modalBody.querySelectorAll('.card-body > *')) : [];
+        
+        // Cari elemen berdasarkan teksnya, bukan kelasnya
+        const tutupEl = allTextNodes.find(el => el.textContent.includes('Tutup:'));
+        const hasilEl = allTextNodes.find(el => el.textContent.includes('Hasil:'));
+        const hariEl = allTextNodes.find(el => el.textContent.includes('Hari Aktif:'));
+
+        // Ekstrak teks, atau gunakan fallback yang netral
+        const tutup = tutupEl ? tutupEl.textContent.trim() : 'Tutup: -';
+        const hasil = hasilEl ? hasilEl.textContent.trim() : 'Hasil: -';
+        // Pisahkan label dari nilainya
+        const hariText = hariEl ? hariEl.textContent.replace('Hari Aktif:', '').trim() : '-';
+        // --- AKHIR BLOK PERBAIKAN ---
         
         const newGroup = document.createElement('div');
         newGroup.className = 'input-group mb-3';
@@ -1121,12 +1131,16 @@
         newBtn.href = urlLink.href; 
         newBtn.innerHTML = 'Website <i class="bi bi-arrow-up-right-square"></i>';
         
+        // 6. Buat kotak info jadwal (Layout disesuaikan dengan screenshot)
         const scheduleBox = document.createElement('div');
-        scheduleBox.className = 'alert alert-primary d-flex justify-content-between flex-wrap p-2';
+        scheduleBox.className = 'alert alert-primary p-2';
         scheduleBox.style.alignItems = 'center';
+        
         scheduleBox.innerHTML = `
-            <strong style="color: #fff; font-size: 0.9em; margin-right: 15px;">${hari}</strong>
-            <div style="font-size: 0.9em;">
+            <strong style="color: #fff; font-size: 0.9em; display: block; text-align: center; margin-bottom: 5px;">
+                Hari Aktif: ${hariText}
+            </strong>
+            <div style="font-size: 0.9em; text-align: center; border-top: 1px solid #34495e; padding-top: 5px;">
                 <span>${tutup}</span> &nbsp;&nbsp;|&nbsp;&nbsp; <span>${hasil}</span>
             </div>
         `;
@@ -1266,6 +1280,7 @@
         }
     });
 })();
+
 
 
 

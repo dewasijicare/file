@@ -1114,76 +1114,92 @@
         withdrawForm.dataset.styled = 'true'; // Tandai selesai
     }
     function styleResultPage() {
+        // Target judul "Result Togel"
         const title = Array.from(document.querySelectorAll('#maincontent h3')).find(h => h.textContent.trim() === 'Result Togel');
-        if (!title) return; 
+        if (!title) return; // Berhenti jika bukan halaman Result
 
+        // Target <div class="mb-5"> yang berisi dropdown, link, dan tombol
         const mainContainer = title.parentElement.nextElementSibling; 
         
         if (!mainContainer || !mainContainer.classList.contains('mb-5') || mainContainer.dataset.styled === 'true') {
-            return; 
+            return; // Berhenti jika tidak ada, atau sudah di-style
         }
 
         const oldSelect = mainContainer.querySelector('select[name="m"]');
+        if (!oldSelect) return; // Perlu select untuk lanjut
+        
+        // 1. Cek apakah elemen opsional (link dan tombol) ada
         const urlLink = mainContainer.querySelector('a[target="_blank"]');
         const scheduleBtn = mainContainer.querySelector('button[data-bs-target="#scheduleModal"]');
         const modal = document.querySelector('#scheduleModal');
 
-        if (!oldSelect || !urlLink || !scheduleBtn || !modal) return;
-
+        // 2. Kurangi margin (ini aman dilakukan di kedua kasus)
         mainContainer.classList.remove('mb-5');
         mainContainer.classList.add('mb-3');
 
-        // --- Ambil info modal (versi pintar) ---
-        const modalBody = modal.querySelector('.modal-body');
-        const allTextNodes = modalBody ? Array.from(modalBody.querySelectorAll('.card-body > *')) : [];
-        
-        const tutupEl = allTextNodes.find(el => el.textContent.includes('Tutup:'));
-        const hasilEl = allTextNodes.find(el => el.textContent.includes('Hasil:'));
-        const hariEl = allTextNodes.find(el => el.textContent.includes('Hari Aktif:'));
+        // 3. JIKA KASUS NORMAL (Ada link dan tombol)
+        if (urlLink && scheduleBtn && modal) {
+            
+            // Ekstrak info dari modal
+            const modalBody = modal.querySelector('.modal-body');
+            const allTextNodes = modalBody ? Array.from(modalBody.querySelectorAll('.card-body > *')) : [];
+            const tutupEl = allTextNodes.find(el => el.textContent.includes('Tutup:'));
+            const hasilEl = allTextNodes.find(el => el.textContent.includes('Hasil:'));
+            const hariEl = allTextNodes.find(el => el.textContent.includes('Hari Aktif:'));
+            const tutup = tutupEl ? tutupEl.textContent.trim() : 'Tutup: -';
+            const hasil = hasilEl ? hasilEl.textContent.trim() : 'Hasil: -';
+            const hariText = hariEl ? hariEl.textContent.replace('Hari Aktif:', '').trim() : '-';
+            
+            // Buat Input Group (Dropdown + Tombol)
+            const newGroup = document.createElement('div');
+            newGroup.className = 'input-group mb-3';
+            oldSelect.className = 'form-select'; 
+            oldSelect.style = ''; 
 
-        const tutup = tutupEl ? tutupEl.textContent.trim() : 'Tutup: -';
-        const hasil = hasilEl ? hasilEl.textContent.trim() : 'Hasil: -';
-        // Pisahkan label dari nilainya
-        const hariText = hariEl ? hariEl.textContent.replace('Hari Aktif:', '').trim() : '-';
-        
-        const newGroup = document.createElement('div');
-        newGroup.className = 'input-group mb-3';
+            // --- BARIS DIPERBAIKI (MENGGUNAKAN !important) ---
+            oldSelect.style.setProperty('border-color', '#ffd700', 'important');
+            
+            const newBtn = document.createElement('a');
+            newBtn.className = 'btn btn-secondary'; 
+            newBtn.target = '_blank';
+            newBtn.href = urlLink.href; 
+            newBtn.innerHTML = 'Website <i class="bi bi-arrow-up-right-square"></i>';
+            
+            // Buat kotak info jadwal
+            const scheduleBox = document.createElement('div');
+            scheduleBox.className = 'alert alert-primary p-2';
+            scheduleBox.style.alignItems = 'center';
+            scheduleBox.innerHTML = `
+                <strong style="color: #fff; font-size: 0.9em; display: block; text-align: center; margin-bottom: 5px;">
+                    ${hariText}
+                </strong>
+                <div style="font-size: 0.9em; text-align: center; border-top: 1px solid #34495e; padding-top: 5px;">
+                    <span>${tutup}</span> &nbsp;&nbsp;|&nbsp;&nbsp; <span>${hasil}</span>
+                </div>
+            `;
 
-        oldSelect.className = 'form-select'; 
-        oldSelect.style = ''; 
-        oldSelect.style.borderColor = '#ffd700'; 
-        
-        const newBtn = document.createElement('a');
-        newBtn.className = 'btn btn-secondary'; 
-        newBtn.target = '_blank';
-        newBtn.href = urlLink.href; 
-        newBtn.innerHTML = 'Website <i class="bi bi-arrow-up-right-square"></i>';
-        
-        // --- KOTAK INFO JADWAL (SUDAH DIPERBARUI) ---
-        const scheduleBox = document.createElement('div');
-        scheduleBox.className = 'alert alert-primary p-2';
-        scheduleBox.style.alignItems = 'center';
-        
-        scheduleBox.innerHTML = `
-            <strong style="color: #fff; font-size: 0.9em; display: block; text-align: center; margin-bottom: 5px;">
-                ${hariText}
-            </strong>
-            <div style="font-size: 0.9em; text-align: center; border-top: 1px solid #34495e; padding-top: 5px;">
-                <span>${tutup}</span> &nbsp;&nbsp;|&nbsp;&nbsp; <span>${hasil}</span>
-            </div>
-        `;
-        // --- AKHIR PERUBAHAN ---
+            // Susun ulang
+            newGroup.appendChild(oldSelect); 
+            newGroup.appendChild(newBtn);    
+            mainContainer.innerHTML = '';      
+            mainContainer.appendChild(newGroup); 
+            mainContainer.appendChild(scheduleBox); 
+            modal.remove();
 
-        newGroup.appendChild(oldSelect); 
-        newGroup.appendChild(newBtn);    
+        // 4. JIKA KASUS "SEMUA" (Tidak ada link/tombol)
+        } else {
+            // Kita hanya perlu men-style dropdown-nya saja
+            
+            // --- BARIS DIPERBAIKI (MENGGUNAKAN !important) ---
+            oldSelect.style.setProperty('border-color', '#ffd700', 'important');
+            oldSelect.style.width = '100%'; // Buat jadi full width
+            
+            // Hapus elemen-elemen kosong yang tidak perlu
+            if (urlLink) urlLink.parentElement.remove();
+            if (scheduleBtn) scheduleBtn.parentElement.remove();
+        }
         
-        mainContainer.innerHTML = '';      
-        mainContainer.appendChild(newGroup); 
-        mainContainer.appendChild(scheduleBox); 
-
-        modal.remove();
-        
-        mainContainer.dataset.styled = 'true';
+        mainContainer.dataset.styled = 'true'; // Tandai selesai
     }
     function styleResultTableHighlight() {
         const tableBody = document.querySelector('#maincontent .table-bordered tbody');
@@ -1341,6 +1357,7 @@
         }
     });
 })();
+
 
 
 

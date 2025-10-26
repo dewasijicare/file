@@ -104,7 +104,32 @@
              box-shadow: 0 0 20px #00eaff, 0 0 30px #0077ff, inset 0 0 5px rgba(255,255,255,.4) !important;
              transform: scale(1.05);
         }
-
+        /* CSS KHUSUS UNTUK PROMO BOX (IDE #1) */
+        .promo-choice-box {
+            background-color: #1a252f; /* Sesuai dengan warna .form-control */
+            border: 2px solid #34495e; /* Sesuai dengan border .form-control */
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: border-color 0.2s ease-in-out;
+            color: #ecf0f1; /* Sesuai dengan .form-label */
+        }
+        .promo-choice-box:hover {
+            border-color: #bdc3c7; /* Sesuai dengan :focus .form-control */
+        }
+        .promo-choice-box.selected {
+            border-color: #FFD700; /* Sesuai dengan warna judul h1 */
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.6); /* Sesuai dengan h1 */
+        }
+        .promo-choice-box h5 {
+            color: #FFD700; /* Sesuai dengan h1 */
+            margin-bottom: 0.5rem;
+        }
+        .promo-choice-box small {
+            color: #ecf0f1; /* Sesuai dengan .form-label */
+            font-size: 0.85em;
+        }
         /* [CSS BARU] Perbaikan warna teks deskripsi permainan */
         #betting-page-container div[id^="panel-"] .card-body small,
         #betting-page-container div[id^="panel-"] .card-body small p {
@@ -629,7 +654,164 @@
             addPasswordToggle(newPasswordInput);
         });
     }
+    function styleDepositFormFields(depositForm) {
+        if (!depositForm) return;
 
+        // --- REQUEST 1: Style "Akun Bank" ---
+        const agentBankSelect = depositForm.querySelector('#agentmemberbankid');
+        if (agentBankSelect && !agentBankSelect.dataset.styled) {
+            const agentBankGroup = agentBankSelect.closest('.form-group');
+            if (agentBankGroup) {
+                const label = agentBankGroup.querySelector('label.form-label');
+                const labelText = label ? label.textContent.trim() : 'Akun Bank';
+                const labelIcon = label ? label.querySelector('i.bi') : null;
+
+                const newRow = document.createElement('div');
+                newRow.className = 'profile-row profile-row-stacked mb-3';
+                newRow.setAttribute('bis_skin_checked', '1');
+
+                const newLabel = document.createElement('div');
+                newLabel.className = 'profile-label';
+                newLabel.setAttribute('bis_skin_checked', '1');
+                
+                if (labelIcon) {
+                    newLabel.appendChild(labelIcon.cloneNode(true));
+                } else {
+                    newLabel.innerHTML = '<i class="bi bi-wallet2"></i>'; // Fallback
+                }
+                newLabel.appendChild(document.createElement('span')).textContent = ` ${labelText}`;
+
+                const newValue = document.createElement('div');
+                newValue.className = 'profile-value';
+                newValue.setAttribute('bis_skin_checked', '1');
+                newValue.style.padding = '0';
+                newValue.style.border = 'none';
+                
+                // Style select agar menyatu
+                agentBankSelect.style.backgroundColor = 'transparent';
+                agentBankSelect.style.border = 'none';
+                agentBankSelect.style.color = 'white';
+                agentBankSelect.style.marginTop = '-5px';
+                
+                newValue.appendChild(agentBankSelect); // Pindahkan select
+                newRow.appendChild(newLabel);
+                newRow.appendChild(newValue);
+
+                agentBankGroup.replaceWith(newRow); // Ganti form-group lama
+                agentBankSelect.dataset.styled = 'true'; // Tandai selesai
+            }
+        }
+
+        // --- REQUEST 2: Style "Jumlah" ---
+        const amountInput = depositForm.querySelector('#amount');
+        if (amountInput && !amountInput.dataset.styled) {
+            const amountGroup = amountInput.closest('.form-group');
+            if (amountGroup) {
+                const label = amountGroup.querySelector('label.form-label');
+                const labelIcon = label ? label.querySelector('i.bi') : null;
+                const placeholderText = label ? label.textContent.trim() : 'Jumlah';
+
+                const newInputGroup = document.createElement('div');
+                newInputGroup.className = 'input-group mb-3';
+                newInputGroup.setAttribute('bis_skin_checked', '1');
+
+                const iconSpan = document.createElement('span');
+                iconSpan.className = 'input-group-text';
+                if (labelIcon) {
+                    iconSpan.appendChild(labelIcon.cloneNode(true));
+                } else {
+                    iconSpan.innerHTML = '<i class="bi bi-cash-coin"></i>'; // Fallback
+                }
+                
+                amountInput.placeholder = placeholderText; // Set placeholder
+                
+                newInputGroup.appendChild(iconSpan);
+                newInputGroup.appendChild(amountInput); // Pindahkan input
+
+                amountGroup.replaceWith(newInputGroup); // Ganti form-group lama
+                amountInput.dataset.styled = 'true'; // Tandai selesai
+            }
+        }
+
+        // --- REQUEST 3: Style "Kode Promo" ---
+        const promoInput = depositForm.querySelector('#promocode');
+        if (promoInput && !promoInput.dataset.styled) {
+            const promoGroup = promoInput.closest('.form-group');
+            if (promoGroup) {
+                const label = promoGroup.querySelector('label.form-label');
+                const labelIcon = label ? label.querySelector('i.bi') : null;
+
+                const newInputGroup = document.createElement('div');
+                newInputGroup.className = 'input-group mb-3';
+                newInputGroup.setAttribute('bis_skin_checked', '1');
+                
+                const iconSpan = document.createElement('span');
+                iconSpan.className = 'input-group-text';
+                if (labelIcon) {
+                    iconSpan.appendChild(labelIcon.cloneNode(true));
+                } else {
+                    iconSpan.innerHTML = '<i class="bi bi-tag-fill"></i>'; // Fallback
+                }
+                
+                promoInput.placeholder = "Pilih promo yang tersedia"; // Teks placeholder baru
+                
+                newInputGroup.appendChild(iconSpan);
+                newInputGroup.appendChild(promoInput); // Pindahkan input
+
+                promoGroup.replaceWith(newInputGroup); // Ganti form-group lama
+                promoInput.dataset.styled = 'true'; // Tandai selesai
+            }
+        }
+
+        // --- REQUEST 4: Style "Pilihan Promo" ---
+        const promoButtonContainer = depositForm.querySelector('.row.g-2.mb-3');
+        if (promoButtonContainer && !promoButtonContainer.dataset.styled) {
+            const purpleButtons = promoButtonContainer.querySelectorAll('button.promo-button.btn-purple-moon');
+            if (purpleButtons.length > 0) {
+                purpleButtons.forEach(button => {
+                    const newPromoBox = document.createElement('div');
+                    newPromoBox.className = 'promo-choice-box';
+                    newPromoBox.dataset.code = button.dataset.code; // Transfer data-code
+                    newPromoBox.innerHTML = button.innerHTML; // Salin konten (h5, small, dll)
+                    
+                    const column = button.closest('.d-grid')?.parentElement;
+                    if (column) {
+                        column.innerHTML = ''; // Hapus .d-grid dan tombol
+                        column.appendChild(newPromoBox); // Tambahkan kotak baru
+                    }
+                });
+                promoButtonContainer.dataset.styled = 'true'; // Tandai container selesai
+            }
+        }
+    }
+    function initializePromoSelection() {
+        const promoBoxes = document.querySelectorAll('.promo-choice-box');
+        const promoInput = document.getElementById('promocode');
+
+        if (!promoBoxes.length || !promoInput) return;
+
+        promoBoxes.forEach(function(box) {
+            if (box.dataset.promoInitialized === 'true') {
+                return; 
+            }
+            box.dataset.promoInitialized = 'true'; 
+
+            box.addEventListener('click', function() {
+                const selectedCode = box.getAttribute('data-code');
+                
+                if (box.classList.contains('selected')) {
+                    box.classList.remove('selected');
+                    promoInput.value = '';
+                } else {
+                    promoBoxes.forEach(function(otherBox) {
+                        otherBox.classList.remove('selected');
+                    });
+                    box.classList.add('selected');
+                    promoInput.value = selectedCode;
+                }
+            });
+        });
+    }
     function styleLogoutButton() {
         const profileFormLogout = document.querySelector('form a[href="/logout"]');
         if (profileFormLogout && !profileFormLogout.dataset.styled) {
@@ -672,8 +854,10 @@
             if (depositForm) {
                 initializeDepositForm(depositForm);
                 updateDepositFormUI(depositForm);
+                styleDepositFormFields(depositForm); // <--- TAMBAHKAN BARIS INI
             }
-           
+
+            initializePromoSelection();
             styleWithdrawForm();
             styleRtpModal();
             styleConfirmationModal(); 
@@ -716,6 +900,7 @@
         }
     });
 })();
+
 
 
 

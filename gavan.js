@@ -104,6 +104,33 @@
              box-shadow: 0 0 20px #00eaff, 0 0 30px #0077ff, inset 0 0 5px rgba(255,255,255,.4) !important;
              transform: scale(1.05);
         }
+        /* CSS UNTUK TOMBOL CLEAR PROMO */
+        .promo-input-wrapper {
+            position: relative;
+        }
+        .promo-clear-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #bdc3c7;
+            display: none; /* Sembunyi by default */
+            font-size: 1.1rem;
+            z-index: 5;
+            line-height: 1;
+        }
+        .promo-clear-btn:hover {
+            color: #fff;
+        }
+        /* Kelas 'visible' akan ditambah/dihapus oleh JavaScript */
+        .promo-clear-btn.visible {
+            display: block;
+        }
+        /* Beri padding di input agar teks tidak tertutup tombol */
+        #promocode[data-clearable="true"] {
+            padding-right: 35px !important;
+        }
         /* CSS KHUSUS UNTUK PROMO BOX (IDE #1) */
         .promo-choice-box {
             background-color: #1a252f; /* Sesuai dengan warna .form-control */
@@ -662,18 +689,23 @@
     function styleDepositFormFields(depositForm) {
         if (!depositForm) return;
 
-        // --- REQUEST 3 (BARU): Menambahkan padding p-3 ke wrapper ---
+        // --- REQUEST 2 (BARU): Padding di container terluar (kolom) ---
+        const mainColumn = depositForm.closest('.col-lg-6.col-xl-4');
+        if (mainColumn && !mainColumn.dataset.colPadded) {
+            mainColumn.style.padding = '0 10px'; // 0 top/bottom, 10px left/right
+            mainColumn.dataset.colPadded = 'true';
+        }
+
+        // --- REQUEST (LAMA): Menambahkan padding p-3 ke wrapper ---
         const contentWrapper = depositForm.parentElement;
-        // Cek elemen wrapper (yang memiliki class .border-top-0)
         if (contentWrapper && contentWrapper.classList.contains('border-top-0') && !contentWrapper.dataset.padded) {
-            contentWrapper.classList.remove('p-2'); // Hapus padding lama
-            contentWrapper.classList.add('p-3');   // Tambah padding p-3 seperti halaman login
-            contentWrapper.dataset.padded = 'true'; // Tandai selesai
+            contentWrapper.classList.remove('p-2'); 
+            contentWrapper.classList.add('p-3');   
+            contentWrapper.dataset.padded = 'true';
         }
 
         // --- REQUEST 1 (DIUBAH): Style "Akun Bank" ---
         const agentBankSelect = depositForm.querySelector('#agentmemberbankid');
-        // Kita cari elemen pembungkusnya, entah itu .form-group asli atau .profile-row dari skrip lama
         const currentWrapper = agentBankSelect ? agentBankSelect.closest('.form-group, .profile-row') : null;
 
         if (agentBankSelect && currentWrapper && !agentBankSelect.dataset.styledAsInputGroup) {
@@ -681,12 +713,10 @@
             const originalLabel = document.querySelector('label[for="agentmemberbankid"]'); 
             const labelIcon = originalLabel ? originalLabel.querySelector('i.bi') : null;
 
-            // Buat input-group baru
             const newInputGroup = document.createElement('div');
             newInputGroup.className = 'input-group mb-3';
             newInputGroup.setAttribute('bis_skin_checked', '1');
 
-            // Buat span label
             const labelSpan = document.createElement('span');
             labelSpan.className = 'input-group-text';
             
@@ -696,40 +726,35 @@
                 labelSpan.innerHTML = '<i class="bi bi-wallet2"></i>'; // Fallback
             }
             
-            // --- REQUEST 2 (DIPERBAIKI): Menambahkan spasi label ---
-            labelSpan.innerHTML += ' Akun Saya'; // Gunakan += untuk memastikan ada spasi
+            // --- REQUEST 1 (DIPERBAIKI): Menambahkan spasi label ---
+            labelSpan.innerHTML += '&nbsp;Akun Saya'; // Paksa spasi dengan &nbsp;
 
-            // Bersihkan style lama dari select
             agentBankSelect.style.backgroundColor = '';
             agentBankSelect.style.border = '';
             agentBankSelect.style.color = '';
             agentBankSelect.style.marginTop = '';
             
-            // Susun
             newInputGroup.appendChild(labelSpan);
-            newInputGroup.appendChild(agentBankSelect); // Pindahkan select
+            newInputGroup.appendChild(agentBankSelect); 
 
-            currentWrapper.replaceWith(newInputGroup); // Ganti elemen lama
-            agentBankSelect.dataset.styledAsInputGroup = 'true'; // Tandai selesai
+            currentWrapper.replaceWith(newInputGroup); 
+            agentBankSelect.dataset.styledAsInputGroup = 'true'; 
             if (agentBankSelect.dataset.styled) delete agentBankSelect.dataset.styled;
         }
 
-        // --- REQUEST 1 (BARU): Memperpendek teks opsi dropdown ---
+        // --- REQUEST 1 (LAMA): Memperpendek teks opsi dropdown ---
         if (agentBankSelect && !agentBankSelect.dataset.optionsShortened) {
             const options = agentBankSelect.querySelectorAll('option');
             options.forEach(option => {
                 const originalText = option.textContent;
-                // Memecah teks "BCA - Gaban Toto - 1440387555"
                 const parts = originalText.split(' - '); 
-                
-                // Jika formatnya 3 bagian (Bank - Nama - Nomor)
                 if (parts.length === 3) {
                     const bank = parts[0].trim();
                     const number = parts[2].trim();
-                    option.textContent = `${bank} - ${number}`; // Gabungkan lagi tanpa nama
+                    option.textContent = `${bank} - ${number}`; 
                 }
             });
-            agentBankSelect.dataset.optionsShortened = 'true'; // Tandai selesai
+            agentBankSelect.dataset.optionsShortened = 'true';
         }
 
 
@@ -754,17 +779,17 @@
                     iconSpan.innerHTML = '<i class="bi bi-cash-coin"></i>'; // Fallback
                 }
                 
-                amountInput.placeholder = placeholderText; // Set placeholder
+                amountInput.placeholder = placeholderText; 
                 
                 newInputGroup.appendChild(iconSpan);
-                newInputGroup.appendChild(amountInput); // Pindahkan input
+                newInputGroup.appendChild(amountInput); 
 
-                amountGroup.replaceWith(newInputGroup); // Ganti form-group lama
-                amountInput.dataset.styled = 'true'; // Tandai selesai
+                amountGroup.replaceWith(newInputGroup); 
+                amountInput.dataset.styled = 'true'; 
             }
         }
 
-        // --- REQUEST 3 (LAMA): Style "Kode Promo" (Biarkan, sudah benar) ---
+        // --- REQUEST 3 (DIUBAH): Style "Kode Promo" ---
         const promoInput = depositForm.querySelector('#promocode');
         if (promoInput && !promoInput.dataset.styled) {
             const promoGroup = promoInput.closest('.form-group');
@@ -773,7 +798,7 @@
                 const labelIcon = label ? label.querySelector('i.bi') : null;
 
                 const newInputGroup = document.createElement('div');
-                newInputGroup.className = 'input-group mb-3';
+                newInputGroup.className = 'input-group mb-3'; // Hapus mb-3, akan di-handle wrapper
                 newInputGroup.setAttribute('bis_skin_checked', '1');
                 
                 const iconSpan = document.createElement('span');
@@ -784,15 +809,32 @@
                     iconSpan.innerHTML = '<i class="bi bi-tag-fill"></i>'; // Fallback
                 }
                 
-                promoInput.placeholder = "Pilih promo yang tersedia"; // Teks placeholder baru
+                // (BARU) Buat wrapper untuk clear button
+                const wrapper = document.createElement('div');
+                wrapper.className = 'promo-input-wrapper mb-3'; // position: relative
+
+                promoInput.placeholder = "Pilih promo yang tersedia";
+                promoInput.dataset.clearable = 'true'; // Tandai input ini
                 
                 newInputGroup.appendChild(iconSpan);
-                newInputGroup.appendChild(promoInput); // Pindahkan input
+                newInputGroup.appendChild(promoInput);
+                
+                // (BARU) Buat clear button
+                const clearBtn = document.createElement('i');
+                clearBtn.className = 'bi bi-x-circle-fill promo-clear-btn';
+                clearBtn.id = 'promo-clear-btn-instance'; // Beri ID unik
+                
+                wrapper.appendChild(newInputGroup);
+pre {
+  white-space: pre-wrap;
+}
+                wrapper.appendChild(clearBtn);
 
-                promoGroup.replaceWith(newInputGroup); // Ganti form-group lama
+                promoGroup.replaceWith(wrapper); // Ganti form-group lama
                 promoInput.dataset.styled = 'true'; // Tandai selesai
             }
         }
+
 
         // --- REQUEST 4 (LAMA): Style "Pilihan Promo" (Biarkan, sudah benar) ---
         const promoButtonContainer = depositForm.querySelector('.row.g-2.mb-3');
@@ -802,25 +844,50 @@
                 purpleButtons.forEach(button => {
                     const newPromoBox = document.createElement('div');
                     newPromoBox.className = 'promo-choice-box';
-                    newPromoBox.dataset.code = button.dataset.code; // Transfer data-code
-                    newPromoBox.innerHTML = button.innerHTML; // Salin konten (h5, small, dll)
+                    newPromoBox.dataset.code = button.dataset.code; 
+                    newPromoBox.innerHTML = button.innerHTML; 
                     
                     const column = button.closest('.d-grid')?.parentElement;
                     if (column) {
-                        column.innerHTML = ''; // Hapus .d-grid dan tombol
-                        column.appendChild(newPromoBox); // Tambahkan kotak baru
+                        column.innerHTML = ''; 
+                        column.appendChild(newPromoBox); 
                     }
                 });
-                promoButtonContainer.dataset.styled = 'true'; // Tandai container selesai
+                promoButtonContainer.dataset.styled = 'true'; 
             }
         }
     }
     function initializePromoSelection() {
         const promoBoxes = document.querySelectorAll('.promo-choice-box');
         const promoInput = document.getElementById('promocode');
+        const clearBtn = document.getElementById('promo-clear-btn-instance'); // Ambil tombol X
 
-        if (!promoBoxes.length || !promoInput) return;
+        // Jika salah satu elemen tidak ada, jangan jalankan
+        if (!promoBoxes.length || !promoInput || !clearBtn) return;
 
+        // Fungsi untuk update status tombol X
+        const updateClearButton = () => {
+            if (promoInput.value) {
+                clearBtn.classList.add('visible');
+            } else {
+                clearBtn.classList.remove('visible');
+            }
+        };
+
+        // Fungsi untuk clear promo
+        const clearPromo = () => {
+            promoInput.value = '';
+            promoBoxes.forEach(box => box.classList.remove('selected'));
+            updateClearButton();
+        };
+
+        // Event listener untuk tombol X (pastikan hanya ditambah sekali)
+        if (!clearBtn.dataset.promoInitialized) {
+            clearBtn.addEventListener('click', clearPromo);
+            clearBtn.dataset.promoInitialized = 'true';
+        }
+
+        // Event listener untuk promo box (pastikan hanya ditambah sekali)
         promoBoxes.forEach(function(box) {
             if (box.dataset.promoInitialized === 'true') {
                 return; 
@@ -831,17 +898,20 @@
                 const selectedCode = box.getAttribute('data-code');
                 
                 if (box.classList.contains('selected')) {
-                    box.classList.remove('selected');
-                    promoInput.value = '';
+                    // Jika klik yg aktif, clear
+                    clearPromo(); 
                 } else {
-                    promoBoxes.forEach(function(otherBox) {
-                        otherBox.classList.remove('selected');
-                    });
+                    // Jika klik yg baru
+                    promoBoxes.forEach(b => b.classList.remove('selected'));
                     box.classList.add('selected');
                     promoInput.value = selectedCode;
+                    updateClearButton();
                 }
             });
         });
+
+        // Cek status awal saat load (jika halaman refresh & value tersimpan)
+        updateClearButton();
     }
     function styleLogoutButton() {
         const profileFormLogout = document.querySelector('form a[href="/logout"]');
@@ -931,6 +1001,7 @@
         }
     });
 })();
+
 
 
 

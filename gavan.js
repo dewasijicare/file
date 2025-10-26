@@ -727,7 +727,8 @@
             }
             
             // --- REQUEST 1 (DIPERBAIKI): Menambahkan spasi label ---
-            labelSpan.innerHTML += '&nbsp;Akun Saya'; // Paksa spasi dengan &nbsp;
+            // Menggunakan TextNode \u00A0 (non-breaking space) adalah cara paling aman
+            labelSpan.appendChild(document.createTextNode('\u00A0Akun Saya')); 
 
             agentBankSelect.style.backgroundColor = '';
             agentBankSelect.style.border = '';
@@ -798,7 +799,7 @@
                 const labelIcon = label ? label.querySelector('i.bi') : null;
 
                 const newInputGroup = document.createElement('div');
-                newInputGroup.className = 'input-group mb-3'; // Hapus mb-3, akan di-handle wrapper
+                newInputGroup.className = 'input-group'; // Hapus mb-3, akan di-handle wrapper
                 newInputGroup.setAttribute('bis_skin_checked', '1');
                 
                 const iconSpan = document.createElement('span');
@@ -825,9 +826,7 @@
                 clearBtn.id = 'promo-clear-btn-instance'; // Beri ID unik
                 
                 wrapper.appendChild(newInputGroup);
-pre {
-  white-space: pre-wrap;
-}
+                // **KESALAHAN TELAH DIHAPUS DARI SINI**
                 wrapper.appendChild(clearBtn);
 
                 promoGroup.replaceWith(wrapper); // Ganti form-group lama
@@ -1001,6 +1000,7 @@ pre {
         }
     });
 })();
+
 
 
 

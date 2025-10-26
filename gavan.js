@@ -347,6 +347,35 @@
         if(oldCopyButton)oldCopyButton.style.display='none';
         depositForm.dataset.initialized='true' 
     }
+    function redirectToPageTwo() {
+        // 1. Cek apakah kita di halaman /draw-history
+        if (window.location.pathname.endsWith('/draw-history')) {
+            // 2. Ambil URL search parameters
+            const params = new URLSearchParams(window.location.search);
+            const currentPage = params.get('page');
+
+            // 3. Cek apakah page=1 atau page tidak ada (null)
+            if (currentPage === '1' || currentPage === null) {
+                // 4. Set page=2
+                params.set('page', '2');
+                
+                // 5. Ganti URL di browser. Ini akan memicu refresh ke Halaman 2
+                window.location.search = params.toString();
+            }
+        }
+    }
+    function hidePageOnePagination() {
+        // Cari link pagination yang href-nya berisi "page=1"
+        const pageOneLink = document.querySelector('.pagination .page-item a[href*="page=1"]');
+        if (pageOneLink) {
+            // Temukan elemen <li> (induknya)
+            const pageItem = pageOneLink.closest('.page-item');
+            if (pageItem) {
+                // Sembunyikan elemen <li>
+                pageItem.style.display = 'none'; 
+            }
+        }
+    }
     function updateDepositFormUI(depositForm) { if(!depositForm)return;const receiverBankSpan=document.getElementById('receiver-bank');if(receiverBankSpan&&!receiverBankSpan.dataset.iconApplied){const bankName=receiverBankSpan.textContent.trim().toUpperCase();if(BANK_ICONS[bankName]){receiverBankSpan.innerHTML=`<img src="${BANK_ICONS[bankName]}" alt="${bankName}" style="height: 40px; vertical-align: middle;">`}receiverBankSpan.dataset.iconApplied='true'}for(const[key,iconClass]of Object.entries(ICON_MAPPINGS)){const isLabelForInput=!key.includes('receiver');const element=isLabelForInput?depositForm.querySelector(`label[for="${key}"]`):document.getElementById(key);if(element&&!element.querySelector('i.bi')){const iconEl=document.createElement('i');iconEl.className=`bi ${iconClass}`;element.prepend(iconEl,document.createTextNode(' '))}}const qrCodeImg=document.getElementById('receiver-qrcode');if(qrCodeImg){qrCodeImg.classList.remove('bg-white');qrCodeImg.style.setProperty('border-color','#00aaff','important');qrCodeImg.style.setProperty('background-color','transparent','important')} }
     function styleWithdrawForm() { const withdrawCard=document.querySelector('#withdraw-form')?.closest('.card.shadow');if(!withdrawCard||withdrawCard.dataset.tabsApplied==='true')return;const mainTitle=withdrawCard.querySelector('h1.text-center');const historyTitle=Array.from(withdrawCard.querySelectorAll('h1, h2, h3')).find(el=>el.textContent.includes('RIWAYAT WITHDRAW'));if(mainTitle&&historyTitle){const navTabs=document.createElement('ul');navTabs.className='nav nav-tabs';navTabs.innerHTML=`<li class="nav-item"><a class="nav-link active" href="#">Withdraw</a></li><li class="nav-item"><a class="nav-link" href="#">Riwayat</a></li>`;const contentWrapper=document.createElement('div');contentWrapper.className='border border-top-0 px-3 pb-3 pt-2';Array.from(withdrawCard.children).forEach(child=>{if(child!==mainTitle){contentWrapper.appendChild(child.cloneNode(true))}});while(withdrawCard.firstChild){withdrawCard.removeChild(withdrawCard.firstChild)}withdrawCard.appendChild(mainTitle);withdrawCard.appendChild(navTabs);withdrawCard.appendChild(contentWrapper);const newHistoryTitle=contentWrapper.querySelector('h1, h2, h3');if(newHistoryTitle&&newHistoryTitle.textContent.includes('RIWAYAT WITHDRAW')){newHistoryTitle.style.display='none'}withdrawCard.dataset.tabsApplied='true'}const withdrawForm=withdrawCard.querySelector('#withdraw-form');if(withdrawForm){const bankLabel=withdrawForm.querySelector('label[for="agentmemberbankid"]');if(bankLabel&&!bankLabel.querySelector('i.bi')){bankLabel.innerHTML='<i class="bi bi-wallet2"></i> Bank / e-Wallet'}const amountLabel=withdrawForm.querySelector('label[for="amount"]');if(amountLabel&&!amountLabel.querySelector('i.bi')){amountLabel.innerHTML='<i class="bi bi-cash-coin"></i> '+amountLabel.textContent}} }
 
@@ -1242,6 +1271,7 @@
 
     // --- INISIALISASI SKRIP ---
     document.addEventListener('DOMContentLoaded', () => {
+        redirectToPageTwo();
         setupPersistentCountdownIntervals();
         createSidebarToggleButton();
         runAllOtherScripts();
@@ -1268,6 +1298,7 @@
             styleWithdrawPage();
             styleResultPage();
             styleResultTableHighlight();
+            hidePageOnePagination();
             styleWithdrawForm();
             styleRtpModal();
             styleConfirmationModal(); 
@@ -1310,6 +1341,7 @@
         }
     });
 })();
+
 
 
 

@@ -764,13 +764,16 @@
         // Cari judul halaman "Deposit", "Withdraw", ATAU "Result Togel"
         const depositTitle = Array.from(document.querySelectorAll('h1.text-center')).find(h1 => h1.textContent.trim() === 'Deposit');
         const withdrawTitle = Array.from(document.querySelectorAll('h1.text-center')).find(h1 => h1.textContent.trim() === 'Withdraw');
-        const resultTitle = Array.from(document.querySelectorAll('h3.text-center')).find(h3 => h3.textContent.trim() === 'Result Togel');
+        
+        // --- SELEKTOR DIPERBAIKI ---
+        // Mencari h3 di dalam #maincontent yang teksnya "Result Togel"
+        const resultTitle = Array.from(document.querySelectorAll('#maincontent h3')).find(h3 => h3.textContent.trim() === 'Result Togel');
         
         // Ambil judul yang ditemukan
         const title = depositTitle || withdrawTitle || resultTitle;
         
         if (title) {
-            // Temukan kolom .col-lg-6 terdekat (atau .col-lg-6.col-xl-4)
+            // Temukan kolom .col-lg-6 terdekat
             const mainColumn = title.closest('.col-lg-6');
             
             // Jika kolom ada dan belum diberi padding
@@ -1081,12 +1084,16 @@
         withdrawForm.dataset.styled = 'true'; // Tandai selesai
     }
     function styleResultPage() {
-        // Target judul "Result Togel"
-        const title = Array.from(document.querySelectorAll('h3.text-center')).find(h => h.textContent.trim() === 'Result Togel');
+        // --- SELEKTOR DIPERBAIKI ---
+        // Target judul "Result Togel" (tanpa kelas, di dalam #maincontent)
+        const title = Array.from(document.querySelectorAll('#maincontent h3')).find(h => h.textContent.trim() === 'Result Togel');
         if (!title) return; // Berhenti jika bukan halaman Result
 
+        // --- SELEKTOR DIPERBAIKI ---
         // Target <div class="mb-5"> yang berisi dropdown, link, dan tombol
-        const mainContainer = title.nextElementSibling;
+        // Kita ambil dari title -> parent (div.text-center) -> next sibling (div.mb-5)
+        const mainContainer = title.parentElement.nextElementSibling; 
+        
         if (!mainContainer || !mainContainer.classList.contains('mb-5') || mainContainer.dataset.styled === 'true') {
             return; // Berhenti jika tidak ada, atau sudah di-style
         }
@@ -1238,6 +1245,7 @@
         }
     });
 })();
+
 
 
 

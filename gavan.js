@@ -337,22 +337,13 @@
         const buttonWrapper = card ? card.querySelector('.d-grid.gap-3.mb-3') : null;
         if (!card || !mainRow || !buttonWrapper) return;
 
-        // [KODE BARU DITAMBAHKAN DI SINI]
         // Blok ini akan memindahkan field yang salah tempat ke dalam kolom grid yang benar
         try {
-            // 1. Tentukan kolom target (yaitu col-lg-6 kedua, yang berisi 'Email')
             const targetColumn = mainRow.querySelector('.col-lg-6:has(label[for="email"])') || mainRow.querySelector('.col-lg-6:nth-child(2)');
-            
-            // 2. Temukan elemen form-group yang ingin dipindahkan (berdasarkan label 'for')
-            // Kita cari 'form-group' karena ini adalah elemen *sebelum* script mengubahnya
             const usernameGroup = form.querySelector('label[for="username"]')?.closest('.form-group');
             const passwordGroup = form.querySelector('label[for="password"]')?.closest('.form-group');
             const confirmGroup = form.querySelector('label[for="confirmpassword"]')?.closest('.form-group');
-
-            // 3. Pindahkan elemen-elemen tersebut ke bagian atas kolom target
             if (targetColumn && usernameGroup && passwordGroup && confirmGroup) {
-                // Kita .prepend() secara terbalik agar urutannya benar:
-                // 1. Username, 2. Password, 3. Konfirmasi
                 targetColumn.prepend(confirmGroup);
                 targetColumn.prepend(passwordGroup);
                 targetColumn.prepend(usernameGroup);
@@ -360,24 +351,42 @@
         } catch (e) {
             console.error("GavanTheme Error (Layouting Register):", e);
         }
-        // [AKHIR DARI KODE BARU]
-        // [MODIFIKASI BARU UNTUK MENGHAPUS KOLOM KIRI & MENGGESER KE TENGAH]
-        try {
-            const emptyColumn = mainRow.querySelector('.col-lg-6:first-child');
-            const contentColumn = mainRow.querySelector('.col-lg-6:last-child');
-            
-            // Cek apakah kolom pertama dan kedua ada, DAN kolom pertama tidak ada inputnya
-            if (emptyColumn && contentColumn && !emptyColumn.querySelector('input, select')) { 
-                emptyColumn.remove(); // Hapus kolom kiri yang kosong
-                contentColumn.classList.add('offset-lg-3'); // Tambahkan offset agar kolom kanan bergeser ke tengah
-            } else if (mainRow.children.length === 1 && mainRow.firstElementChild.classList.contains('col-lg-12')) {
-                // Kasus jika layout aslinya memang 1 kolom penuh, ubah ke 6 dan tengahkan
-                mainRow.firstElementChild.classList.remove('col-lg-12');
-                mainRow.firstElementChild.classList.add('col-lg-6', 'offset-lg-3');
-            }
-        } catch (e) {
-            console.error("GavanTheme Error (Centering Register):", e);
-        }
+        
+        // [MODIFIKASI BARU UNTUK MEMPERBAIKI LEBAR BOX]
+        try {
+            // 1. Bungkus card (box) agar lebarnya menjadi col-lg-6 offset-lg-3
+            // Cek agar tidak dibungkus berulang kali
+            if (!card.parentElement.classList.contains('col-lg-6')) { 
+                const cardParent = card.parentElement; // Ini <div class="container">
+                const newRow = document.createElement('div');
+                newRow.className = 'row';
+                const newCol = document.createElement('div');
+                newCol.className = 'col-lg-6 offset-lg-3'; // Terapkan offset ke kolom BARU ini
+                
+                cardParent.replaceChild(newRow, card); // Ganti card dgn row
+                newRow.appendChild(newCol); // Masukkan col ke row
+                newCol.appendChild(card); // Masukkan card ke col
+            }
+
+            // 2. Sekarang, ubah kolom di *dalam* card agar jadi full-width (karena card-nya sudah sempit)
+            const emptyColumn = mainRow.querySelector('.col-lg-6:first-child');
+            const contentColumn = mainRow.querySelector('.col-lg-6:last-child');
+            
+            if (emptyColumn && contentColumn && !emptyColumn.querySelector('input, select')) { 
+                // Ini adalah layout 2-kolom (satu kosong, satu isi)
+                emptyColumn.remove(); // Hapus kolom kiri yg kosong
+                contentColumn.classList.remove('col-lg-6', 'offset-lg-3'); // Hapus class sempit
+                contentColumn.classList.add('col-12'); // Buat jadi full width (relatif thd card)
+            } else if (mainRow.children.length === 1 && mainRow.firstElementChild.classList.contains('col-lg-12')) {
+                // Ini layout 1-kolom penuh, sudah benar. Biarkan.
+            } else if (mainRow.children.length === 1 && mainRow.firstElementChild.classList.contains('col-lg-6')) {
+                // Ini layout 1-kolom sempit (hasil script lama), perbaiki:
+                mainRow.firstElementChild.classList.remove('col-lg-6', 'offset-lg-3');
+                mainRow.firstElementChild.classList.add('col-12');
+            }
+        } catch (e) {
+            console.error("GavanTheme Error (Centering Register):", e);
+        }
         // [AKHIR DARI MODIFIKASI BARU]
 
         mainRow.before(form);
@@ -625,6 +634,7 @@
         }
     });
 })();
+
 
 
 

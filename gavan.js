@@ -228,6 +228,42 @@
              /* 2. Ubah warna teks jadi gelap (sesuai tema .btn-secondary) */
             color: #2c3e50 !important;
         }
+        /* [CSS BARU] Mengatur Status Badge (Ditolak, Sukses, dll) */
+        #maincontent .badge.bg-danger {
+            background: linear-gradient(45deg, #e74c3c, #c0392b) !important;
+            color: #fff !important;
+            box-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
+            border: 1px solid #e74c3c;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            font-weight: 600;
+        }
+
+        #maincontent .badge.bg-success {
+            background: linear-gradient(45deg, #2ecc71, #27ae60) !important;
+            color: #fff !important;
+            box-shadow: 0 0 5px rgba(46, 204, 113, 0.5);
+            border: 1px solid #2ecc71;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            font-weight: 600;
+        }
+        
+        #maincontent .badge.bg-warning {
+            background: linear-gradient(45deg, #ffd700, #ffa500) !important;
+            color: #2c3e50 !important; /* Teks gelap agar kontras */
+            box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+            border: 1px solid #ffd700;
+            text-shadow: 0 1px 1px rgba(255,255,255,0.2);
+            font-weight: 600;
+        }
+        
+        #maincontent .badge.bg-primary {
+            background: linear-gradient(45deg, #0077ff, #00eaff) !important;
+            color: #fff !important;
+            box-shadow: 0 0 5px rgba(0, 234, 255, 0.5);
+            border: 1px solid #00eaff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            font-weight: 600;
+        }
     `;
     const styleElement = document.createElement('style');
     document.head.appendChild(styleElement);
@@ -1405,6 +1441,7 @@
         }
     });
 })();
+
 
 
 

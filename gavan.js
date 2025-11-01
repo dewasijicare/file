@@ -297,6 +297,7 @@
             let displayInput = originalInput.previousElementSibling;
             if (!displayInput || !displayInput.classList.contains('display-input')) {
                 displayInput = originalInput.cloneNode(true);
+                displayInput.id = 'display_' + originalInput.id;
                 displayInput.classList.add('display-input'); // Tambahkan class untuk identifikasi
                 displayInput.type = 'text';
                 displayInput.inputMode = 'numeric';
@@ -1441,6 +1442,7 @@
         }
     });
 })();
+
 
 
 

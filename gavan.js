@@ -214,6 +214,10 @@
             padding: 0 !important;
             line-height: 1.2;
         }
+        /* [FIX] Sembunyikan kontainer logo bank default yang duplikat */
+        #maincontent .alert.alert-primary > div.mb-2 {
+            display: none !important;
+        }
     `;
     const styleElement = document.createElement('style');
     document.head.appendChild(styleElement);
@@ -1387,6 +1391,7 @@
         }
     });
 })();
+
 
 
 

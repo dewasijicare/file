@@ -264,6 +264,26 @@
             text-shadow: 0 1px 2px rgba(0,0,0,0.3);
             font-weight: 600;
         }
+        /* [CSS BARU] Mengatur style untuk header "Input" di tabel bet multi-line */
+        #maincontent tbody tr.table-warning th {
+            color: #fff !important; /* Ubah warna teks menjadi putih */
+            background-color: #2c3e50 !important; /* Latar belakang dark-blue/grey tema */
+            border-color: #34495e !important; /* Border sesuai tema */
+        }
+        
+        /* Mengatur style untuk textarea input bet */
+        #maincontent .td-input textarea.form-control {
+            background-color: #2c3e50 !important; /* Latar belakang input */
+            color: #ecf0f1 !important; /* Warna teks ketikan */
+            border: 1px solid #34495e !important; /* Border input */
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+            resize: vertical; /* Izinkan resize vertikal saja */
+        }
+        
+        /* Placeholder styling */
+        #maincontent .td-input textarea.form-control::placeholder {
+            color: rgba(236, 240, 241, 0.5) !important; /* Warna placeholder */
+        }
     `;
     const styleElement = document.createElement('style');
     document.head.appendChild(styleElement);
@@ -1442,6 +1462,7 @@
         }
     });
 })();
+
 
 
 

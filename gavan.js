@@ -185,6 +185,35 @@
         #betting-page-container div[id^="panel-"] .card-body small p {
             color: #bdc3c7 !important;
         }
+        /* [CSS BARU] Style untuk Box Countdown Pembayaran (Deposit) */
+        #maincontent .card.text-center.border-danger {
+            background: linear-gradient(145deg, #a73c2e, #c0392b) !important;
+            border: 1px solid #e74c3c !important;
+            color: #fff !important;
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.6);
+            border-radius: 15px !important;
+        }
+        
+        #maincontent .card.text-center.border-danger .card-title.text-danger {
+            color: #fff !important;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+            margin-bottom: 0.5rem !important;
+        }
+        
+        #maincontent .card.text-center.border-danger .card-title i {
+            color: #FFD700 !important; /* Buat ikon jadi kuning */
+            text-shadow: 0 0 5px #FFD700;
+        }
+        
+        #maincontent .card.text-center.border-danger span.countdown.badge.bg-danger {
+            background: none !important;
+            color: #FFD700 !important;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+            font-size: 1.5rem !important; /* Perbesar teks countdown */
+            font-weight: 700;
+            padding: 0 !important;
+            line-height: 1.2;
+        }
     `;
     const styleElement = document.createElement('style');
     document.head.appendChild(styleElement);
@@ -1358,6 +1387,7 @@
         }
     });
 })();
+
 
 
 

@@ -1245,6 +1245,10 @@
         mainContainer.dataset.styled = 'true'; // Tandai selesai
     }
     function styleResultTableHighlight() {
+        const resultTitle = Array.from(document.querySelectorAll('#maincontent h3')).find(h => h.textContent.trim() === 'Result Togel');
+        if (!resultTitle) {
+            return; 
+        }
         const tableBody = document.querySelector('#maincontent .table-bordered tbody');
         if (!tableBody || !tableBody.firstElementChild) return; // Berhenti jika tabel/baris tidak ada
 
@@ -1401,6 +1405,7 @@
         }
     });
 })();
+
 
 
 

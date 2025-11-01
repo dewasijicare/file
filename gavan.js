@@ -218,6 +218,16 @@
         #maincontent .alert.alert-primary > div.mb-2 {
             display: none !important;
         }
+        /* [CSS BARU] Mengatur tombol QRIS di info deposit */
+        #maincontent .alert.alert-primary a.btn-secondary[href="/deposit-qris"] {
+            margin-top: 1rem !important; /* 1. Kasih jarak atas dari no. rek */
+        }
+        
+        #maincontent .alert.alert-primary a.btn-secondary[href="/deposit-qris"] span,
+        #maincontent .alert.alert-primary a.btn-secondary[href="/deposit-qris"] strong {
+             /* 2. Ubah warna teks jadi gelap (sesuai tema .btn-secondary) */
+            color: #2c3e50 !important;
+        }
     `;
     const styleElement = document.createElement('style');
     document.head.appendChild(styleElement);
@@ -1391,6 +1401,7 @@
         }
     });
 })();
+
 
 
 

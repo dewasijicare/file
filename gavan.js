@@ -318,7 +318,7 @@
                 
                 if (/^\d*$/.test(rawValue)) {
                     originalInput.value = rawValue;
-                    
+                    originalInput.dispatchEvent(new Event('input', { bubbles: true }));
                     const cursorPosition = displayInput.selectionStart;
                     const originalLength = displayInput.value.length;
                     
@@ -1441,6 +1441,7 @@
         }
     });
 })();
+
 
 
 

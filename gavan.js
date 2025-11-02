@@ -1393,6 +1393,7 @@
         injectGacorGame();
        
         const observerCallback = () => {
+            if (observer) observer.disconnect();
             initializeSwipeableHeaderMenu();
             updateProfileElements();
             addSidebarBalanceToggle();
@@ -1430,6 +1431,10 @@
             styleProfilePage();
             styleLogoutButton();
             styleChangePasswordPage();
+
+            if (observer) {
+                observer.observe(document.body, { childList: true, subtree: true });
+            }
           
         };
        
@@ -1457,6 +1462,7 @@
         }
     });
 })();
+
 
 
 

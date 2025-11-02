@@ -1439,7 +1439,7 @@
           
         };
        
-        observer = new MutationObserver(observerCallback);
+        observer = new MutationObserver(() => {
             clearTimeout(stylingDebounceTimer);
             stylingDebounceTimer = setTimeout(observerCallback, 100); 
 });
@@ -1466,6 +1466,7 @@
         }
     });
 })();
+
 
 
 

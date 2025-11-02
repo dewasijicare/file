@@ -292,6 +292,7 @@
     // --- KUMPULAN FUNGSI ---
     let intervalsInitialized = false;
     let observer;
+    let stylingDebounceTimer;
 
     // [FUNGSI BARU] Untuk format angka dengan koma
     function formatNumberWithCommas(val) {
@@ -1439,8 +1440,11 @@
         };
        
         observer = new MutationObserver(observerCallback);
+            clearTimeout(stylingDebounceTimer);
+            stylingDebounceTimer = setTimeout(observerCallback, 100); 
+});
         observer.observe(document.body, { childList: true, subtree: true });
-       
+      
         observerCallback(); 
        
         document.body.addEventListener('change', (event) => {
@@ -1462,6 +1466,7 @@
         }
     });
 })();
+
 
 
 

@@ -291,8 +291,6 @@
 
     // --- KUMPULAN FUNGSI ---
     let intervalsInitialized = false;
-    let observer;
-    let stylingDebounceTimer;
 
     // [FUNGSI BARU] Untuk format angka dengan koma
     function formatNumberWithCommas(val) {
@@ -1385,6 +1383,48 @@
         }
     }
 
+// [MODIFIKASI] Ini sekarang adalah fungsi pemindai utama kita
+    function runDynamicStyling() {
+        // --- JALANKAN SEMUA FUNGSI STYLING ANDA ---
+        initializeSwipeableHeaderMenu();
+        updateProfileElements();
+        addSidebarBalanceToggle();
+        addMainBalanceToggle();
+        styleMemberStatusPanel();
+        styleTogelTutorialPage();
+        initializeTogelCarousel();
+        stylePagePadding();
+        
+        const depositForm = document.querySelector('#deposit-form');
+        if (depositForm) {
+            initializeDepositForm(depositForm);
+            updateDepositFormUI(depositForm);
+            styleDepositFormFields(depositForm); 
+        }
+
+        initializePromoSelection();
+        styleWithdrawPage();
+        styleResultPage();
+        styleResultTableHighlight();
+        hidePageOnePagination();
+        styleWithdrawForm();
+        styleRtpModal();
+        styleConfirmationModal(); 
+        initializeBetFormatting(); // Fungsi Anda akan berjalan dengan aman
+        
+        document.querySelectorAll('input[type="password"]:not([data-toggle-added="true"])').forEach(input => {
+            addPasswordToggle(input);
+        });
+
+        styleBettingPage(); 
+        styleQuickLogin();
+        styleLoginPage();
+        styleRegisterPage(); 
+        styleProfilePage();
+        styleLogoutButton();
+        styleChangePasswordPage();
+    }
+    
     // --- INISIALISASI SKRIP ---
     document.addEventListener('DOMContentLoaded', () => {
         redirectToPageTwo();
@@ -1393,59 +1433,9 @@
         runAllOtherScripts();
         injectGacorGame();
        
-        const observerCallback = () => {
-            if (observer) observer.disconnect();
-            initializeSwipeableHeaderMenu();
-            updateProfileElements();
-            addSidebarBalanceToggle();
-            addMainBalanceToggle();
-            styleMemberStatusPanel();
-            styleTogelTutorialPage();
-            initializeTogelCarousel();
-            stylePagePadding();
-           
-            const depositForm = document.querySelector('#deposit-form');
-            if (depositForm) {
-                initializeDepositForm(depositForm);
-                updateDepositFormUI(depositForm);
-                styleDepositFormFields(depositForm); // <--- TAMBAHKAN BARIS INI
-            }
-
-            initializePromoSelection();
-            styleWithdrawPage();
-            styleResultPage();
-            styleResultTableHighlight();
-            hidePageOnePagination();
-            styleWithdrawForm();
-            styleRtpModal();
-            styleConfirmationModal(); 
-            initializeBetFormatting(); // [PANGGILAN FUNGSI BARU]
-           
-            document.querySelectorAll('input[type="password"]:not([data-toggle-added="true"])').forEach(input => {
-                addPasswordToggle(input);
-            });
-
-            styleBettingPage(); 
-            styleQuickLogin();
-            styleLoginPage();
-            styleRegisterPage(); 
-            styleProfilePage();
-            styleLogoutButton();
-            styleChangePasswordPage();
-
-            if (observer) {
-                observer.observe(document.body, { childList: true, subtree: true });
-            }
-          
-        };
        
-        observer = new MutationObserver(() => {
-            clearTimeout(stylingDebounceTimer);
-            stylingDebounceTimer = setTimeout(observerCallback, 100); 
-});
-        observer.observe(document.body, { childList: true, subtree: true });
-      
-        observerCallback(); 
+        setInterval(runDynamicStyling, 250); // Pindai halaman setiap 250ms
+        runDynamicStyling(); // Jalankan 1x saat halaman pertama kali dimuat
        
         document.body.addEventListener('change', (event) => {
             if (event.target.id === 'agentmemberbankid') {
@@ -1466,47 +1456,3 @@
         }
     });
 })();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

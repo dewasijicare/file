@@ -307,7 +307,7 @@
     
     // [FUNGSI DIPERBARUI] Untuk inisialisasi input bet agar memiliki format
     function initializeBetFormatting() {
-        document.querySelectorAll('#betting-page-container input[type="number"][name^="bet"], #betting-page-container input[inputmode="numeric"][name^="bet"]').forEach(originalInput => {
+        document.querySelectorAll('#betting-page-container input[name^="bet"]').forEach(originalInput => {
             // Cek apakah input sudah diformat atau merupakan input tersembunyi
             if (originalInput.dataset.betFormatted === 'true' || originalInput.offsetParent === null || originalInput.type === 'hidden') return;
             
@@ -1462,6 +1462,7 @@
         }
     });
 })();
+
 
 
 

@@ -329,11 +329,7 @@
             originalInput.style.display = 'none';
             displayInput.value = formatNumberWithCommas(originalInput.value);
 
-            // Hapus event listener lama agar tidak menumpuk
-            const newDisplayInput = displayInput.cloneNode(true);
-            displayInput.parentNode.replaceChild(newDisplayInput, displayInput);
-            displayInput = newDisplayInput;
-            
+          
             const handleInput = () => {
                 const rawValue = displayInput.value.replace(/,/g, '');
                 
@@ -1462,6 +1458,7 @@
         }
     });
 })();
+
 
 
 

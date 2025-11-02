@@ -311,8 +311,6 @@
             // Cek apakah input sudah diformat atau merupakan input tersembunyi
             if (originalInput.dataset.betFormatted === 'true' || originalInput.offsetParent === null || originalInput.type === 'hidden') return;
             
-            originalInput.dataset.betFormatted = 'true';
-            
             // Cari apakah sudah ada display input sebelumnya
             let displayInput = originalInput.previousElementSibling;
             if (!displayInput || !displayInput.classList.contains('display-input')) {
@@ -362,6 +360,7 @@
 
             displayInput.addEventListener('input', handleInput);
             displayInput.addEventListener('blur', handleBlur);
+            originalInput.dataset.betFormatted = 'true';
         });
     }
 
@@ -1458,6 +1457,7 @@
         }
     });
 })();
+
 
 
 

@@ -1,7 +1,7 @@
 (function() {
     // --- Pengaturan ---
     const apkDownloadLink = "https://fffiiillleee.com/apk/gabantoto.apk";
-    const appIconUrl = "https://raw.githubusercontent.com/dewasijicare/images/main/icon_gaban_36x36.png"; // Icon dari skrip Anda
+    const appIconUrl = "https://raw.githubusercontent.com/dewasijicare/images/main/appicon_128x128.png";
     const appName = "GABANTOTO";
     const appDescription = "Unduh aplikasi resmi kami.";
     // --- Selesai Pengaturan ---
@@ -16,37 +16,27 @@
         return; // Hanya tampilkan di mobile
     }
 
-    // --- BLOK CSS (GAVAN THEME) ---
-    // Sesuai permintaan: "jangan terlalu lebar" (tinggi baris diatur ke ~65px)
+    // --- [PERUBAHAN] BLOK CSS (GAVAN THEME - TOP BAR) ---
     const gavanDownloadStyles = `
-        :root {
-            /* Atur "lebar" (tinggi) bar di sini */
-            --gavan-download-bar-height: 65px; 
-        }
-        
         #gavan-download-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: var(--gavan-download-bar-height);
+            /* [DIUBAH] Tidak lagi 'fixed'. Ini membuatnya jadi 'static' dan mendorong konten */
             background: linear-gradient(145deg, #2c3e50, #1a252f) !important;
-            border-top: 1px solid #00aaff !important;
-            box-shadow: 0 -5px 20px rgba(0, 170, 255, 0.5) !important;
-            z-index: 9998;
+            /* [DIUBAH] Border sekarang di bawah */
+            border-bottom: 1px solid #00aaff !important; 
+            /* [DIUBAH] Shadow sekarang di bawah */
+            box-shadow: 0 5px 20px rgba(0, 170, 255, 0.5) !important; 
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 10px;
+            /* [DIUBAH] Menggunakan padding untuk mengatur tinggi (sekitar 65px) */
+            padding: 10px; 
             font-family: 'Exo 2', sans-serif !important;
-            transform: translateY(100%);
-            animation: gavan-slide-up 0.5s ease forwards;
             box-sizing: border-box;
-        }
-
-        @keyframes gavan-slide-up {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0%); }
+            
+            /* [PERUBAHAN] Logika animasi baru untuk 'slide-down' */
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out; 
         }
 
         #gavan-download-bar * {
@@ -54,8 +44,8 @@
         }
 
         #gavan-download-bar-close {
-            font-size: 1.8rem; /* Ukuran tombol close */
-            color: #bdc3c7; /* Warna muted */
+            font-size: 1.8rem;
+            color: #bdc3c7;
             background: none;
             border: none;
             padding: 0 10px;
@@ -67,16 +57,16 @@
         }
 
         #gavan-download-bar-close:hover {
-            color: #e74c3c; /* Warna merah saat hover */
+            color: #e74c3c;
             transform: scale(1.1);
         }
 
         #gavan-download-bar-icon {
             flex-shrink: 0;
-            width: 45px; /* Ukuran ikon APK */
+            width: 45px;
             height: 45px;
             margin-left: 5px;
-            border-radius: 8px; /* samakan dengan tema */
+            border-radius: 8px;
         }
 
         #gavan-download-bar-text {
@@ -131,7 +121,7 @@
     styleElement.innerHTML = gavanDownloadStyles;
     document.head.appendChild(styleElement);
 
-    // --- BLOK HTML ---
+    // --- BLOK HTML (Sama seperti sebelumnya) ---
     const barHtml = `
         <button id="gavan-download-bar-close" title="Tutup">&times;</button>
         <img id="gavan-download-bar-icon" src="${appIconUrl}" alt="Icon">
@@ -142,19 +132,26 @@
         <a href="${apkDownloadLink}" id="gavan-download-bar-button">Download</a>
     `;
     
-    // --- Injeksi HTML ke <body> ---
+    // --- [PERUBAHAN] Injeksi HTML ke <body> ---
     const barElement = document.createElement('div');
     barElement.id = 'gavan-download-bar';
     barElement.innerHTML = barHtml;
-    document.body.appendChild(barElement);
 
-    // --- Logika Tombol Close ---
+    // [DIUBAH] Menggunakan .prepend() untuk menyisipkan di AWAL <body>
+    document.body.prepend(barElement); 
+
+    // [DIUBAH] Memicu animasi 'slide-down' setelah elemen ada di DOM
+    // Kita set max-height ke nilai yang lebih besar dari tinggi aslinya
+    setTimeout(() => {
+        barElement.style.maxHeight = '100px'; 
+    }, 50); // Delay kecil untuk memastikan transisi CSS terbaca
+
+    // --- [PERUBAHAN] Logika Tombol Close ---
     document.getElementById('gavan-download-bar-close').addEventListener('click', function() {
-        barElement.style.transition = 'transform 0.3s ease-out';
-        barElement.style.transform = 'translateY(100%)';
+        // [DIUBAH] Memicu animasi 'slide-up'
+        barElement.style.transition = 'max-height 0.3s ease-in';
+        barElement.style.maxHeight = '0'; 
         
-        // Simpan di sessionStorage agar muncul lagi saat buka tab baru
-        // Ganti ke localStorage.setItem(...) jika ingin ditutup permanen
         sessionStorage.setItem('gavanDownloadBarClosed', 'true');
         
         // Hapus elemen setelah animasi selesai

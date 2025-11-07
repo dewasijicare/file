@@ -6,8 +6,8 @@
         // --- Pengaturan ---
         const apkDownloadLink = "https://fffiiillleee.com/apk/gabantoto.apk"; 
         const appIconUrl = "https://raw.githubusercontent.com/dewasijicare/images/main/appicon_128x128.png";
-        const appName = "GABANTOTO";
-        const appDescription = "Unduh aplikasi resmi kami.";
+        const appName = "APK GABANTOTO ANTI BLOKIR";
+        const appDescription = "Unduh & install aplikasi resmi kami";
         // --- Selesai Pengaturan ---
 
         // 1. Cek jika sudah pernah ditutup di sesi ini
@@ -126,3 +126,4 @@
     }); // Akhir dari 'DOMContentLoaded'
 
 })(); // Akhir dari IIFE
+

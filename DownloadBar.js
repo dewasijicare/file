@@ -1,4 +1,4 @@
-// [PERBAIKAN V8] Menghapus logika margin-top (penyebab space kosong) + Ganti Teks Kuning + Spasi Ikon
+// [PERBAIKAN V9] Tombol 'X' Merah + Animasi Ikon 'Spin Loop'
 (function() {
     
     document.addEventListener('DOMContentLoaded', function() {
@@ -7,7 +7,7 @@
         const apkDownloadLink = "https://fffiiillleee.com/apk/gabantoto.apk"; 
         const appIconUrl = "https://raw.githubusercontent.com/dewasijicare/images/main/appicon_128x128.png";
         const appName = "APK GABANTOTO ANTI BLOKIR";
-        const appDescription = "Unduh & install aplikasi resmi kami";
+        const appDescription = "Unduh & install aplikasi official";
         // --- Selesai Pengaturan ---
 
         // 1. Cek jika sudah pernah ditutup di sesi ini
@@ -20,10 +20,23 @@
             return; // Hanya tampilkan di mobile
         }
 
-        // --- [PERUBAHAN V8] BLOK CSS ---
+        // --- [PERUBAHAN V9] BLOK CSS ---
         const gavanDownloadStyles = `
+            /* [BARU] Keyframe untuk animasi ikon */
+            @keyframes gavan-icon-spin-loop {
+                /* Diam selama 80% durasi */
+                0%, 80% { transform: scale(1) rotate(0deg); }
+                
+                /* Berputar sesaat (kombinasi scale & rotate) */
+                85% { transform: scale(1.1) rotate(10deg); }
+                95% { transform: scale(1.1) rotate(-10deg); }
+                
+                /* Kembali normal */
+                100% { transform: scale(1) rotate(0deg); }
+            }
+        
             #gavan-download-bar {
-                background: linear-gradient(145deg, #2c3e50, #1a2f40) !important; /* Sedikit penyesuaian gradient */
+                background: linear-gradient(145deg, #2c3e50, #1a2f40) !important;
                 border-bottom: 1px solid #00aaff !important; 
                 box-shadow: 0 5px 20px rgba(0, 170, 255, 0.5) !important; 
                 display: flex;
@@ -38,21 +51,32 @@
                 box-sizing: border-box;
             }
 
-            /* [PERUBAHAN V8] Tombol close diberi margin kiri agar tidak mepet ikon */
+            /* [PERUBAHAN V9] Tombol close diubah jadi merah tema */
             #gavan-download-bar-close {
-                font-size: 1.8rem; color: #bdc3c7; background: none; border: none;
-                padding: 0 5px; /* Padding L/R */
-                margin-left: 10px; /* Jarak dari ikon */
+                font-size: 1.8rem; 
+                color: #e74c3c !important; /* Warna merah tema */
+                text-shadow: 0 0 5px rgba(231, 76, 60, 0.7); /* Glow merah */
+                background: none; border: none;
+                padding: 0 5px;
+                margin-left: 10px; 
                 cursor: pointer; line-height: 1;
                 transition: all 0.3s ease; flex-shrink: 0;
             }
-            #gavan-download-bar-close:hover { color: #e74c3c; transform: scale(1.1); }
+            /* Hover-nya diubah jadi merah muda (sesuai tema 'promo-clear-btn') */
+            #gavan-download-bar-close:hover { 
+                color: #f5b7b1 !important; /* Merah muda/terang */
+                transform: scale(1.1); 
+            }
 
+            /* [PERUBAHAN V9] Terapkan animasi looping ke link ikon */
             #gavan-download-bar-icon-link {
                 flex-shrink: 0;
                 line-height: 0; 
-                margin-left: 10px; /* Jarak dari teks */
+                margin-left: 10px; 
+                /* Terapkan animasi: 4 detik per loop */
+                animation: gavan-icon-spin-loop 4s infinite ease-in-out;
             }
+            /* Hover akan menghentikan animasi & hanya membesarkan ikon */
             #gavan-download-bar-icon-link:hover img {
                 transform: scale(1.1); 
             }
@@ -63,17 +87,17 @@
                 transition: transform 0.2s ease;
             }
 
-            /* [PERUBAHAN V8] Teks diubah jadi kuning (#FFD700) */
+            /* Teks kuning (Tidak berubah) */
             #gavan-download-bar-text {
                 flex-grow: 1; 
                 color: #FFD700 !important;
                 padding: 0 12px; font-size: 0.9rem;
                 line-height: 1.3; 
-                text-shadow: 0 0 8px rgba(255, 215, 0, 0.6) !important; /* Shadow kuning */
+                text-shadow: 0 0 8px rgba(255, 215, 0, 0.6) !important;
                 overflow: hidden; white-space: nowrap;
             }
             #gavan-download-bar-text strong {
-                color: #FFD700 !important; /* Teks strong juga kuning */
+                color: #FFD700 !important; 
                 display: block; font-size: 1rem; text-transform: uppercase;
                 text-overflow: ellipsis; overflow: hidden;
             }
@@ -84,7 +108,7 @@
         styleElement.innerHTML = gavanDownloadStyles;
         document.head.appendChild(styleElement);
 
-        // --- BLOK HTML (Sama seperti V7) ---
+        // --- BLOK HTML (Sama seperti V8) ---
         const barHtml = `
             <div id="gavan-download-bar">
                 <div id="gavan-download-bar-text">
@@ -98,18 +122,16 @@
             </div>
         `;
         
-        // --- [PERUBAHAN V8] Logika Injeksi (Logika margin-top dihapus) ---
+        // --- Logika Injeksi (Sama seperti V8) ---
         const targetWrapper = document.getElementById('navbar-top-wrapper');
         
         if (targetWrapper) {
-            // Cukup suntikkan HTML. Selesai.
-            // Dorongan ke bawah akan terjadi secara alami.
             targetWrapper.insertAdjacentHTML('afterbegin', barHtml);
         } else {
             console.warn('Gavan APK: Target #navbar-top-wrapper tidak ditemukan!');
         }
 
-        // --- [PERUBAHAN V8] Logika Tombol Close (Logika margin-top dihapus) ---
+        // --- Logika Tombol Close (Sama seperti V8) ---
         document.body.addEventListener('click', function(event) {
             const closeButton = event.target.closest('#gavan-download-bar-close');
             
@@ -118,7 +140,6 @@
                 if (barElement) {
                     barElement.remove();
                 }
-                // Tidak perlu reset margin-top lagi
                 sessionStorage.setItem('gavanDownloadBarClosed', 'true');
             }
         });
@@ -126,4 +147,3 @@
     }); // Akhir dari 'DOMContentLoaded'
 
 })(); // Akhir dari IIFE
-

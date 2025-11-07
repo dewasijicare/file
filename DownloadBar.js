@@ -1,5 +1,4 @@
-// [PERBAIKAN] Bungkus semua logika dalam 'DOMContentLoaded'
-// Ini memastikan skrip baru berjalan SETELAH halaman HTML siap
+// [DEBUG] Dibungkus 'DOMContentLoaded' untuk keamanan
 document.addEventListener('DOMContentLoaded', function() {
 
     (function() {
@@ -10,15 +9,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const appDescription = "Unduh aplikasi resmi kami.";
         // --- Selesai Pengaturan ---
 
+        /* // --- DEBUG: Pengecekan dimatikan sementara ---
         // 1. Cek jika sudah pernah ditutup di sesi ini
         if (sessionStorage.getItem('gavanDownloadBarClosed') === 'true') {
+            console.log('Gavan APK: Dibatalkan (sessionStorage)');
             return; 
         }
         // 2. Cek jika bukan mobile
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         if (!isMobile) {
+            console.log('Gavan APK: Dibatalkan (bukan mobile)');
             return; // Hanya tampilkan di mobile
         }
+        */
+       
+        console.log('Gavan APK: Menjalankan skrip... (Mode Debug)');
 
         // --- BLOK CSS (GAVAN THEME - TOP BAR) ---
         const gavanDownloadStyles = `
@@ -33,9 +38,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 font-family: 'Exo 2', sans-serif !important;
                 box-sizing: border-box;
                 
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.5s ease-out; 
+                /* [PERUBAHAN DEBUG] Animasi 'max-height' dan 'overflow' dihapus */
+                /* Ini akan memaksanya terlihat secara instan */
             }
 
             #gavan-download-bar * {
@@ -111,7 +115,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             #gavan-download-bar-button:hover {
                 transform: scale(1.05);
-                box-shadow: 0 0 20px #00eaff, 0 0 30px #0077ff, inset 0 0 5px rgba(255, 255, 255, .4);
             }
         `;
 
@@ -136,27 +139,28 @@ document.addEventListener('DOMContentLoaded', function() {
         barElement.id = 'gavan-download-bar';
         barElement.innerHTML = barHtml;
 
-        // Menggunakan .prepend() untuk menyisipkan di AWAL <body>
-        // Ini aman dilakukan di dalam 'DOMContentLoaded'
         document.body.prepend(barElement); 
+        console.log('Gavan APK: Elemen bar DITAMBAHKAN ke body.');
 
-        // Memicu animasi 'slide-down'
-        setTimeout(() => {
-            barElement.style.maxHeight = '100px'; 
-        }, 50); // Delay kecil untuk memastikan transisi CSS terbaca
+        // [PERUBAHAN DEBUG] Memicu animasi dihapus
+        // setTimeout(() => {
+        //     barElement.style.maxHeight = '100px'; 
+        // }, 50);
 
         // --- Logika Tombol Close ---
+        // [PERUBAHAN DEBUG] Animasi 'max-height' diganti dengan 'display'
         document.getElementById('gavan-download-bar-close').addEventListener('click', function() {
-            barElement.style.transition = 'max-height 0.3s ease-in';
-            barElement.style.maxHeight = '0'; 
+            barElement.style.display = 'none'; // Sembunyikan langsung
             
             sessionStorage.setItem('gavanDownloadBarClosed', 'true');
             
+            // Hapus setelah disembunyikan
             setTimeout(() => {
                 if (barElement) {
                     barElement.remove();
                 }
-            }, 300);
+            }, 50);
         });
 
-    })();}); // [AKHIR PERBAIKAN]
+    })();
+});

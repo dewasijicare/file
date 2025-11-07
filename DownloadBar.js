@@ -1,4 +1,4 @@
-// [PERBAIKAN FINAL] Menggunakan jQuery dan selector dari skrip Anda
+// [PERBAIKAN V5] Menggunakan jQuery, target #navbar-top-wrapper, dan 'margin-top' manual
 $(document).ready(function() {
 
     // --- Pengaturan ---
@@ -18,7 +18,7 @@ $(document).ready(function() {
         return; // Hanya tampilkan di mobile
     }
 
-    // --- BLOK CSS (GAVAN THEME - TOP BAR) ---
+    // --- [PERUBAHAN] BLOK CSS (Animasi max-height dihapus) ---
     const gavanDownloadStyles = `
         #gavan-download-bar {
             background: linear-gradient(145deg, #2c3e50, #1a252f) !important;
@@ -30,11 +30,7 @@ $(document).ready(function() {
             padding: 10px; 
             font-family: 'Exo 2', sans-serif !important;
             box-sizing: border-box;
-            
-            /* Menggunakan animasi max-height untuk slide-down */
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease-out; 
+            /* [DIHAPUS] Tidak ada lagi max-height, overflow, atau transition */
         }
 
         #gavan-download-bar * {
@@ -42,72 +38,38 @@ $(document).ready(function() {
         }
 
         #gavan-download-bar-close {
-            font-size: 1.8rem;
-            color: #bdc3c7;
-            background: none;
-            border: none;
-            padding: 0 10px;
-            margin-right: 5px;
-            cursor: pointer;
-            line-height: 1;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
+            font-size: 1.8rem; color: #bdc3c7; background: none; border: none;
+            padding: 0 10px; margin-right: 5px; cursor: pointer; line-height: 1;
+            transition: all 0.3s ease; flex-shrink: 0;
         }
-
-        #gavan-download-bar-close:hover {
-            color: #e74c3c;
-            transform: scale(1.1);
-        }
+        #gavan-download-bar-close:hover { color: #e74c3c; transform: scale(1.1); }
 
         #gavan-download-bar-icon {
-            flex-shrink: 0;
-            width: 45px;
-            height: 45px;
-            margin-left: 5px;
-            border-radius: 8px;
+            flex-shrink: 0; width: 45px; height: 45px;
+            margin-left: 5px; border-radius: 8px;
         }
 
         #gavan-download-bar-text {
-            flex-grow: 1;
-            color: #ecf0f1;
-            padding: 0 12px;
-            font-size: 0.9rem;
-            line-height: 1.3;
-            text-shadow: 0 0 5px #00aaff;
-            overflow: hidden;
-            white-space: nowrap;
+            flex-grow: 1; color: #ecf0f1; padding: 0 12px; font-size: 0.9rem;
+            line-height: 1.3; text-shadow: 0 0 5px #00aaff;
+            overflow: hidden; white-space: nowrap;
         }
-
         #gavan-download-bar-text strong {
-            color: #fff;
-            display: block;
-            font-size: 1rem;
-            text-transform: uppercase;
-            text-overflow: ellipsis;
-            overflow: hidden;
+            color: #fff; display: block; font-size: 1rem; text-transform: uppercase;
+            text-overflow: ellipsis; overflow: hidden;
         }
-        
-        #gavan-download-bar-text span {
-            text-overflow: ellipsis;
-            overflow: hidden;
-        }
+        #gavan-download-bar-text span { text-overflow: ellipsis; overflow: hidden; }
 
         #gavan-download-bar-button {
             flex-shrink: 0;
             background: linear-gradient(45deg, #0077ff, #00eaff) !important;
-            border: none !important;
-            color: #fff !important;
-            font-weight: 700;
+            border: none !important; color: #fff !important; font-weight: 700;
             text-transform: uppercase;
             box-shadow: 0 0 10px #00eaff, inset 0 0 5px rgba(255, 255, 255, .4);
-            transition: all .3s ease;
-            border-radius: 5px;
-            padding: 10px 15px;
-            font-size: 0.9rem;
-            text-decoration: none;
-            text-align: center;
+            transition: all .3s ease; border-radius: 5px;
+            padding: 10px 15px; font-size: 0.9rem;
+            text-decoration: none; text-align: center;
         }
-
         #gavan-download-bar-button:hover {
             transform: scale(1.05);
             box-shadow: 0 0 20px #00eaff, 0 0 30px #0077ff, inset 0 0 5px rgba(255, 255, 255, .4);
@@ -115,7 +77,6 @@ $(document).ready(function() {
     `;
 
     // --- Injeksi CSS ke <head> ---
-    // (Menggunakan metode jQuery)
     $('head').append('<style>' + gavanDownloadStyles + '</style>');
 
     // --- BLOK HTML (Dibungkus dalam satu div) ---
@@ -131,41 +92,37 @@ $(document).ready(function() {
         </div>
     `;
     
-    // --- [PERBAIKAN UTAMA] Injeksi HTML menggunakan selector dari skrip asli ---
+    // --- [PERUBAHAN UTAMA] Injeksi HTML dan Logika Margin ---
     const targetWrapper = $('#navbar-top-wrapper');
+    const mainContent = $('#maincontent'); // Target dari skrip tema utama Anda
     
-    if (targetWrapper.length > 0) {
-        // Gunakan .prepend() untuk menyisipkan *di dalam* wrapper
+    if (targetWrapper.length > 0 && mainContent.length > 0) {
+        // 1. Tambahkan HTML-nya
         targetWrapper.prepend(barHtml);
 
-        // Simpan referensi ke elemen bar yang baru dibuat
+        // 2. Dapatkan tinggi bar yang baru ditambahkan
         const barElement = $('#gavan-download-bar');
+        const barHeight = barElement.outerHeight(); // Dapatkan tinggi dinamisnya
 
-        // Memicu animasi 'slide-down'
-        setTimeout(() => {
-            barElement.css('max-height', '100px'); 
-        }, 50); // Delay kecil untuk animasi
+        // 3. Terapkan margin-top ke konten utama
+        if (barHeight > 0) {
+            mainContent.css('margin-top', barHeight + 'px');
+        }
 
     } else {
-        // Fallback jika tidak ditemukan (seharusnya tidak terjadi jika skrip asli Anda berhasil)
-        console.warn('Gavan APK: Target #navbar-top-wrapper tidak ditemukan!');
+        console.warn('Gavan APK: Target #navbar-top-wrapper atau #maincontent tidak ditemukan!');
     }
 
-    // --- Logika Tombol Close (Gunakan jQuery 'on' untuk event) ---
-    // Mendaftarkan listener ke 'body' memastikan tombol ini bisa diklik
-    // bahkan jika elemennya baru ditambahkan secara dinamis
+    // --- Logika Tombol Close (Menghapus margin-top) ---
     $('body').on('click', '#gavan-download-bar-close', function() {
         const barElement = $(this).closest('#gavan-download-bar');
         
-        // Animasi 'slide-up'
-        barElement.css('transition', 'max-height 0.3s ease-in');
-        barElement.css('max-height', '0'); 
+        // Hapus bar
+        barElement.remove();
+        
+        // [PENTING] Kembalikan margin-top ke 0
+        mainContent.css('margin-top', ''); // Menghapus style inline
         
         sessionStorage.setItem('gavanDownloadBarClosed', 'true');
-        
-        // Hapus elemen dari DOM setelah animasi selesai
-        setTimeout(() => {
-            barElement.remove();
-        }, 300);
     });
 });

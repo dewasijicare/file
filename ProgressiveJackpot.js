@@ -1,13 +1,13 @@
 (function() {
-    // --- 1. BLOK CSS KHUSUS JACKPOT (Flowing Energy) ---
-    const jackpotStylesV13 = `
-        /* CSS untuk Progressive Jackpot - V13 Flowing Energy */
+    // --- 1. BLOK CSS KHUSUS JACKPOT (Flowing Energy - Tema Biru/Kuning) ---
+    const jackpotStylesV14 = `
+        /* CSS untuk Progressive Jackpot - V14 Flowing Energy (Biru/Kuning) */
         @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap');
         
-        /* Mendefinisikan warna neon utama */
+        /* Mendefinisikan warna neon utama (TANPA HIJAU) */
         :root {
             --neon-blue: #00eaff;
-            --neon-green: #2ecc71;
+            --neon-yellow: #FFD700; /* Mengganti Hijau dengan Kuning Emas */
             --dark-bg: #1a252f;
         }
 
@@ -31,14 +31,14 @@
             border-radius: 12px;
             padding: 4px; /* Ketebalan border */
             
-            /* Background gradien yang akan kita animasikan */
-            background: linear-gradient(90deg, var(--neon-blue), var(--neon-green), var(--neon-blue));
+            /* Background gradien (Biru ke Kuning) */
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-yellow), var(--neon-blue));
             background-size: 300% 100%;
             
             /* Animasi aliran border */
             animation: borderFlow 4s ease-in-out infinite alternate;
             
-            /* Outer glow */
+            /* Outer glow (Biru) */
             box-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-blue);
         }
 
@@ -76,17 +76,18 @@
             justify-content: center;
         }
 
-        /* Ikon Trophy */
+        /* Ikon Trophy (Warna Kuning Neon) */
         .jackpot-main-title i {
             font-size: 1.1rem;
             margin-right: 10px;
-            color: var(--neon-green); /* Warna ikon hijau neon */
-            text-shadow: 0 0 10px var(--neon-green);
+            color: var(--neon-yellow); /* Diubah ke Kuning Neon */
+            text-shadow: 0 0 10px var(--neon-yellow);
         }
 
         /* Teks Judul yang Berjalan (Warna-warni) */
         .jackpot-animated-text {
-            background: linear-gradient(90deg, #fff, var(--neon-blue), var(--neon-green), #fff);
+            /* Gradien (Putih, Biru, Kuning, Putih) */
+            background: linear-gradient(90deg, #fff, var(--neon-blue), var(--neon-yellow), #fff);
             background-size: 300% 100%;
             background-clip: text;
             -webkit-background-clip: text;
@@ -107,7 +108,7 @@
             font-weight: bold;
             line-height: 1.1;
             letter-spacing: 2px;
-            /* Shadow yang sangat tajam untuk efek LED */
+            /* Shadow yang sangat tajam untuk efek LED (Biru dan Putih) */
             text-shadow: 
                 0 0 5px #fff,
                 0 0 10px #fff,
@@ -141,7 +142,7 @@
 
     // Tambahkan CSS ke head
     const styleElement = document.createElement('style');
-    styleElement.innerHTML = jackpotStylesV13;
+    styleElement.innerHTML = jackpotStylesV14;
     document.head.appendChild(styleElement);
 
 

@@ -1,7 +1,7 @@
 (function() {
-    // --- 1. BLOK CSS KHUSUS JACKPOT (V15 Dot-Matrix LED) ---
-    const jackpotStylesV15 = `
-        /* CSS untuk Progressive Jackpot - V15 Dot-Matrix LED */
+    // --- 1. BLOK CSS KHUSUS JACKPOT (V16 Intense LED Glow) ---
+    const jackpotStylesV16 = `
+        /* CSS untuk Progressive Jackpot - V16 Intense LED Glow */
         @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap');
         
         :root {
@@ -29,13 +29,9 @@
             position: relative;
             border-radius: 12px;
             padding: 4px; /* Ketebalan border */
-            
             background: linear-gradient(90deg, var(--neon-blue), var(--neon-yellow), var(--neon-blue));
             background-size: 300% 100%;
-            
             animation: borderFlow 4s ease-in-out infinite alternate;
-            
-            /* --- PERUBAHAN: Glow diperkecil agar tidak terlalu lebar --- */
             box-shadow: 0 0 8px var(--neon-blue), 0 0 15px var(--neon-blue);
         }
 
@@ -58,7 +54,7 @@
             z-index: 2;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
 
-            /* --- BARU: Background Dot-Matrix (Efek Panel LED) --- */
+            /* Background Dot-Matrix (Efek Panel LED) */
             background-image: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.7) 1px, transparent 0);
             background-size: 3px 3px;
         }
@@ -100,28 +96,39 @@
             100% { background-position: 300% 50%; }
         }
 
-        /* Angka Jackpot (Font Bold dengan LED Glow) */
+        /* --- PERUBAHAN FONT & EFEK GLOW --- */
         .jackpot-value-final {
-            /* --- PERUBAHAN: Menggunakan font tema yang tebal, BUKAN monospace --- */
-            font-family: 'Exo 2', sans-serif !important; 
+            font-family: monospace !important; /* Font Monospace universal (Stabil) */
             color: #fff;
             font-size: 2.2rem; 
-            font-weight: 900; /* Super Bold */
+            font-weight: bold;
             line-height: 1.1;
-            letter-spacing: 2px;
-            /* --- PERUBAHAN: Efek LED Glow yang tajam --- */
+            letter-spacing: 3px; /* Jarak antar huruf untuk 'look' digital */
+            
+            /* Efek 'Bleeding Glow' (Pendaran Cahaya) yang intens */
             text-shadow: 
-                0 0 5px #fff,
-                0 0 10px var(--neon-blue),
-                0 0 20px var(--neon-blue);
+                0 0 5px #fff,    /* Inti putih tajam */
+                0 0 10px #fff,   /* Inti putih pendar */
+                0 0 20px var(--neon-blue), /* Pendaran biru 1 */
+                0 0 35px var(--neon-blue), /* Pendaran biru 2 */
+                0 0 50px var(--neon-blue); /* Pendaran biru terluar (lebar) */
+            
             white-space: nowrap;
+            animation: textGlowLED 1.5s ease-in-out infinite alternate;
         }
+
+        /* Animasi Glow (Berkedip halus) */
+        @keyframes textGlowLED {
+            0% { opacity: 0.95; }
+            100% { opacity: 1; }
+        }
+        /* --- AKHIR PERUBAHAN --- */
 
         /* Responsive Desktop */
         @media (min-width: 992px) {
             .jackpot-value-final {
                 font-size: 2.6rem; 
-                letter-spacing: 3px;
+                letter-spacing: 4px;
             }
             .jackpot-container-main {
                 max-width: 700px; 
@@ -142,7 +149,7 @@
 
     // Tambahkan CSS ke head
     const styleElement = document.createElement('style');
-    styleElement.innerHTML = jackpotStylesV15;
+    styleElement.innerHTML = jackpotStylesV16;
     document.head.appendChild(styleElement);
 
 

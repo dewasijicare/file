@@ -1,122 +1,137 @@
 (function() {
-    // --- 1. BLOK CSS KHUSUS JACKPOT (Desain Mencolok dengan Angka Besar) ---
-    const jackpotStylesBold = `
-        /* CSS untuk Progressive Jackpot - Desain Mencolok */
+    // --- 1. BLOK CSS KHUSUS JACKPOT (Plasma Border) ---
+    const jackpotStylesPlasma = `
+        /* CSS untuk Progressive Jackpot - Plasma Border */
         @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap');
-        .progressive-jackpot-wrapper-bold {
+        .jackpot-container-main {
             font-family: 'Exo 2', sans-serif !important;
             text-align: center;
             position: relative;
-            padding-top: 15px;
             margin-top: 2rem;
             margin-bottom: 2rem;
             z-index: 50;
-        }
-        .progressive-jackpot-header-bold {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(90deg, #00eaff, #0077ff);
-            color: #1a252f; /* Teks gelap di background cerah agar kontras */
-            padding: 3px 25px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-            box-shadow: 0 0 20px rgba(0, 234, 255, 1); /* Sinar yang lebih kuat */
-            border: 2px solid #fff;
-            z-index: 10;
-            white-space: nowrap;
-            text-transform: uppercase;
-        }
-        .jackpot-display-box-bold {
-            display: flex;
-            flex-direction: column; /* Angka dan keterangan di stack vertikal */
-            justify-content: center;
-            align-items: center;
-            background: #1a252f; /* Menggunakan warna background card tema (dark blue) */
-            border: 3px solid #00eaff; /* Border biru neon */
-            border-radius: 15px; 
-            padding: 20px 15px;
-            min-height: 100px;
-            box-shadow: 0 0 30px rgba(0, 234, 255, 0.8), inset 0 0 10px rgba(0, 119, 255, 0.5);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        /* Efek latar belakang bergerak yang intens */
-        .jackpot-display-box-bold::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(45deg, #0077ff 0%, #00eaff 25%, #0077ff 50%, #00eaff 75%, #0077ff 100%);
-            background-size: 400% 400%;
-            opacity: 0.2; /* Menjaga agar teks tetap terbaca */
-            animation: gradientShift 10s ease-in-out infinite;
+            padding: 10px; /* Padding untuk memberi ruang pada border plasma */
+            box-sizing: border-box;
+            max-width: 500px; /* Batasi lebar agar tampilan fokus di tengah */
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .jackpot-info-text {
-            color: #bdc3c7; /* Warna teks sekunder tema Anda */
-            font-size: 0.85rem;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
+        /* Container untuk efek border */
+        .jackpot-border-glow {
+            position: relative;
+            border-radius: 18px;
+            padding: 3px; /* Jarak antara glow dan kotak utama */
+            background: linear-gradient(45deg, #0077ff, #00eaff);
+            box-shadow: 0 0 15px #00eaff;
+            overflow: hidden;
+        }
+
+        /* Kotak konten utama Jackpot */
+        .jackpot-display-box-content {
+            display: flex;
+            flex-direction: column; 
+            justify-content: center;
+            align-items: center;
+            background: #1a252f; /* Warna latar belakang tema */
+            border-radius: 15px; 
+            min-height: 100px;
+            position: relative;
+            padding: 15px;
             z-index: 2;
         }
 
-        .jackpot-value-bold {
+        /* Efek Plasma Flow (Border Bergerak) */
+        .jackpot-border-glow::before {
+            content: '';
+            position: absolute;
+            inset: -10px;
+            background: conic-gradient(from 0deg, transparent, #00eaff, transparent, transparent);
+            animation: borderRotate 4s linear infinite;
+            z-index: 1;
+        }
+        
+        /* Lapisan kedua (optional) untuk membuat efek lebih tebal */
+        .jackpot-border-glow::after {
+            content: '';
+            position: absolute;
+            inset: -10px;
+            background: conic-gradient(from 180deg, transparent, #0077ff, transparent, transparent);
+            animation: borderRotate 4s linear infinite reverse;
+            opacity: 0.8;
+            z-index: 1;
+        }
+
+        /* Animasi Rotasi Border */
+        @keyframes borderRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header / Judul Utama */
+        .jackpot-main-title {
+            color: #00eaff; /* Biru neon yang sangat mencolok */
+            font-size: 1.1rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px #00eaff;
+            z-index: 3;
+        }
+
+        /* Angka Jackpot */
+        .jackpot-value-plasma {
             color: #fff;
-            font-size: 3rem; /* **UKURAN ANGKA DIBUAT SANGAT BESAR** */
+            font-size: 3.2rem; /* Ukuran Super Besar */
             font-weight: 900;
             line-height: 1.1;
             letter-spacing: 3px;
-            text-shadow: 0 0 18px #fff, 0 0 10px #00eaff, 0 0 5px #0077ff;
-            z-index: 2; 
+            text-shadow: 0 0 20px #fff, 0 0 12px #00eaff, 0 0 6px #0077ff;
+            z-index: 3; 
             white-space: nowrap;
+            animation: textGlow 1.5s ease-in-out infinite alternate;
         }
 
-        /* Animasi Gradient Latar Belakang */
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Animasi Text Glow */
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 15px #fff, 0 0 8px #00eaff; }
+            100% { text-shadow: 0 0 25px #fff, 0 0 15px #0077ff; }
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .jackpot-value-bold {
+            .jackpot-value-plasma {
                 font-size: 2.2rem;
-                letter-spacing: 2px;
             }
-            .progressive-jackpot-header-bold {
-                font-size: 0.8rem;
-                padding: 3px 20px;
+            .jackpot-main-title {
+                font-size: 1rem;
             }
         }
         @media (max-width: 480px) {
-            .jackpot-value-bold {
+            .jackpot-value-plasma {
                 font-size: 1.8rem;
                 letter-spacing: 1px;
             }
-            .jackpot-display-box-bold {
+            .jackpot-display-box-content {
                 padding: 15px 10px;
+            }
+            .jackpot-main-title {
+                font-size: 0.9rem;
             }
         }
     `;
 
     // Tambahkan CSS ke head
     const styleElement = document.createElement('style');
-    styleElement.innerHTML = jackpotStylesBold;
+    styleElement.innerHTML = jackpotStylesPlasma;
     document.head.appendChild(styleElement);
 
 
     // --- 2. FUNGSI LOGIKA COUNTER DINAMIS ---
-    function startDynamicJackpotCounterBold() {
-        const element = document.getElementById('dynamic-jackpot-value-bold');
-        if (!element) {
-            console.warn('Dynamic jackpot bold element not found.');
-            return;
-        }
+    function startDynamicJackpotCounterPlasma() {
+        const element = document.getElementById('dynamic-jackpot-value-plasma');
+        if (!element) return;
 
         let currentValue = 32462646763; // Nilai awal
         const maxIncrement = 15;
@@ -131,7 +146,7 @@
                 currentValue = 32462646763;
             }
 
-            // Gunakan format Rupiah (IDR)
+            // Gabungkan "IDR" dan nilai yang sudah diformat
             const formattedValue = 'IDR ' + new Intl.NumberFormat('id-ID', {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
@@ -145,39 +160,38 @@
     }
 
     // --- 3. FUNGSI UNTUK MENYISIPKAN HTML KE LOKASI YANG TEPAT ---
-    function injectJackpotHTMLBold() {
+    function injectJackpotHTMLPlasma() {
         const targetElement = document.getElementById('row-togel');
         
         // Cek jika elemen Jackpot sudah ada
-        if (document.querySelector('.progressive-jackpot-wrapper-bold')) {
+        if (document.querySelector('.jackpot-container-main')) {
             return;
         }
 
         if (!targetElement) {
-            setTimeout(injectJackpotHTMLBold, 100);
+            setTimeout(injectJackpotHTMLPlasma, 100);
             return;
         }
 
-        const jackpotHTMLBold = `
-            <div class="progressive-jackpot-wrapper-bold">
-                <div class="progressive-jackpot-header-bold">
-                    WIN BIG! PROGRESSIVE JACKPOTS
-                </div>
-                <div class="jackpot-display-box-bold">
-                    <div class="jackpot-info-text">TOTAL HADIAH SAAT INI</div>
-                    <div id="dynamic-jackpot-value-bold" class="jackpot-value-bold">32.462.646.763</div>
+        const jackpotHTMLPlasma = `
+            <div class="jackpot-container-main">
+                <div class="jackpot-border-glow">
+                    <div class="jackpot-display-box-content">
+                        <div class="jackpot-main-title">WIN BIG! PROGRESSIVE JACKPOTS</div>
+                        <div id="dynamic-jackpot-value-plasma" class="jackpot-value-plasma">32.462.646.763</div>
+                    </div>
                 </div>
             </div>
         `;
 
         // Sisipkan HTML tepat SEBELUM elemen #row-togel
-        targetElement.insertAdjacentHTML('beforebegin', jackpotHTMLBold);
+        targetElement.insertAdjacentHTML('beforebegin', jackpotHTMLPlasma);
 
         // Setelah elemen disisipkan, segera mulai counter dinamisnya
-        startDynamicJackpotCounterBold();
+        startDynamicJackpotCounterPlasma();
     }
 
     // --- 4. EKSEKUSI ---
-    document.addEventListener('DOMContentLoaded', injectJackpotHTMLBold);
-    setInterval(injectJackpotHTMLBold, 500);
+    document.addEventListener('DOMContentLoaded', injectJackpotHTMLPlasma);
+    setInterval(injectJackpotHTMLPlasma, 500);
 })();

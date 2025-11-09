@@ -1,8 +1,9 @@
 (function() {
-    // --- 1. BLOK CSS KHUSUS JACKPOT (V19 - Perbaikan Duplikasi) ---
-    const jackpotStylesV19 = `
-        /* CSS untuk Progressive Jackpot - V19 Perbaikan Duplikasi */
-        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap');
+    // --- 1. BLOK CSS KHUSUS JACKPOT (V20 - Font Aldrich) ---
+    const jackpotStylesV20 = `
+        /* CSS untuk Progressive Jackpot - V20 Font Digital 'Aldrich' */
+        /* --- PERUBAHAN: Menambahkan font 'Aldrich' --- */
+        @import url('https://fonts.googleapis.com/css2?family=Aldrich&family=Exo+2:wght@700;900&display=swap');
         
         :root {
             --neon-blue: #00eaff;
@@ -101,25 +102,25 @@
             100% { background-position: 300% 50%; }
         }
 
-        /* FONT LED STABIL (Monospace) DENGAN EFEK GLOW INTENS */
+        /* --- PERUBAHAN HANYA DI BAGIAN INI --- */
         .jackpot-value-final {
-            font-family: 'Lucida Console', 'Courier New', monospace !important; 
+            font-family: 'Aldrich', sans-serif !important; /* Font 'Aldrich' yang baru */
             color: #fff; 
-            font-size: 2.2rem; 
-            font-weight: bold;
+            font-size: 2.4rem; /* Ukuran disesuaikan untuk font baru */
+            font-weight: 400; /* Font ini hanya punya 1 ketebalan */
             line-height: 1.1;
-            letter-spacing: 3px; 
+            letter-spacing: 2px; 
             
+            /* Efek Glow disesuaikan untuk font yang lebih bersih */
             text-shadow: 
-                0 0 5px #fff,    
-                0 0 10px #fff,   
-                0 0 20px var(--neon-blue), 
-                0 0 35px var(--neon-blue), 
-                0 0 50px var(--neon-blue-dark); 
+                0 0 5px #fff,
+                0 0 15px var(--neon-blue), 
+                0 0 25px var(--neon-blue); 
             
             white-space: nowrap;
             animation: textGlowLED 1.5s ease-in-out infinite alternate;
         }
+        /* --- AKHIR PERUBAHAN --- */
 
         @keyframes textGlowLED {
             0% { opacity: 0.95; }
@@ -129,8 +130,8 @@
         /* Responsive Desktop */
         @media (min-width: 992px) {
             .jackpot-value-final {
-                font-size: 2.6rem; 
-                letter-spacing: 4px;
+                font-size: 2.8rem; /* Ukuran desktop disesuaikan */
+                letter-spacing: 3px;
             }
             .jackpot-container-main {
                 max-width: 700px; 
@@ -140,7 +141,7 @@
         /* Responsive Mobile */
         @media (max-width: 768px) {
             .jackpot-value-final {
-                font-size: 5.5vw; 
+                font-size: 6vw; /* Menggunakan VW agar pas */
                 letter-spacing: 0.5vw;
             }
             .jackpot-main-title {
@@ -151,19 +152,19 @@
 
     // Tambahkan CSS ke head
     const styleElement = document.createElement('style');
-    styleElement.innerHTML = jackpotStylesV19;
+    styleElement.innerHTML = jackpotStylesV20;
     document.head.appendChild(styleElement);
 
 
-    // --- 2. FUNGSI LOGIKA COUNTER DINAMIS ---
+    // --- 2. FUNGSI LOGIKA COUNTER DINAMIS (Tidak Berubah) ---
     function startDynamicJackpotCounterFinal() {
         const element = document.getElementById('dynamic-jackpot-value-final');
         if (!element) return;
 
-        let currentValue = 32462646763; // Nilai awal
+        let currentValue = 32462646763;
         const maxIncrement = 15;
         const updateInterval = 80;
-        const resetThreshold = 32462700000; // Batas reset
+        const resetThreshold = 32462700000;
 
         function updateJackpotValue() {
             const increment = Math.floor(Math.random() * maxIncrement) + 1;
@@ -173,10 +174,7 @@
                 currentValue = 32462646763;
             }
 
-            // Format manual menggunakan regex (paling stabil)
             let formattedNumber = currentValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-            
-            // Tambahkan "IDR " ke depan
             element.textContent = 'IDR ' + formattedNumber;
         }
 
@@ -184,22 +182,19 @@
         setInterval(updateJackpotValue, updateInterval);
     }
 
-    // --- 3. FUNGSI UNTUK MENYISIPKAN HTML KE LOKASI YANG TEPAT ---
+    // --- 3. FUNGSI UNTUK MENYISIPKAN HTML (Tidak Berubah) ---
     function injectJackpotHTMLFinal() {
         const targetElement = document.getElementById('row-togel');
         
-        // Cek jika elemen Jackpot sudah ada
         if (document.querySelector('.jackpot-container-main')) {
             return;
         }
 
         if (!targetElement) {
-            // Jika target belum ada, coba lagi sebentar
             setTimeout(injectJackpotHTMLFinal, 200);
             return;
         }
 
-        // --- PERBAIKAN TYPO: 'class.=' menjadi 'class=' ---
         const jackpotHTMLFinal = `
             <div class="jackpot-container-main">
                 <div class="jackpot-animated-border">
@@ -214,13 +209,10 @@
             </div>
         `;
 
-        // Sisipkan HTML tepat SEBELUM elemen #row-togel
         targetElement.insertAdjacentHTML('beforebegin', jackpotHTMLFinal);
-
         startDynamicJackpotCounterFinal();
     }
 
-    // --- 4. EKSEKUSI (PERBAIKAN: Hapus setInterval) ---
-    // Hanya jalankan saat DOM selesai dimuat
+    // --- 4. EKSEKUSI (Tidak Berubah) ---
     document.addEventListener('DOMContentLoaded', injectJackpotHTMLFinal);
 })();

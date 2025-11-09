@@ -1,7 +1,19 @@
 (function() {
-    // --- 1. BLOK CSS KHUSUS MENU GAME (V4) ---
-    const gameMenuStylesV4 = `
-        /* CSS untuk Game Menu Grid - V4 */
+    // --- 0. FUNGSI UNTUK MEMUAT FONT AWESOME (JIKA BELUM ADA) ---
+    function loadFontAwesome() {
+        if (!document.querySelector('link[href*="font-awesome"]')) {
+            const faLink = document.createElement('link');
+            faLink.rel = 'stylesheet';
+            faLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+            document.head.appendChild(faLink);
+        }
+    }
+    loadFontAwesome(); // Panggil fungsi ini di awal
+
+
+    // --- 1. BLOK CSS KHUSUS MENU GAME (V5) ---
+    const gameMenuStylesV5 = `
+        /* CSS untuk Game Menu Grid - V5 */
         :root {
             --neon-yellow: #FFD700; /* Warna kuning border & ikon */
             --dark-bg: #1a252f;
@@ -41,7 +53,8 @@
             color: #fff;
         }
 
-        .game-menu-icon {
+        /* Kelas ikon untuk kedua library (BI & FA) */
+        .game-menu-icon, .game-menu-icon-fa { 
             font-size: 2.1rem;
             margin-bottom: 0.1rem;
             display: block; 
@@ -66,12 +79,12 @@
 
     // Tambahkan CSS ke <head>
     const styleEl = document.createElement('style');
-    styleEl.innerHTML = gameMenuStylesV4;
+    styleEl.innerHTML = gameMenuStylesV5;
     document.head.appendChild(styleEl);
 
 
-    // --- 2. FUNGSI UNTUK MENYISIPKAN HTML MENU (V4) ---
-    function injectGameMenuV4() {
+    // --- 2. FUNGSI UNTUK MENYISIPKAN HTML MENU (V5) ---
+    function injectGameMenuV5() {
         // Hapus versi menu sebelumnya jika ada
         const existingMenu = document.querySelector('.gavan-game-menu-grid');
         if (existingMenu) {
@@ -83,26 +96,29 @@
         
         if (targetPanel) {
             
-            // --- PERUBAHAN: Ikon diganti sesuai V4 ---
+            // --- PERUBAHAN: Ikon diganti sesuai V5 (campuran BI dan FA) ---
             const menuItems = [
-                { label: 'Slot', icon: 'bi-7-square-fill', href: '/game?category=101' },
-                { label: 'Casino', icon: 'bi-dice-6-fill', href: '/game?category=102' },
-                { label: 'Sport', icon: 'bi-dribbble', href: '/sport' },
-                { label: 'Togel', icon: 'bi-8-circle-fill', href: '/togel' }, 
-                { label: 'Table', icon: 'bi-layout-text-sidebar-reverse', href: '#' },
-                { label: 'Fishing', icon: 'bi-bullseye', href: '#' },
-                { label: 'Cock Fight', icon: 'bi-lightning-charge-fill', href: '#' },
-                { label: 'Arcade', icon: 'bi-controller', href: '#' }
+                { label: 'Slot', icon: 'bi-7-square-fill', type: 'bi', href: '/game?category=101' },
+                { label: 'Casino', icon: 'fa-gem', type: 'fa', href: '/game?category=102' }, // FA
+                { label: 'Sport', icon: 'bi-dribbble', type: 'bi', href: '/sport' },
+                { label: 'Togel', icon: 'bi-8-circle-fill', type: 'bi', href: '/togel' }, 
+                { label: 'Table', icon: 'fa-hat-wizard', type: 'fa', href: '#' }, // FA (menggunakan hat-wizard sebagai kartu poker)
+                { label: 'Fishing', icon: 'fa-fish-fins', type: 'fa', href: '#' }, // FA (ikan lucu)
+                { label: 'Cock Fight', icon: 'fa-feather-pointed', type: 'fa', href: '#' }, // FA (bulu, pengganti ayam jantan)
+                { label: 'Arcade', icon: 'bi-controller', type: 'bi', href: '#' }
             ];
 
             // Membuat string HTML
             let menuHTML = '<div class="container gavan-game-menu-grid"><div class="row">';
             
             menuItems.forEach(item => {
+                const iconClass = item.type === 'fa' ? `fa-solid ${item.icon}` : `bi ${item.icon}`;
+                const iconElementClass = item.type === 'fa' ? 'game-menu-icon-fa' : 'game-menu-icon';
+
                 menuHTML += `
                     <div class="col-3">
                         <a href="${item.href}" class="game-menu-box">
-                            <i class="bi ${item.icon} game-menu-icon game-menu-icon-color"></i>
+                            <i class="${iconClass} ${iconElementClass} game-menu-icon-color"></i>
                             <div class="game-menu-label">${item.label}</div>
                         </a>
                     </div>
@@ -116,14 +132,21 @@
 
         } else {
             // Jika panel belum dimuat
-            setTimeout(injectGameMenuV4, 300);
+            setTimeout(injectGameMenuV5, 300);
         }
     }
 
     // --- 3. EKSEKUSI ---
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', injectGameMenuV4);
-    } else {
-        injectGameMenuV4();
-    }
+    // Pastikan Font Awesome dimuat sebelum mencoba inject menu
+    const faCheckInterval = setInterval(() => {
+        if (document.querySelector('link[href*="font-awesome"]') && 
+            document.fonts.check('1rem "Font Awesome 6 Free"')) { // Pastikan font FA benar-benar siap
+            clearInterval(faCheckInterval);
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', injectGameMenuV5);
+            } else {
+                injectGameMenuV5();
+            }
+        }
+    }, 100); // Cek setiap 100ms
 })();

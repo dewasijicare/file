@@ -11,9 +11,9 @@
     loadFontAwesome(); 
 
 
-    // --- 1. BLOK CSS KHUSUS MENU GAME (V21) ---
-    const gameMenuStylesV21 = `
-        /* CSS untuk Game Menu Grid - V21 (Perbaikan Layout Teks) */
+    // --- 1. BLOK CSS KHUSUS MENU GAME (V22) ---
+    const gameMenuStylesV22 = `
+        /* CSS untuk Game Menu Grid - V22 (Perbaikan Jarak Teks) */
         :root {
             --neon-yellow: #FFD700;
             --dark-bg: #1a252f;
@@ -53,16 +53,16 @@
             color: #fff;
         }
 
-        /* --- PERBAIKAN: Satu Kelas Universal untuk SEMUA Ikon --- */
+        /* Kelas Universal untuk SEMUA Ikon */
         .gavan-icon-base {
-            font-size: 1.9rem; /* Ukuran ikon kecil */
-            display: block; /* PAKSA jadi block (memperbaiki masalah FA) */
-            line-height: 1; /* Menghapus line-height bawaan FA */
+            font-size: 1.9rem; 
+            display: block; 
+            line-height: 1; 
             margin-bottom: 0;
-            color: var(--neon-yellow); /* Warna ikon */
+            color: var(--neon-yellow); 
         }
-        /* --- AKHIR PERBAIKAN --- */
 
+        /* --- PERBAIKAN: Menambah margin-top agar teks lebih ke bawah --- */
         .game-menu-label {
             font-family: 'Exo 2', sans-serif;
             font-weight: 700;
@@ -70,18 +70,18 @@
             text-transform: uppercase;
             letter-spacing: 0.2px;
             line-height: 1.2; 
-            margin-top: 0.25rem; /* Jarak ini sekarang akan berfungsi */
+            margin-top: 0.4rem; /* Diperbesar dari 0.25rem */
         }
     `;
 
     // Tambahkan CSS ke <head>
     const styleEl = document.createElement('style');
-    styleEl.innerHTML = gameMenuStylesV21;
+    styleEl.innerHTML = gameMenuStylesV22;
     document.head.appendChild(styleEl);
 
 
-    // --- 2. FUNGSI UNTUK MENYISIPKAN HTML MENU (V21) ---
-    function injectGameMenuV21() {
+    // --- 2. FUNGSI UNTUK MENYISIPKAN HTML MENU (V22) ---
+    function injectGameMenuV22() {
         // Hapus versi menu sebelumnya jika ada
         const existingMenu = document.querySelector('.gavan-game-menu-grid');
         if (existingMenu) {
@@ -93,13 +93,13 @@
         
         if (targetPanel) {
             
-            // Menggunakan daftar ikon V20 (dengan link yang benar)
+            // --- PERBAIKAN: Ikon 'Table' diubah ---
             const menuItems = [
                 { label: 'Slot', icon: 'bi-7-square-fill', type: 'bi', href: '/game?category=101' },
                 { label: 'Casino', icon: 'fa-coins', type: 'fa', href: '/game?category=102' },
                 { label: 'Sport', icon: 'bi-dribbble', type: 'bi', href: '/sport' },
                 { label: 'Togel', icon: 'bi-8-circle-fill', type: 'bi', href: '/togel' }, 
-                { label: 'Table', icon: 'fa-clone', type: 'fa', href: '/game?category=103%2C104%2C105%2C106%2C107' },
+                { label: 'Table', icon: 'fa-rectangle-list', type: 'fa', href: '/game?category=103%2C104%2C105%2C106%2C107' }, // Ikon diubah
                 { label: 'Fishing', icon: 'fa-fish-fins', type: 'fa', href: '/game?category=201' },
                 { label: 'Cock Fight', icon: 'fa-feather-pointed', type: 'fa', href: '/cockfight' },
                 { label: 'Arcade', icon: 'bi-controller', type: 'bi', href: '/game?category=151%2C900' }
@@ -111,7 +111,6 @@
             menuItems.forEach(item => {
                 const iconClass = item.type === 'fa' ? `fa-solid ${item.icon}` : `bi ${item.icon}`;
 
-                // --- PERBAIKAN: Menggunakan satu kelas 'gavan-icon-base' ---
                 menuHTML += `
                     <div class="col-3">
                         <a href="${item.href}" class="game-menu-box">
@@ -129,25 +128,22 @@
 
         } else {
             // Jika panel belum dimuat
-            setTimeout(injectGameMenuV21, 300);
+            setTimeout(injectGameMenuV22, 300);
         }
     }
 
     // --- 3. EKSEKUSI ---
-    // Logika untuk menunggu Font Awesome siap sebelum inject
     const faCheckInterval = setInterval(() => {
-        // Cek jika link CSS sudah ada DAN font-nya sudah bisa digunakan oleh browser
         if (document.querySelector('link[href*="font-awesome"]') && 
             document.fonts && document.fonts.check('1rem "Font Awesome 6 Free"')) {
             
-            clearInterval(faCheckInterval); // Hentikan pengecekan
+            clearInterval(faCheckInterval); 
             
-            // Jalankan inject
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', injectGameMenuV21);
+                document.addEventListener('DOMContentLoaded', injectGameMenuV22);
             } else {
-                injectGameMenuV21();
+                injectGameMenuV22();
             }
         }
-    }, 100); // Cek setiap 100ms
+    }, 100); 
 })();

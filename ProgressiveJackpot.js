@@ -1,10 +1,10 @@
 (function() {
-    // --- 1. BLOK CSS KHUSUS JACKPOT (Cyber Matrix Pulse) ---
-    const jackpotStylesCyber = `
-        /* CSS untuk Progressive Jackpot - V12 Cyber Matrix Pulse */
+    // --- 1. BLOK CSS KHUSUS JACKPOT (Flowing Energy) ---
+    const jackpotStylesV13 = `
+        /* CSS untuk Progressive Jackpot - V13 Flowing Energy */
         @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap');
         
-        /* Warna Neon Baru */
+        /* Mendefinisikan warna neon utama */
         :root {
             --neon-blue: #00eaff;
             --neon-green: #2ecc71;
@@ -15,8 +15,8 @@
             font-family: 'Exo 2', sans-serif !important; 
             text-align: center;
             position: relative;
-            margin-top: 3rem; /* Jarak lebih besar */
-            margin-bottom: 2rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
             z-index: 50;
             padding: 0; 
             box-sizing: border-box;
@@ -25,104 +25,95 @@
             margin-right: auto;
         }
 
-        /* Container 3D Frame Luar */
-        .jackpot-cyber-frame {
+        /* Border Animasi (Flowing Energy) */
+        .jackpot-animated-border {
             position: relative;
-            border-radius: 15px;
-            padding: 5px;
-            background: linear-gradient(145deg, var(--neon-blue), var(--neon-green));
-            box-shadow: 0 0 15px var(--neon-blue);
-            transform-style: preserve-3d;
-            animation: frameGlow 2s ease-in-out infinite alternate;
+            border-radius: 12px;
+            padding: 4px; /* Ketebalan border */
+            
+            /* Background gradien yang akan kita animasikan */
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-green), var(--neon-blue));
+            background-size: 300% 100%;
+            
+            /* Animasi aliran border */
+            animation: borderFlow 4s ease-in-out infinite alternate;
+            
+            /* Outer glow */
+            box-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-blue);
         }
 
-        /* Animasi Glow Frame Luar */
-        @keyframes frameGlow {
-            0% {
-                box-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-green);
-            }
-            100% {
-                box-shadow: 0 0 25px var(--neon-blue), 0 0 40px var(--neon-green);
-            }
+        @keyframes borderFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
         }
-        
-        /* Kotak konten utama Jackpot (Layar Digital) */
+
+        /* Kotak konten utama Jackpot (Panel LED) */
         .jackpot-display-box-content {
             display: flex;
             flex-direction: column; 
             justify-content: center;
             align-items: center;
             background: var(--dark-bg); 
-            border: 3px solid var(--neon-blue); 
-            border-radius: 10px; 
-            min-height: 90px;
+            border-radius: 8px; /* Lebih kotak agar pas di dalam frame */
+            min-height: 80px;
             position: relative;
             padding: 10px 15px; 
-            z-index: 10;
-            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8), 0 0 5px var(--neon-blue);
+            z-index: 2;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
-
-        /* Tanda Senter (Marker) di sudut untuk efek 3D */
-        .jackpot-display-box-content::before,
-        .jackpot-display-box-content::after {
-            content: '';
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            border: 2px solid var(--neon-green);
-            z-index: 11;
-        }
-        .jackpot-display-box-content::before {
-            top: -2px;
-            left: -2px;
-            border-right: none;
-            border-bottom: none;
-            box-shadow: 0 0 10px var(--neon-green);
-        }
-        .jackpot-display-box-content::after {
-            bottom: -2px;
-            right: -2px;
-            border-left: none;
-            border-top: none;
-            box-shadow: 0 0 10px var(--neon-green);
-        }
-
+        
         /* Judul Jackpot */
         .jackpot-main-title {
-            color: var(--neon-blue); 
+            color: #fff; 
             font-size: 1.1rem;
             font-weight: 900;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            margin-bottom: 5px;
-            text-shadow: 0 0 8px var(--neon-blue), 0 0 5px #fff;
+            margin-bottom: 8px;
             white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Angka Jackpot (Font Monospace Stabil + Hyper Glow) */
+        /* Ikon Trophy */
+        .jackpot-main-title i {
+            font-size: 1.1rem;
+            margin-right: 10px;
+            color: var(--neon-green); /* Warna ikon hijau neon */
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+
+        /* Teks Judul yang Berjalan (Warna-warni) */
+        .jackpot-animated-text {
+            background: linear-gradient(90deg, #fff, var(--neon-blue), var(--neon-green), #fff);
+            background-size: 300% 100%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: textFlow 3s linear infinite;
+        }
+
+        @keyframes textFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        /* Angka Jackpot (Font Monospace Stabil) */
         .jackpot-value-final {
             font-family: monospace !important; 
-            color: var(--neon-green); /* Angka Hijau Neon */
+            color: #fff;
             font-size: 2.2rem; 
             font-weight: bold;
             line-height: 1.1;
-            letter-spacing: 2px; 
-            
-            /* Lapisan Hyper Glow */
+            letter-spacing: 2px;
+            /* Shadow yang sangat tajam untuk efek LED */
             text-shadow: 
-                0 0 5px var(--neon-green),  
-                0 0 10px var(--neon-green), 
-                0 0 20px var(--neon-blue),  
-                0 0 30px var(--neon-blue); 
-            
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 15px var(--neon-blue),
+                0 0 25px var(--neon-blue);
             white-space: nowrap;
-            animation: textFlicker 0.15s linear infinite alternate; 
-        }
-
-        /* Animasi Kedip Angka */
-        @keyframes textFlicker {
-            0% { opacity: 1; text-shadow: 0 0 10px var(--neon-green); }
-            100% { opacity: 0.95; text-shadow: 0 0 20px var(--neon-blue); }
         }
 
         /* Responsive Desktop */
@@ -142,12 +133,15 @@
                 font-size: 5.5vw; 
                 letter-spacing: 0.5vw;
             }
+            .jackpot-main-title {
+                font-size: 0.9rem;
+            }
         }
     `;
 
     // Tambahkan CSS ke head
     const styleElement = document.createElement('style');
-    styleElement.innerHTML = jackpotStylesCyber;
+    styleElement.innerHTML = jackpotStylesV13;
     document.head.appendChild(styleElement);
 
 
@@ -196,9 +190,12 @@
 
         const jackpotHTMLFinal = `
             <div class="jackpot-container-main">
-                <div class="jackpot-cyber-frame">
+                <div class="jackpot-animated-border">
                     <div class="jackpot-display-box-content">
-                        <div class="jackpot-main-title">PROGRESSIVE JACKPOTS</div>
+                        <div class="jackpot-main-title">
+                            <i class="bi bi-trophy-fill"></i>
+                            <span class="jackpot-animated-text">PROGRESSIVE JACKPOTS</span>
+                        </div>
                         <div id="dynamic-jackpot-value-final" class="jackpot-value-final">IDR 32.462.646.763</div>
                     </div>
                 </div>

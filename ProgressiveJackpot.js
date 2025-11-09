@@ -1,13 +1,12 @@
 (function() {
-    // --- 1. BLOK CSS KHUSUS JACKPOT (Flowing Energy - Tema Biru/Kuning) ---
-    const jackpotStylesV14 = `
-        /* CSS untuk Progressive Jackpot - V14 Flowing Energy (Biru/Kuning) */
+    // --- 1. BLOK CSS KHUSUS JACKPOT (V15 Dot-Matrix LED) ---
+    const jackpotStylesV15 = `
+        /* CSS untuk Progressive Jackpot - V15 Dot-Matrix LED */
         @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap');
         
-        /* Mendefinisikan warna neon utama (TANPA HIJAU) */
         :root {
             --neon-blue: #00eaff;
-            --neon-yellow: #FFD700; /* Mengganti Hijau dengan Kuning Emas */
+            --neon-yellow: #FFD700;
             --dark-bg: #1a252f;
         }
 
@@ -31,15 +30,13 @@
             border-radius: 12px;
             padding: 4px; /* Ketebalan border */
             
-            /* Background gradien (Biru ke Kuning) */
             background: linear-gradient(90deg, var(--neon-blue), var(--neon-yellow), var(--neon-blue));
             background-size: 300% 100%;
             
-            /* Animasi aliran border */
             animation: borderFlow 4s ease-in-out infinite alternate;
             
-            /* Outer glow (Biru) */
-            box-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-blue);
+            /* --- PERUBAHAN: Glow diperkecil agar tidak terlalu lebar --- */
+            box-shadow: 0 0 8px var(--neon-blue), 0 0 15px var(--neon-blue);
         }
 
         @keyframes borderFlow {
@@ -53,13 +50,17 @@
             flex-direction: column; 
             justify-content: center;
             align-items: center;
-            background: var(--dark-bg); 
-            border-radius: 8px; /* Lebih kotak agar pas di dalam frame */
+            background-color: var(--dark-bg); 
+            border-radius: 8px; 
             min-height: 80px;
             position: relative;
             padding: 10px 15px; 
             z-index: 2;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+
+            /* --- BARU: Background Dot-Matrix (Efek Panel LED) --- */
+            background-image: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.7) 1px, transparent 0);
+            background-size: 3px 3px;
         }
         
         /* Judul Jackpot */
@@ -80,13 +81,12 @@
         .jackpot-main-title i {
             font-size: 1.1rem;
             margin-right: 10px;
-            color: var(--neon-yellow); /* Diubah ke Kuning Neon */
+            color: var(--neon-yellow); 
             text-shadow: 0 0 10px var(--neon-yellow);
         }
 
         /* Teks Judul yang Berjalan (Warna-warni) */
         .jackpot-animated-text {
-            /* Gradien (Putih, Biru, Kuning, Putih) */
             background: linear-gradient(90deg, #fff, var(--neon-blue), var(--neon-yellow), #fff);
             background-size: 300% 100%;
             background-clip: text;
@@ -100,20 +100,20 @@
             100% { background-position: 300% 50%; }
         }
 
-        /* Angka Jackpot (Font Monospace Stabil) */
+        /* Angka Jackpot (Font Bold dengan LED Glow) */
         .jackpot-value-final {
-            font-family: monospace !important; 
+            /* --- PERUBAHAN: Menggunakan font tema yang tebal, BUKAN monospace --- */
+            font-family: 'Exo 2', sans-serif !important; 
             color: #fff;
             font-size: 2.2rem; 
-            font-weight: bold;
+            font-weight: 900; /* Super Bold */
             line-height: 1.1;
             letter-spacing: 2px;
-            /* Shadow yang sangat tajam untuk efek LED (Biru dan Putih) */
+            /* --- PERUBAHAN: Efek LED Glow yang tajam --- */
             text-shadow: 
                 0 0 5px #fff,
-                0 0 10px #fff,
-                0 0 15px var(--neon-blue),
-                0 0 25px var(--neon-blue);
+                0 0 10px var(--neon-blue),
+                0 0 20px var(--neon-blue);
             white-space: nowrap;
         }
 
@@ -142,7 +142,7 @@
 
     // Tambahkan CSS ke head
     const styleElement = document.createElement('style');
-    styleElement.innerHTML = jackpotStylesV14;
+    styleElement.innerHTML = jackpotStylesV15;
     document.head.appendChild(styleElement);
 
 

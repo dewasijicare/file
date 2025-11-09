@@ -1,20 +1,20 @@
 (function() {
-    // --- 1. BLOK CSS KHUSUS JACKPOT (Dominan Desktop & LED Look Final) ---
-    const jackpotStylesFinal = `
-        /* CSS untuk Progressive Jackpot - V7 Stabil & Dominan */
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Exo+2:wght@700;900&display=swap');
+    // --- 1. BLOK CSS KHUSUS JACKPOT (Hyper-Responsive & LED Look Final) ---
+    const jackpotStylesV8 = `
+        /* CSS untuk Progressive Jackpot - V8 Stabil & Dominan */
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap');
         
         .jackpot-container-main {
             font-family: 'Exo 2', sans-serif !important; 
             text-align: center;
             position: relative;
-            margin-top: 2.5rem; /* Margin atas lebih besar */
-            margin-bottom: 1.5rem; /* Jarak ke Pasaran Togel */
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
             z-index: 50;
             padding: 5px;
             box-sizing: border-box;
-            /* Ukuran Desktop: Lebar maks 600px agar dominan di tengah */
-            max-width: 600px; 
+            /* Lebar Maksimal untuk Desktop */
+            max-width: 90%; 
             margin-left: auto;
             margin-right: auto;
         }
@@ -26,8 +26,14 @@
             padding: 3px; 
             box-shadow: 0 0 10px #00eaff;
             overflow: hidden;
-            
+            transition: box-shadow 0.3s ease-in-out;
+            cursor: pointer;
         }
+        /* Efek Hover/Sentuh */
+        .jackpot-border-glow:hover {
+            box-shadow: 0 0 25px #00eaff, 0 0 40px #0077ff; 
+        }
+
 
         /* Kotak konten utama Jackpot */
         .jackpot-display-box-content {
@@ -40,58 +46,48 @@
             border-radius: 15px; 
             min-height: 90px;
             position: relative;
-            padding: 10px; /* Padding lebih kecil */
+            padding: 10px 10px; /* Padding seragam */
             z-index: 2;
-            box-shadow: inset 0 0 10px rgba(0, 119, 255, 0.5); 
+            box-shadow: inset 0 0 15px rgba(0, 119, 255, 0.4); 
         }
 
-        /* Efek Plasma Flow (Border Bergerak) */
-        .jackpot-border-glow::before {
+        /* Garis Horizontal Tipis untuk efek Panel Digital */
+        .jackpot-display-box-content::before {
             content: '';
             position: absolute;
-            inset: -10px;
-            background: conic-gradient(from 0deg, transparent 50%, #00eaff 50%, transparent 100%);
-            animation: borderRotate 4s linear infinite;
-            z-index: 1;
-            opacity: 0.7;
+            top: 50%;
+            left: 5%;
+            right: 5%;
+            height: 1px;
+            background: rgba(0, 234, 255, 0.2);
+            transform: translateY(-50%);
         }
-        .jackpot-border-glow::after {
-            content: '';
-            position: absolute;
-            inset: -10px;
-            background: conic-gradient(from 180deg, transparent 50%, #0077ff 50%, transparent 100%);
-            animation: borderRotate 4s linear infinite reverse;
-            opacity: 0.6;
-            z-index: 1;
-        }
+        
+        /* Efek Plasma Flow (Border Bergerak) - Ditinggalkan untuk fokus pada kestabilan glow box-shadow */
 
-        /* Animasi Rotasi Border */
-        @keyframes borderRotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
 
         /* Judul Jackpot */
         .jackpot-main-title {
             color: #00eaff; 
-            font-size: 1.1rem; /* Ukuran tetap */
+            font-size: 1rem;
             font-weight: 900;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             text-shadow: 0 0 10px #00eaff;
             z-index: 3;
             white-space: nowrap;
         }
 
-        /* Angka Jackpot (Menggunakan font digital yang lebih tebal) */
+        /* Angka Jackpot (Font stabil Monospace) */
         .jackpot-value-final {
-            font-family: 'Orbitron', monospace !important; /* Font LED/Digital baru yang tebal */
+            font-family: monospace !important; 
             color: #fff;
-            font-size: 2.5rem; /* Ukuran disesuaikan agar pas dengan lebar */
+            /* Font size menggunakan vw untuk otomatis responsif dan menghindari overflow */
+            font-size: 3.5vw; 
             font-weight: 700;
             line-height: 1.1;
-            letter-spacing: 1px;
+            letter-spacing: 0.5vw; /* Spasi antar huruf responsif */
             text-shadow: 0 0 15px #00eaff, 0 0 8px #fff; 
             z-index: 3; 
             white-space: nowrap;
@@ -100,32 +96,36 @@
 
         /* Animasi Text Glow LED */
         @keyframes textGlowLED {
-            0% { text-shadow: 0 0 10px #00eaff, 0 0 5px #fff; opacity: 0.95; }
+            0% { text-shadow: 0 0 10px #00eaff, 0 0 5px #fff; opacity: 0.98; }
             100% { text-shadow: 0 0 20px #0077ff, 0 0 10px #00eaff; opacity: 1; }
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .jackpot-container-main {
-                max-width: 100%; /* Full width di mobile */
-                padding: 0 10px;
-            }
+        /* Responsive Desktop: Overwrite VW units untuk ukuran stabil yang besar */
+        @media (min-width: 992px) {
             .jackpot-value-final {
-                font-size: 1.8rem;
-                letter-spacing: 1px;
+                font-size: 2.5rem; /* Ukuran besar yang stabil di desktop */
+                letter-spacing: 2px;
             }
-            .jackpot-main-title {
-                font-size: 0.9rem;
+            .jackpot-container-main {
+                max-width: 700px; /* Lebar maksimal lebih besar */
             }
-            .jackpot-display-box-content {
-                min-height: 80px;
+        }
+
+        /* Responsive Mobile: Batasi ukuran font agar tidak overflow */
+        @media (max-width: 768px) {
+            .jackpot-value-final {
+                font-size: 5vw; /* Ukuran font lebih kecil di mobile */
+                letter-spacing: 0.2vw;
+            }
+            .jackpot-container-main {
+                padding: 0;
             }
         }
     `;
 
     // Tambahkan CSS ke head
     const styleElement = document.createElement('style');
-    styleElement.innerHTML = jackpotStylesFinal;
+    styleElement.innerHTML = jackpotStylesV8;
     document.head.appendChild(styleElement);
 
 
@@ -147,8 +147,7 @@
                 currentValue = 32462646763;
             }
 
-            // Gunakan format Rupiah (IDR)
-            // Note: Menggunakan 'id-ID' akan otomatis menggunakan titik sebagai pemisah ribuan
+            // Gabungkan "IDR" dan nilai yang sudah diformat
             const formattedValue = 'IDR ' + new Intl.NumberFormat('id-ID', {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
@@ -163,10 +162,8 @@
 
     // --- 3. FUNGSI UNTUK MENYISIPKAN HTML KE LOKASI YANG TEPAT ---
     function injectJackpotHTMLFinal() {
-        // Cari elemen target: #row-togel (Pasaran Togel)
         const targetElement = document.getElementById('row-togel');
         
-        // Cek jika elemen Jackpot sudah ada
         if (document.querySelector('.jackpot-container-main')) {
             return;
         }
@@ -187,10 +184,8 @@
             </div>
         `;
 
-        // Sisipkan HTML tepat SEBELUM elemen #row-togel
         targetElement.insertAdjacentHTML('beforebegin', jackpotHTMLFinal);
 
-        // Setelah elemen disisipkan, segera mulai counter dinamisnya
         startDynamicJackpotCounterFinal();
     }
 

@@ -1,12 +1,12 @@
 (function() {
-    // --- 1. BLOK CSS KHUSUS JACKPOT (V17 Golden Beacon) ---
-    const jackpotStylesV17 = `
-        /* CSS untuk Progressive Jackpot - V17 Golden Beacon */
-        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&family=Share+Tech+Mono&display=swap');
+    // --- 1. BLOK CSS KHUSUS JACKPOT (V18 Blue Neon Pulse) ---
+    const jackpotStylesV18 = `
+        /* CSS untuk Progressive Jackpot - V18 Blue Neon Pulse */
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap');
         
         :root {
             --neon-blue: #00eaff;
-            --neon-yellow: #FFD700;
+            --neon-blue-dark: #0077ff;
             --dark-bg: #1a252f;
         }
 
@@ -24,26 +24,26 @@
             margin-right: auto;
         }
 
-        /* Border Animasi (Denyutan Emas/Kuning) */
+        /* Border Animasi (Denyutan Biru Neon) */
         .jackpot-animated-border {
             position: relative;
             border-radius: 12px;
             padding: 4px; /* Ketebalan border */
             
-            /* Background statis (biru) */
+            /* Background statis (biru tua) */
             background: var(--dark-bg);
-            border: 2px solid var(--neon-yellow);
+            border: 2px solid var(--neon-blue);
             
-            /* Animasi Denyutan Kuning (Glow) */
-            animation: borderPulseYellow 1.5s ease-in-out infinite alternate;
+            /* Animasi Denyutan Biru (Glow) */
+            animation: borderPulseBlue 2s ease-in-out infinite alternate;
         }
 
-        @keyframes borderPulseYellow {
+        @keyframes borderPulseBlue {
             0% { 
-                box-shadow: 0 0 5px var(--neon-yellow), 0 0 10px var(--neon-yellow);
+                box-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue), inset 0 0 3px var(--neon-blue);
             }
             100% { 
-                box-shadow: 0 0 15px var(--neon-yellow), 0 0 30px var(--neon-yellow);
+                box-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-blue-dark), inset 0 0 8px var(--neon-blue);
             }
         }
 
@@ -80,17 +80,17 @@
             justify-content: center;
         }
 
-        /* Ikon Trophy (Warna Kuning Neon) */
+        /* Ikon Trophy (Warna Biru Neon) */
         .jackpot-main-title i {
             font-size: 1.1rem;
             margin-right: 10px;
-            color: var(--neon-yellow); 
-            text-shadow: 0 0 10px var(--neon-yellow);
+            color: var(--neon-blue); /* Diubah ke Biru Neon */
+            text-shadow: 0 0 10px var(--neon-blue);
         }
 
-        /* Teks Judul yang Berjalan (Warna-warni) */
+        /* Teks Judul yang Berjalan (Biru dan Putih) */
         .jackpot-animated-text {
-            background: linear-gradient(90deg, #fff, var(--neon-blue), var(--neon-yellow), #fff);
+            background: linear-gradient(90deg, #fff, var(--neon-blue), #fff);
             background-size: 300% 100%;
             background-clip: text;
             -webkit-background-clip: text;
@@ -103,22 +103,31 @@
             100% { background-position: 300% 50%; }
         }
 
-        /* --- PERUBAHAN FONT & WARNA --- */
+        /* --- FONT LED STABIL (Monospace) DENGAN EFEK GLOW INTENS --- */
         .jackpot-value-final {
-            font-family: 'Share Tech Mono', monospace !important; /* Font Digital STABIL */
-            color: var(--neon-yellow); /* Warna Angka Kuning Emas */
+            font-family: 'Lucida Console', 'Courier New', monospace !important; /* Font Monospace universal (Stabil) */
+            color: #fff; /* Warna font putih */
             font-size: 2.2rem; 
-            font-weight: 400; /* Font digital biasanya tipis */
+            font-weight: bold;
             line-height: 1.1;
-            letter-spacing: 2px;
+            letter-spacing: 3px; /* Jarak antar huruf untuk 'look' digital */
             
-            /* Efek 'Glow' Kuning Emas */
+            /* Efek 'Bleeding Glow' (Pendaran Cahaya) yang intens */
             text-shadow: 
                 0 0 5px #fff,    /* Inti putih tajam */
-                0 0 10px var(--neon-yellow),
-                0 0 20px var(--neon-yellow);
+                0 0 10px #fff,   /* Inti putih pendar */
+                0 0 20px var(--neon-blue), /* Pendaran biru 1 */
+                0 0 35px var(--neon-blue), /* Pendaran biru 2 */
+                0 0 50px var(--neon-blue-dark); /* Pendaran biru terluar (lebar) */
             
             white-space: nowrap;
+            animation: textGlowLED 1.5s ease-in-out infinite alternate;
+        }
+
+        /* Animasi Glow (Berkedip halus) */
+        @keyframes textGlowLED {
+            0% { opacity: 0.95; }
+            100% { opacity: 1; }
         }
         /* --- AKHIR PERUBAHAN --- */
 
@@ -126,7 +135,7 @@
         @media (min-width: 992px) {
             .jackpot-value-final {
                 font-size: 2.6rem; 
-                letter-spacing: 3px;
+                letter-spacing: 4px;
             }
             .jackpot-container-main {
                 max-width: 700px; 
@@ -147,7 +156,7 @@
 
     // Tambahkan CSS ke head
     const styleElement = document.createElement('style');
-    styleElement.innerHTML = jackpotStylesV17;
+    styleElement.innerHTML = jackpotStylesV18;
     document.head.appendChild(styleElement);
 
 
@@ -195,7 +204,7 @@
         }
 
         const jackpotHTMLFinal = `
-            <div class="jackpot-container-main">
+            <div class.="jackpot-container-main">
                 <div class="jackpot-animated-border">
                     <div class="jackpot-display-box-content">
                         <div class="jackpot-main-title">

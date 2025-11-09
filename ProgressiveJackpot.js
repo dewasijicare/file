@@ -1,7 +1,7 @@
 (function() {
-    // --- 1. BLOK CSS KHUSUS JACKPOT (V18 Blue Neon Pulse) ---
-    const jackpotStylesV18 = `
-        /* CSS untuk Progressive Jackpot - V18 Blue Neon Pulse */
+    // --- 1. BLOK CSS KHUSUS JACKPOT (V19 - Perbaikan Duplikasi) ---
+    const jackpotStylesV19 = `
+        /* CSS untuk Progressive Jackpot - V19 Perbaikan Duplikasi */
         @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap');
         
         :root {
@@ -30,11 +30,9 @@
             border-radius: 12px;
             padding: 4px; /* Ketebalan border */
             
-            /* Background statis (biru tua) */
             background: var(--dark-bg);
             border: 2px solid var(--neon-blue);
             
-            /* Animasi Denyutan Biru (Glow) */
             animation: borderPulseBlue 2s ease-in-out infinite alternate;
         }
 
@@ -84,7 +82,7 @@
         .jackpot-main-title i {
             font-size: 1.1rem;
             margin-right: 10px;
-            color: var(--neon-blue); /* Diubah ke Biru Neon */
+            color: var(--neon-blue); 
             text-shadow: 0 0 10px var(--neon-blue);
         }
 
@@ -103,33 +101,30 @@
             100% { background-position: 300% 50%; }
         }
 
-        /* --- FONT LED STABIL (Monospace) DENGAN EFEK GLOW INTENS --- */
+        /* FONT LED STABIL (Monospace) DENGAN EFEK GLOW INTENS */
         .jackpot-value-final {
-            font-family: 'Lucida Console', 'Courier New', monospace !important; /* Font Monospace universal (Stabil) */
-            color: #fff; /* Warna font putih */
+            font-family: 'Lucida Console', 'Courier New', monospace !important; 
+            color: #fff; 
             font-size: 2.2rem; 
             font-weight: bold;
             line-height: 1.1;
-            letter-spacing: 3px; /* Jarak antar huruf untuk 'look' digital */
+            letter-spacing: 3px; 
             
-            /* Efek 'Bleeding Glow' (Pendaran Cahaya) yang intens */
             text-shadow: 
-                0 0 5px #fff,    /* Inti putih tajam */
-                0 0 10px #fff,   /* Inti putih pendar */
-                0 0 20px var(--neon-blue), /* Pendaran biru 1 */
-                0 0 35px var(--neon-blue), /* Pendaran biru 2 */
-                0 0 50px var(--neon-blue-dark); /* Pendaran biru terluar (lebar) */
+                0 0 5px #fff,    
+                0 0 10px #fff,   
+                0 0 20px var(--neon-blue), 
+                0 0 35px var(--neon-blue), 
+                0 0 50px var(--neon-blue-dark); 
             
             white-space: nowrap;
             animation: textGlowLED 1.5s ease-in-out infinite alternate;
         }
 
-        /* Animasi Glow (Berkedip halus) */
         @keyframes textGlowLED {
             0% { opacity: 0.95; }
             100% { opacity: 1; }
         }
-        /* --- AKHIR PERUBAHAN --- */
 
         /* Responsive Desktop */
         @media (min-width: 992px) {
@@ -156,7 +151,7 @@
 
     // Tambahkan CSS ke head
     const styleElement = document.createElement('style');
-    styleElement.innerHTML = jackpotStylesV18;
+    styleElement.innerHTML = jackpotStylesV19;
     document.head.appendChild(styleElement);
 
 
@@ -199,12 +194,14 @@
         }
 
         if (!targetElement) {
-            setTimeout(injectJackpotHTMLFinal, 100);
+            // Jika target belum ada, coba lagi sebentar
+            setTimeout(injectJackpotHTMLFinal, 200);
             return;
         }
 
+        // --- PERBAIKAN TYPO: 'class.=' menjadi 'class=' ---
         const jackpotHTMLFinal = `
-            <div class.="jackpot-container-main">
+            <div class="jackpot-container-main">
                 <div class="jackpot-animated-border">
                     <div class="jackpot-display-box-content">
                         <div class="jackpot-main-title">
@@ -223,7 +220,7 @@
         startDynamicJackpotCounterFinal();
     }
 
-    // --- 4. EKSEKUSI ---
+    // --- 4. EKSEKUSI (PERBAIKAN: Hapus setInterval) ---
+    // Hanya jalankan saat DOM selesai dimuat
     document.addEventListener('DOMContentLoaded', injectJackpotHTMLFinal);
-    setInterval(injectJackpotHTMLFinal, 500);
 })();

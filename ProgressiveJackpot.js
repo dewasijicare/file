@@ -1,8 +1,9 @@
 (function() {
-    // --- 1. BLOK CSS KHUSUS JACKPOT (Plasma Border) ---
-    const jackpotStylesPlasma = `
-        /* CSS untuk Progressive Jackpot - Plasma Border */
-        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700;900&display=swap');
+    // --- 1. BLOK CSS KHUSUS JACKPOT (Gaya LED Digital) ---
+    const jackpotStylesLED = `
+        /* CSS untuk Progressive Jackpot - Gaya LED Digital */
+        @import url('https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Exo+2:wght@700;900&display=swap');
+        
         .jackpot-container-main {
             font-family: 'Exo 2', sans-serif !important;
             text-align: center;
@@ -10,9 +11,9 @@
             margin-top: 2rem;
             margin-bottom: 2rem;
             z-index: 50;
-            padding: 10px; /* Padding untuk memberi ruang pada border plasma */
+            padding: 10px; 
             box-sizing: border-box;
-            max-width: 500px; /* Batasi lebar agar tampilan fokus di tengah */
+            max-width: 500px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -21,7 +22,7 @@
         .jackpot-border-glow {
             position: relative;
             border-radius: 18px;
-            padding: 3px; /* Jarak antara glow dan kotak utama */
+            padding: 3px; 
             background: linear-gradient(45deg, #0077ff, #00eaff);
             box-shadow: 0 0 15px #00eaff;
             overflow: hidden;
@@ -33,7 +34,7 @@
             flex-direction: column; 
             justify-content: center;
             align-items: center;
-            background: #1a252f; /* Warna latar belakang tema */
+            background: #1a252f; 
             border-radius: 15px; 
             min-height: 100px;
             position: relative;
@@ -70,7 +71,7 @@
 
         /* Header / Judul Utama */
         .jackpot-main-title {
-            color: #00eaff; /* Biru neon yang sangat mencolok */
+            color: #00eaff; 
             font-size: 1.1rem;
             font-weight: 900;
             letter-spacing: 2px;
@@ -80,29 +81,31 @@
             z-index: 3;
         }
 
-        /* Angka Jackpot */
+        /* Angka Jackpot (Menggunakan font LED) */
         .jackpot-value-plasma {
+            font-family: 'Major Mono Display', monospace !important; /* Font LED/Digital */
             color: #fff;
-            font-size: 3.2rem; /* Ukuran Super Besar */
-            font-weight: 900;
+            font-size: 2.8rem; /* Sedikit diperkecil dari 3.2rem */
+            font-weight: 400; /* Font digital biasanya lebih tipis */
             line-height: 1.1;
-            letter-spacing: 3px;
-            text-shadow: 0 0 20px #fff, 0 0 12px #00eaff, 0 0 6px #0077ff;
+            letter-spacing: 4px; /* Lebih lebar untuk efek digital */
+            text-shadow: 0 0 20px #00eaff, 0 0 10px #fff; /* Shadow biru intens untuk LED glow */
             z-index: 3; 
             white-space: nowrap;
-            animation: textGlow 1.5s ease-in-out infinite alternate;
+            animation: textGlowLED 1s ease-in-out infinite alternate;
         }
 
-        /* Animasi Text Glow */
-        @keyframes textGlow {
-            0% { text-shadow: 0 0 15px #fff, 0 0 8px #00eaff; }
-            100% { text-shadow: 0 0 25px #fff, 0 0 15px #0077ff; }
+        /* Animasi Text Glow Khusus LED (lebih cepat dan berkedip) */
+        @keyframes textGlowLED {
+            0% { text-shadow: 0 0 15px #00eaff, 0 0 8px #fff; opacity: 0.95; }
+            100% { text-shadow: 0 0 25px #0077ff, 0 0 12px #00eaff; opacity: 1; }
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .jackpot-value-plasma {
-                font-size: 2.2rem;
+                font-size: 2rem;
+                letter-spacing: 3px;
             }
             .jackpot-main-title {
                 font-size: 1rem;
@@ -110,8 +113,8 @@
         }
         @media (max-width: 480px) {
             .jackpot-value-plasma {
-                font-size: 1.8rem;
-                letter-spacing: 1px;
+                font-size: 1.6rem;
+                letter-spacing: 2px;
             }
             .jackpot-display-box-content {
                 padding: 15px 10px;
@@ -124,7 +127,7 @@
 
     // Tambahkan CSS ke head
     const styleElement = document.createElement('style');
-    styleElement.innerHTML = jackpotStylesPlasma;
+    styleElement.innerHTML = jackpotStylesLED;
     document.head.appendChild(styleElement);
 
 
@@ -177,7 +180,7 @@
             <div class="jackpot-container-main">
                 <div class="jackpot-border-glow">
                     <div class="jackpot-display-box-content">
-                        <div class="jackpot-main-title">WIN BIG! PROGRESSIVE JACKPOTS</div>
+                        <div class="jackpot-main-title">PROGRESSIVE JACKPOTS</div>
                         <div id="dynamic-jackpot-value-plasma" class="jackpot-value-plasma">32.462.646.763</div>
                     </div>
                 </div>

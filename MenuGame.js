@@ -1,11 +1,12 @@
 (function() {
-    // --- 1. BLOK CSS KHUSUS MENU GAME (V2) ---
-    const gameMenuStylesV2 = `
-        /* CSS untuk Game Menu Grid - V2 */
+    // --- 1. BLOK CSS KHUSUS MENU GAME (V3) ---
+    const gameMenuStylesV3 = `
+        /* CSS untuk Game Menu Grid - V3 */
         :root {
-            --neon-blue: #00eaff;
+            --neon-blue: #00eaff; /* Tetap didefinisikan untuk border */
+            --neon-yellow: #FFD700; /* Warna kuning border & ikon */
             --dark-bg: #1a252f;
-            --border-color: #00aaff;
+            --border-color-yellow: #FFD700; /* Warna border kuning neon */
         }
 
         .gavan-game-menu-grid {
@@ -17,68 +18,74 @@
             --bs-gutter-y: 0.75rem;
         }
 
-        /* --- PERUBAHAN DI SINI --- */
         .game-menu-box {
             background: var(--dark-bg);
-            border: 1px solid var(--border-color);
+            /* Border warna kuning */
+            border: 1px solid var(--border-color-yellow); 
             border-radius: 12px;
             text-align: center;
             text-decoration: none;
             color: #ecf0f1;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 0 10px rgba(0, 170, 255, 0.4);
+            /* Box-shadow kuning */
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); 
             
-            /* 1. Membuat kotak menjadi persegi (1:1) */
+            /* Membuat kotak menjadi persegi (1:1) */
             aspect-ratio: 1 / 1; 
             
-            /* 2. Mengatur konten (ikon & teks) agar pas di tengah kotak persegi */
+            /* Mengatur konten (ikon & teks) agar pas di tengah kotak persegi */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 0.5rem; /* Padding disesuaikan untuk kotak persegi */
+            padding: 0.25rem; /* Padding lebih kecil lagi agar teks panjang muat */
+            width: 100%; /* Memastikan mengambil lebar penuh kolom */
         }
 
         .game-menu-box:hover {
             transform: translateY(-5px);
-            box-shadow: 0 0 20px var(--neon-blue);
+            /* Glow lebih terang saat hover, warna kuning */
+            box-shadow: 0 0 20px var(--neon-yellow); 
             color: #fff;
         }
 
         .game-menu-icon {
-            font-size: 2.2rem; /* Ukuran ikon disesuaikan sedikit */
-            margin-bottom: 0.25rem; /* Jarak ikon ke teks diperkecil */
+            font-size: 2.1rem; /* Ukuran ikon disesuaikan */
+            margin-bottom: 0.1rem; /* Jarak ikon ke teks lebih kecil */
             display: block; 
         }
 
-        /* 3. Semua ikon menggunakan warna biru ini */
+        /* Semua ikon menggunakan warna kuning */
         .game-menu-icon-color {
-            color: var(--neon-blue);
-            text-shadow: 0 0 10px var(--neon-blue);
+            color: var(--neon-yellow);
+            text-shadow: 0 0 10px var(--neon-yellow);
         }
 
-        /* 4. Memperkecil font label agar "Olahraga" tidak nabrak */
+        /* Memperkecil font label lebih lanjut */
         .game-menu-label {
             font-family: 'Exo 2', sans-serif;
             font-weight: 700;
-            font-size: 0.7rem; /* Diperkecil dari 0.8rem */
+            font-size: 0.65rem; /* Diperkecil dari 0.7rem */
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            line-height: 1.2; /* Menjaga tinggi baris */
+            letter-spacing: 0.2px; /* Letter spacing sedikit lebih rapat */
+            line-height: 1.1; /* Menjaga tinggi baris agar tidak terlalu renggang */
+            word-break: break-word; /* Memastikan kata panjang bisa pecah */
+            max-width: 100%; /* Memastikan tidak meluber */
         }
     `;
 
     // Tambahkan CSS ke <head>
     const styleEl = document.createElement('style');
-    styleEl.innerHTML = gameMenuStylesV2;
+    styleEl.innerHTML = gameMenuStylesV3;
     document.head.appendChild(styleEl);
 
 
-    // --- 2. FUNGSI UNTUK MENYISIPKAN HTML MENU (V2) ---
-    function injectGameMenuV2() {
-        // Cek apakah menu sudah ada agar tidak duplikat
-        if (document.querySelector('.gavan-game-menu-grid')) {
-            return;
+    // --- 2. FUNGSI UNTUK MENYISIPKAN HTML MENU (V3) ---
+    function injectGameMenuV3() {
+        // Hapus versi menu sebelumnya jika ada
+        const existingMenu = document.querySelector('.gavan-game-menu-grid');
+        if (existingMenu) {
+            existingMenu.remove();
         }
         
         // Cari elemen target (panel saldo/username)
@@ -86,23 +93,22 @@
         
         if (targetPanel) {
             
-            // --- PERUBAHAN: Ikon Togel diubah, 'color' dihilangkan ---
+            // Susunan menu dan ikon sesuai permintaan baru
             const menuItems = [
-                { label: 'Olahraga', icon: 'bi-dribbble', href: '/sport' },
-                { label: 'Esports', icon: 'bi-controller', href: '#' }, 
-                { label: 'Kasino', icon: 'bi-suit-diamond-fill', href: '/game?category=102' },
-                { label: 'Live Kasino', icon: 'bi-person-video3', href: '/game?category=102' },
-                { label: 'Kartu', icon: 'bi-suit-club-fill', href: '/game?category=103' },
-                { label: 'Virtual', icon: 'bi-display', href: '#' },
-                { label: 'Togel', icon: 'bi-8-circle-fill', href: '/togel' }, // Ikon diubah
-                { label: 'Slot', icon: 'bi-joystick', href: '/game?category=101' }
+                { label: 'Slot', icon: 'bi-joystick', href: '/game?category=101' },
+                { label: 'Casino', icon: 'bi-suit-diamond-fill', href: '/game?category=102' },
+                { label: 'Sport', icon: 'bi-dribbble', href: '/sport' },
+                { label: 'Togel', icon: 'bi-8-circle-fill', href: '/togel' }, 
+                { label: 'Table', icon: 'bi-table', href: '#' }, // Menggunakan ikon bi-table
+                { label: 'Fishing', icon: 'bi-fish', href: '#' }, // Menggunakan ikon bi-fish
+                { label: 'Cock Fight', icon: 'bi-egg', href: '#' }, // Menggunakan ikon bi-egg (ayam jago)
+                { label: 'Arcade', icon: 'bi-controller', href: '#' } // Menggunakan ikon bi-controller
             ];
 
             // Membuat string HTML
             let menuHTML = '<div class="container gavan-game-menu-grid"><div class="row">';
             
             menuItems.forEach(item => {
-                // --- PERUBAHAN: 'item.color' dihapus, kelas statis 'game-menu-icon-color' dipakai ---
                 menuHTML += `
                     <div class="col-3">
                         <a href="${item.href}" class="game-menu-box">
@@ -120,16 +126,16 @@
 
         } else {
             // Jika panel belum dimuat
-            setTimeout(injectGameMenuV2, 300);
+            setTimeout(injectGameMenuV3, 300);
         }
     }
 
     // --- 3. EKSEKUSI ---
     // Gunakan listener yang lebih aman untuk inject
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', injectGameMenuV2);
+        document.addEventListener('DOMContentLoaded', injectGameMenuV3);
     } else {
         // Jika DOM sudah dimuat, jalankan langsung
-        injectGameMenuV2();
+        injectGameMenuV3();
     }
 })();

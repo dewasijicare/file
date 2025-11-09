@@ -11,9 +11,9 @@
     loadFontAwesome(); // Panggil fungsi ini di awal
 
 
-    // --- 1. BLOK CSS KHUSUS MENU GAME (V5) ---
-    const gameMenuStylesV5 = `
-        /* CSS untuk Game Menu Grid - V5 */
+    // --- 1. BLOK CSS KHUSUS MENU GAME (V6) ---
+    const gameMenuStylesV6 = `
+        /* CSS untuk Game Menu Grid - V6 */
         :root {
             --neon-yellow: #FFD700; /* Warna kuning border & ikon */
             --dark-bg: #1a252f;
@@ -56,35 +56,35 @@
         /* Kelas ikon untuk kedua library (BI & FA) */
         .game-menu-icon, .game-menu-icon-fa { 
             font-size: 2.1rem;
-            margin-bottom: 0.1rem;
+            margin-bottom: 0; /* Margin di-nol-kan, diatur oleh label */
             display: block; 
         }
 
+        /* PERBAIKAN: Efek glow (text-shadow) DIHAPUS */
         .game-menu-icon-color {
             color: var(--neon-yellow);
-            text-shadow: 0 0 10px var(--neon-yellow);
         }
 
+        /* PERBAIKAN: Tata letak teks (font-size, margin, line-height) */
         .game-menu-label {
             font-family: 'Exo 2', sans-serif;
             font-weight: 700;
             font-size: 0.65rem;
             text-transform: uppercase;
             letter-spacing: 0.2px;
-            line-height: 1.1;
-            word-break: break-word;
-            max-width: 100%;
+            line-height: 1.2; /* Jarak baris lebih longgar */
+            margin-top: 0.25rem; /* Memberi jarak PASTI dari ikon */
         }
     `;
 
     // Tambahkan CSS ke <head>
     const styleEl = document.createElement('style');
-    styleEl.innerHTML = gameMenuStylesV5;
+    styleEl.innerHTML = gameMenuStylesV6;
     document.head.appendChild(styleEl);
 
 
-    // --- 2. FUNGSI UNTUK MENYISIPKAN HTML MENU (V5) ---
-    function injectGameMenuV5() {
+    // --- 2. FUNGSI UNTUK MENYISIPKAN HTML MENU (V6) ---
+    function injectGameMenuV6() {
         // Hapus versi menu sebelumnya jika ada
         const existingMenu = document.querySelector('.gavan-game-menu-grid');
         if (existingMenu) {
@@ -96,15 +96,15 @@
         
         if (targetPanel) {
             
-            // --- PERUBAHAN: Ikon diganti sesuai V5 (campuran BI dan FA) ---
+            // --- PERUBAHAN: Ikon diganti sesuai V6 (campuran BI dan FA) ---
             const menuItems = [
                 { label: 'Slot', icon: 'bi-7-square-fill', type: 'bi', href: '/game?category=101' },
-                { label: 'Casino', icon: 'fa-gem', type: 'fa', href: '/game?category=102' }, // FA
+                { label: 'Casino', icon: 'fa-database', type: 'fa', href: '/game?category=102' }, // Tumpukan Chips
                 { label: 'Sport', icon: 'bi-dribbble', type: 'bi', href: '/sport' },
                 { label: 'Togel', icon: 'bi-8-circle-fill', type: 'bi', href: '/togel' }, 
-                { label: 'Table', icon: 'fa-hat-wizard', type: 'fa', href: '#' }, // FA (menggunakan hat-wizard sebagai kartu poker)
-                { label: 'Fishing', icon: 'fa-fish-fins', type: 'fa', href: '#' }, // FA (ikan lucu)
-                { label: 'Cock Fight', icon: 'fa-feather-pointed', type: 'fa', href: '#' }, // FA (bulu, pengganti ayam jantan)
+                { label: 'Table', icon: 'fa-clone', type: 'fa', href: '#' }, // Kartu Bertumpuk
+                { label: 'Fishing', icon: 'fa-fish-fins', type: 'fa', href: '#' }, // Ikan
+                { label: 'Cock Fight', icon: 'fa-crow', type: 'fa', href: '#' }, // Burung Gagak
                 { label: 'Arcade', icon: 'bi-controller', type: 'bi', href: '#' }
             ];
 
@@ -132,20 +132,24 @@
 
         } else {
             // Jika panel belum dimuat
-            setTimeout(injectGameMenuV5, 300);
+            setTimeout(injectGameMenuV6, 300);
         }
     }
 
     // --- 3. EKSEKUSI ---
-    // Pastikan Font Awesome dimuat sebelum mencoba inject menu
+    // Logika untuk menunggu Font Awesome siap sebelum inject
     const faCheckInterval = setInterval(() => {
+        // Cek jika link CSS sudah ada DAN font-nya sudah bisa digunakan oleh browser
         if (document.querySelector('link[href*="font-awesome"]') && 
-            document.fonts.check('1rem "Font Awesome 6 Free"')) { // Pastikan font FA benar-benar siap
-            clearInterval(faCheckInterval);
+            document.fonts && document.fonts.check('1rem "Font Awesome 6 Free"')) {
+            
+            clearInterval(faCheckInterval); // Hentikan pengecekan
+            
+            // Jalankan inject
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', injectGameMenuV5);
+                document.addEventListener('DOMContentLoaded', injectGameMenuV6);
             } else {
-                injectGameMenuV5();
+                injectGameMenuV6();
             }
         }
     }, 100); // Cek setiap 100ms

@@ -1,30 +1,30 @@
 (function() {
-    // --- 1. BLOK CSS KHUSUS JACKPOT (Gaya LED Digital) ---
-    const jackpotStylesLED = `
-        /* CSS untuk Progressive Jackpot - Gaya LED Digital */
-        @import url('https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Exo+2:wght@700;900&display=swap');
-        
+    // --- 1. BLOK CSS KHUSUS JACKPOT (Stabil & LED Look) ---
+    const jackpotStylesStableLED = `
+        /* CSS untuk Progressive Jackpot - V6 Stabil & LED Look */
+        /* Menggunakan font sistem (monospace) untuk stabilitas tampilan digital */
         .jackpot-container-main {
-            font-family: 'Exo 2', sans-serif !important;
+            font-family: 'Exo 2', sans-serif, monospace !important; 
             text-align: center;
             position: relative;
             margin-top: 2rem;
             margin-bottom: 2rem;
             z-index: 50;
-            padding: 10px; 
+            padding: 5px; /* Sedikit padding untuk glow */
             box-sizing: border-box;
             max-width: 500px;
             margin-left: auto;
             margin-right: auto;
         }
 
-        /* Container untuk efek border */
+        /* Container untuk efek border dan glow */
         .jackpot-border-glow {
             position: relative;
             border-radius: 18px;
             padding: 3px; 
-            background: linear-gradient(45deg, #0077ff, #00eaff);
-            box-shadow: 0 0 15px #00eaff;
+            /* Hapus background glow solid agar hanya border yang bersinar */
+            background: transparent; 
+            box-shadow: 0 0 10px #00eaff;
             overflow: hidden;
         }
 
@@ -34,32 +34,34 @@
             flex-direction: column; 
             justify-content: center;
             align-items: center;
-            background: #1a252f; 
+            background: #1a252f; /* Warna latar belakang card tema */
+            border: 3px solid #00eaff; /* Border solid tipis untuk struktur */
             border-radius: 15px; 
             min-height: 100px;
             position: relative;
             padding: 15px;
             z-index: 2;
+            box-shadow: inset 0 0 10px rgba(0, 119, 255, 0.5); /* Inner shadow */
         }
-
+        
         /* Efek Plasma Flow (Border Bergerak) */
         .jackpot-border-glow::before {
             content: '';
             position: absolute;
             inset: -10px;
-            background: conic-gradient(from 0deg, transparent, #00eaff, transparent, transparent);
+            background: conic-gradient(from 0deg, transparent 50%, #00eaff 50%, transparent 100%);
             animation: borderRotate 4s linear infinite;
             z-index: 1;
+            opacity: 0.7;
         }
         
-        /* Lapisan kedua (optional) untuk membuat efek lebih tebal */
         .jackpot-border-glow::after {
             content: '';
             position: absolute;
             inset: -10px;
-            background: conic-gradient(from 180deg, transparent, #0077ff, transparent, transparent);
+            background: conic-gradient(from 180deg, transparent 50%, #0077ff 50%, transparent 100%);
             animation: borderRotate 4s linear infinite reverse;
-            opacity: 0.8;
+            opacity: 0.6;
             z-index: 1;
         }
 
@@ -69,65 +71,59 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Header / Judul Utama */
+        /* Judul Jackpot */
         .jackpot-main-title {
             color: #00eaff; 
-            font-size: 1.1rem;
+            font-size: 1rem; /* Ukuran disesuaikan */
             font-weight: 900;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             text-shadow: 0 0 10px #00eaff;
             z-index: 3;
         }
 
-        /* Angka Jackpot (Menggunakan font LED) */
+        /* Angka Jackpot (Font stabil LED Look) */
         .jackpot-value-plasma {
-            font-family: 'Major Mono Display', monospace !important; /* Font LED/Digital */
+            font-family: monospace !important; /* Font Monospace universal (Stabil) */
             color: #fff;
-            font-size: 2.8rem; /* Sedikit diperkecil dari 3.2rem */
-            font-weight: 400; /* Font digital biasanya lebih tipis */
+            font-size: 2.2rem; /* Ukuran disesuaikan (diperkecil sedikit dari 2.8rem) */
+            font-weight: 700;
             line-height: 1.1;
-            letter-spacing: 4px; /* Lebih lebar untuk efek digital */
-            text-shadow: 0 0 20px #00eaff, 0 0 10px #fff; /* Shadow biru intens untuk LED glow */
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px #00eaff, 0 0 8px #fff; /* Shadow biru intens untuk LED glow */
             z-index: 3; 
             white-space: nowrap;
             animation: textGlowLED 1s ease-in-out infinite alternate;
         }
 
-        /* Animasi Text Glow Khusus LED (lebih cepat dan berkedip) */
+        /* Animasi Text Glow LED */
         @keyframes textGlowLED {
-            0% { text-shadow: 0 0 15px #00eaff, 0 0 8px #fff; opacity: 0.95; }
-            100% { text-shadow: 0 0 25px #0077ff, 0 0 12px #00eaff; opacity: 1; }
+            0% { text-shadow: 0 0 10px #00eaff, 0 0 5px #fff; opacity: 0.95; }
+            100% { text-shadow: 0 0 20px #0077ff, 0 0 10px #00eaff; opacity: 1; }
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .jackpot-value-plasma {
-                font-size: 2rem;
-                letter-spacing: 3px;
+                font-size: 1.8rem;
+                letter-spacing: 1.5px;
             }
             .jackpot-main-title {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
         }
         @media (max-width: 480px) {
             .jackpot-value-plasma {
-                font-size: 1.6rem;
-                letter-spacing: 2px;
-            }
-            .jackpot-display-box-content {
-                padding: 15px 10px;
-            }
-            .jackpot-main-title {
-                font-size: 0.9rem;
+                font-size: 1.5rem;
+                letter-spacing: 1px;
             }
         }
     `;
 
     // Tambahkan CSS ke head
     const styleElement = document.createElement('style');
-    styleElement.innerHTML = jackpotStylesLED;
+    styleElement.innerHTML = jackpotStylesStableLED;
     document.head.appendChild(styleElement);
 
 

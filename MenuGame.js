@@ -10,11 +10,11 @@
     }
     loadFontAwesome(); 
 
-    // --- 1. BLOK CSS KHUSUS MENU GAME (V26 - RAPI & ICON KECIL) ---
-    const gameMenuStylesV26 = `
+    // --- 1. BLOK CSS KHUSUS MENU GAME (V32 - YELLOW BORDER) ---
+    const gameMenuStylesV32 = `
         :root {
             --gaban-gold: #FFD700;
-            --gaban-gold-glow: rgba(255, 215, 0, 0.6);
+            --gaban-gold-dark: #B8860B;
             --gaban-dark: #0f151c;
             --gaban-panel: #1a252f;
             --gaban-blue-neon: #00eaff;
@@ -38,79 +38,107 @@
         /* --- STYLING KOTAK MENU --- */
         .game-menu-box {
             position: relative;
-            background: linear-gradient(145deg, #232f3c, #151c24); 
-            border: 1px solid rgba(255, 215, 0, 0.3); 
-            border-radius: 10px; /* Radius sedikit dikecilkan */
+            background: linear-gradient(145deg, #1e2936, #121921); 
+            
+            /* [UBAH DISINI] Border Kuning Tipis (Semi-Transparan) */
+            border: 1px solid rgba(255, 215, 0, 0.5); 
+            
+            border-radius: 12px;
             text-align: center;
             text-decoration: none;
-            color: #bdc3c7;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 
-                        inset 0 1px 0 rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4); 
             
-            aspect-ratio: 1 / 1; 
-            
-            /* [LAYOUT FIX] Menggunakan Flexbox Rapi */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            
             width: 100%;
             height: 100%; 
-            overflow: hidden;
             
-            /* [SPACING FIX] Jarak konsisten antara Icon dan Teks */
-            gap: 6px; 
+            overflow: visible; 
+            gap: 8px; 
             padding: 5px;
+            aspect-ratio: 1 / 1; 
         }
 
         .game-menu-box:hover {
             transform: translateY(-3px);
+            background: linear-gradient(145deg, #253241, #1a222b);
+            
+            /* [HOVER] Border menjadi Emas Solid */
             border-color: var(--gaban-gold);
-            background: linear-gradient(145deg, #2c3e50, #1a252f);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), 
-                        0 0 10px var(--gaban-gold-glow);
-            color: #fff;
+            
+            /* Menambah glow emas di luar kotak saat hover */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6), 0 0 10px rgba(255, 215, 0, 0.3);
+            z-index: 10; 
         }
 
-        /* --- STYLING IKON (DIPERKECIL & DIKUNCI TINGGINYA) --- */
-        .gavan-icon-base {
-            /* [SIZE FIX] Ukuran Icon Diperkecil */
-            font-size: 1.5rem; 
+        /* --- STYLING WRAPPER ICON (LINGKARAN EMAS / TOKEN) --- */
+        .icon-token-wrapper {
+            width: 44px;  
+            height: 44px; 
             
-            color: var(--gaban-gold);
-            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.4));
-            transition: all 0.3s ease;
+            border-radius: 50%; 
+            background: radial-gradient(circle at 30% 30%, #2c3e50, #000); 
             
-            /* [ALIGNMENT FIX] Memastikan Icon selalu memakan ruang yang sama */
-            /* Ini mencegah teks naik turun karena beda tinggi icon */
+            border: 2px solid transparent;
+            background-image: linear-gradient(#1a252f, #1a252f), linear-gradient(135deg, #FFD700, #FDB931, #996515);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+            
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 1.6rem; 
-            width: 100%;
-            line-height: 1;
-            margin: 0;
+            flex-shrink: 0; 
+            
+            box-shadow: 0 0 10px rgba(0,0,0,0.5), inset 0 0 5px rgba(0,0,0,0.8);
+            transition: all 0.3s ease;
         }
 
-        .game-menu-box:hover .gavan-icon-base {
-            transform: scale(1.1);
-            color: #fff;
-            filter: drop-shadow(0 0 8px var(--gaban-blue-neon));
+        .game-menu-box:hover .icon-token-wrapper {
+            box-shadow: 0 0 15px var(--gaban-gold); 
+            transform: scale(1.1) rotate(5deg); 
+        }
+
+        /* --- STYLING ICON --- */
+        .gavan-icon-base {
+            font-size: 1.35rem; 
+            line-height: 1; 
+            
+            background: linear-gradient(to bottom, #FFF 0%, #FFD700 50%, #B8860B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.8));
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            padding-top: 1px; 
         }
 
         /* --- STYLING TEKS LABEL --- */
         .game-menu-label {
             font-family: 'Exo 2', 'Segoe UI', sans-serif;
             font-weight: 700;
-            font-size: 0.65rem; /* Font sedikit diperkecil agar rapi */
+            font-size: 0.65rem; 
             text-transform: uppercase;
-            letter-spacing: 0.3px;
-            color: #ecf0f1;
+            letter-spacing: 0.5px;
+            color: #bdc3c7;
             margin: 0;
             line-height: 1;
-            white-space: nowrap; /* Mencegah teks turun baris */
+            white-space: nowrap;
+            transition: color 0.3s ease;
+        }
+
+        .game-menu-box:hover .game-menu-label {
+            color: #FFD700; 
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
         }
 
         @keyframes fadeInMenu {
@@ -118,7 +146,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* --- TAMPILAN DESKTOP (Lebih Lebar) --- */
+        /* --- TAMPILAN DESKTOP --- */
         @media (min-width: 992px) {
             .gavan-game-menu-grid .row {
                 --bs-gutter-x: 0.8rem;
@@ -127,23 +155,27 @@
 
             .game-menu-box {
                 aspect-ratio: auto; 
-                flex-direction: row; /* Icon di Kiri, Teks di Kanan */
+                flex-direction: row; 
                 padding: 0 1rem; 
                 background: linear-gradient(to right, #1a252f, #141e26);
-                min-height: 55px; /* Sedikit diperkecil tingginya */
-                gap: 10px;
+                
+                min-height: 70px; 
+                
+                gap: 15px;
+                justify-content: flex-start; 
             }
-
+            
+            .icon-token-wrapper {
+                width: 38px;
+                height: 38px;
+            }
+            
             .gavan-icon-base {
-                font-size: 1.3rem; /* Icon desktop juga diperkecil */
-                height: auto;
-                width: auto;
-                margin: 0;
-                justify-content: flex-start;
+                font-size: 1.1rem; 
             }
 
             .game-menu-label {
-                font-size: 0.8rem;
+                font-size: 0.85rem;
                 text-align: left;
             }
         }
@@ -151,12 +183,12 @@
 
     // Tambahkan CSS ke <head>
     const styleEl = document.createElement('style');
-    styleEl.innerHTML = gameMenuStylesV26;
+    styleEl.innerHTML = gameMenuStylesV32;
     document.head.appendChild(styleEl);
 
 
-    // --- 2. FUNGSI UNTUK MENYISIPKAN HTML MENU (V26) ---
-    function injectGameMenuV26() {
+    // --- 2. FUNGSI UNTUK MENYISIPKAN HTML MENU (V32) ---
+    function injectGameMenuV32() {
         const existingMenu = document.querySelector('.gavan-game-menu-grid');
         if (existingMenu) existingMenu.remove();
         
@@ -174,7 +206,6 @@
                 { label: 'Arcade', icon: 'bi-controller', type: 'bi', href: '/game?category=151%2C900' }
             ];
 
-            // Tetap 4 kolom untuk tampilan kotak yang proporsional
             let menuHTML = '<div class="container gavan-game-menu-grid"><div class="row row-cols-4 row-cols-lg-4">'; 
             
             menuItems.forEach(item => {
@@ -182,7 +213,9 @@
                 menuHTML += `
                     <div class="col"> 
                         <a href="${item.href}" class="game-menu-box">
-                            <div class="gavan-icon-base"><i class="${iconClass}"></i></div>
+                            <div class="icon-token-wrapper">
+                                <i class="${iconClass} gavan-icon-base"></i>
+                            </div>
                             <div class="game-menu-label">${item.label}</div>
                         </a>
                     </div>
@@ -193,7 +226,7 @@
             targetPanel.insertAdjacentHTML('afterend', menuHTML);
 
         } else {
-            setTimeout(injectGameMenuV26, 300);
+            setTimeout(injectGameMenuV32, 300);
         }
     }
 
@@ -202,9 +235,9 @@
         if (document.querySelector('link[href*="font-awesome"]')) {
             clearInterval(faCheckInterval); 
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', injectGameMenuV26);
+                document.addEventListener('DOMContentLoaded', injectGameMenuV32);
             } else {
-                injectGameMenuV26();
+                injectGameMenuV32();
             }
         }
     }, 100); 

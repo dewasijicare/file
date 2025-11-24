@@ -55,7 +55,7 @@
         #betting-page-container .form-check-input:checked { background-color: #00eaff; border-color: #00eaff; box-shadow: 0 0 10px #00eaff; }
         #panel-closed.panel-closed-themed { background: linear-gradient(45deg, #c0392b, #e74c3c) !important; border: 1px solid #e74c3c !important; box-shadow: 0 0 20px rgba(231, 76, 60, 0.6) !important; border-radius: 15px !important; padding: 5rem 1rem !important; }
         #panel-closed.panel-closed-themed strong { font-size: 1.5rem; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
-       
+        
         /* CSS KHUSUS UNTUK TABEL BETTING */
         #betting-page-container .card-body { padding: 1.25rem; padding-top: 0 !important; }
         #betting-page-container .info-description, #betting-page-container .bet-type-toggle { margin-bottom: 0 !important; }
@@ -326,7 +326,7 @@
             originalInput.style.display = 'none';
             displayInput.value = formatNumberWithCommas(originalInput.value);
 
-          
+            
             const handleInput = () => {
                 const rawValue = displayInput.value.replace(/,/g, '');
                 
@@ -441,45 +441,17 @@
         if(oldCopyButton)oldCopyButton.style.display='none';
         depositForm.dataset.initialized='true' 
     }
-    function redirectToPageTwo() {
-        // 1. Cek apakah kita di halaman /draw-history
-        if (window.location.pathname.endsWith('/draw-history')) {
-            // 2. Ambil URL search parameters
-            const params = new URLSearchParams(window.location.search);
-            const currentPage = params.get('page');
-
-            // 3. Cek apakah page=1 atau page tidak ada (null)
-            if (currentPage === '1' || currentPage === null) {
-                // 4. Set page=2
-                params.set('page', '2');
-                
-                // 5. Ganti URL di browser. Ini akan memicu refresh ke Halaman 2
-                window.location.search = params.toString();
-            }
-        }
-    }
-    function hidePageOnePagination() {
-        // Cari link pagination yang href-nya berisi "page=1"
-        const pageOneLink = document.querySelector('.pagination .page-item a[href*="page=1"]');
-        if (pageOneLink) {
-            // Temukan elemen <li> (induknya)
-            const pageItem = pageOneLink.closest('.page-item');
-            if (pageItem) {
-                // Sembunyikan elemen <li>
-                pageItem.style.display = 'none'; 
-            }
-        }
-    }
+    
     function updateDepositFormUI(depositForm) { if(!depositForm)return;const receiverBankSpan=document.getElementById('receiver-bank');if(receiverBankSpan&&!receiverBankSpan.dataset.iconApplied){const bankName=receiverBankSpan.textContent.trim().toUpperCase();if(BANK_ICONS[bankName]){receiverBankSpan.innerHTML=`<img src="${BANK_ICONS[bankName]}" alt="${bankName}" style="height: 40px; vertical-align: middle;">`}receiverBankSpan.dataset.iconApplied='true'}for(const[key,iconClass]of Object.entries(ICON_MAPPINGS)){const isLabelForInput=!key.includes('receiver');const element=isLabelForInput?depositForm.querySelector(`label[for="${key}"]`):document.getElementById(key);if(element&&!element.querySelector('i.bi')){const iconEl=document.createElement('i');iconEl.className=`bi ${iconClass}`;element.prepend(iconEl,document.createTextNode(' '))}}const qrCodeImg=document.getElementById('receiver-qrcode');if(qrCodeImg){qrCodeImg.classList.remove('bg-white');qrCodeImg.style.setProperty('border-color','#00aaff','important');qrCodeImg.style.setProperty('background-color','transparent','important')} }
     function styleWithdrawForm() { const withdrawCard=document.querySelector('#withdraw-form')?.closest('.card.shadow');if(!withdrawCard||withdrawCard.dataset.tabsApplied==='true')return;const mainTitle=withdrawCard.querySelector('h1.text-center');const historyTitle=Array.from(withdrawCard.querySelectorAll('h1, h2, h3')).find(el=>el.textContent.includes('RIWAYAT WITHDRAW'));if(mainTitle&&historyTitle){const navTabs=document.createElement('ul');navTabs.className='nav nav-tabs';navTabs.innerHTML=`<li class="nav-item"><a class="nav-link active" href="#">Withdraw</a></li><li class="nav-item"><a class="nav-link" href="#">Riwayat</a></li>`;const contentWrapper=document.createElement('div');contentWrapper.className='border border-top-0 px-3 pb-3 pt-2';Array.from(withdrawCard.children).forEach(child=>{if(child!==mainTitle){contentWrapper.appendChild(child.cloneNode(true))}});while(withdrawCard.firstChild){withdrawCard.removeChild(withdrawCard.firstChild)}withdrawCard.appendChild(mainTitle);withdrawCard.appendChild(navTabs);withdrawCard.appendChild(contentWrapper);const newHistoryTitle=contentWrapper.querySelector('h1, h2, h3');if(newHistoryTitle&&newHistoryTitle.textContent.includes('RIWAYAT WITHDRAW')){newHistoryTitle.style.display='none'}withdrawCard.dataset.tabsApplied='true'}const withdrawForm=withdrawCard.querySelector('#withdraw-form');if(withdrawForm){const bankLabel=withdrawForm.querySelector('label[for="agentmemberbankid"]');if(bankLabel&&!bankLabel.querySelector('i.bi')){bankLabel.innerHTML='<i class="bi bi-wallet2"></i> Bank / e-Wallet'}const amountLabel=withdrawForm.querySelector('label[for="amount"]');if(amountLabel&&!amountLabel.querySelector('i.bi')){amountLabel.innerHTML='<i class="bi bi-cash-coin"></i> '+amountLabel.textContent}} }
 
     function styleBettingPage() {
         const bettingContainer = document.querySelector('#select-market')?.closest('.container[class*="my-"]');
         if (!bettingContainer) return;
-    
+     
         bettingContainer.classList.remove('my-5');
         bettingContainer.classList.add('my-3'); 
-    
+     
         if (!bettingContainer.dataset.styledOnce) {
             bettingContainer.id = 'betting-page-container';
             const marketLabel = document.querySelector('label[for="select-market"]');
@@ -518,14 +490,14 @@
             });
             bettingContainer.dataset.styledOnce = 'true';
         }
-    
+     
         bettingContainer.querySelectorAll('div[id^="panel-"]:not([data-panel-styled="true"])').forEach(panel => {
             panel.dataset.panelStyled = 'true';
             panel.classList.remove('bg-dark', 'border', 'rounded-3', 'p-1', 'p-3');
             if (!panel.classList.contains('card')) panel.classList.add('card', 'mb-3');
             const cardHeader = panel.querySelector('.card-header');
             const cardBody = panel.querySelector('.card-body');
-    
+     
             if (!cardHeader && !cardBody) {
                 const infoDiv = panel.querySelector('.mb-3');
                 const title = infoDiv ? (infoDiv.querySelector('strong')?.textContent.trim() || 'Panel Permainan') : 'Panel Permainan';
@@ -540,22 +512,22 @@
                 panel.appendChild(newCardHeader);
                 panel.appendChild(newCardBody);
             }
-    
+     
             const infoDivInsideBody = panel.querySelector('.card-body > .mb-3');
             if (infoDivInsideBody) {
                 const descriptionWrapper = infoDivInsideBody.querySelector('.ms-3');
                 if (descriptionWrapper) {
                     descriptionWrapper.classList.remove('ms-3');
                 }
-    
+     
                 const duplicateTitle = infoDivInsideBody.querySelector('strong');
                 if (duplicateTitle && duplicateTitle.nextElementSibling && duplicateTitle.nextElementSibling.matches('div')) {
                     duplicateTitle.style.display = 'none';
                 }
-    
+     
                 infoDivInsideBody.style.marginTop = '0.5rem';
             }
-    
+     
             if (panel.id === 'panel-closed') {
                 panel.classList.add('panel-closed-themed');
             }
@@ -586,111 +558,111 @@
 
     function styleQuickLogin() { document.querySelectorAll('#row-quicklogin:not([data-styled="true"])').forEach(card => { card.dataset.styled = 'true'; const form = card.querySelector('form'); if (!form) return; const usernameDiv = form.querySelector('label[for="username"]')?.parentElement; const passwordDiv = form.querySelector('label[for="password"]')?.parentElement; const buttonDiv = form.querySelector('.d-flex.gap-1.my-3'); if (!usernameDiv || !passwordDiv || !buttonDiv) return; const newInputsHTML = ` <div class="row g-2 mb-3"> <div class="col-md-6"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-person-fill"></i></span> <input type="text" name="userName" id="username" class="form-control" placeholder="Username"> </div> </div> <div class="col-md-6"> <div class="input-wrapper"> <div class="input-group"> <span class="input-group-text"><i class="bi bi-key-fill"></i></span> <input type="password" name="password" id="password" class="form-control" placeholder="Password"> </div> </div> </div> </div> `; buttonDiv.insertAdjacentHTML('beforebegin', newInputsHTML); usernameDiv.remove(); passwordDiv.remove(); const newPasswordInput = card.querySelector('#password'); if (newPasswordInput) { addPasswordToggle(newPasswordInput); } }); }
     function styleLoginPage() {
-        const loginForm = document.querySelector('#maincontent form[action="/login"]');
-        if (!loginForm) return;
-        const loginCard = loginForm.closest('.card.shadow');
-        if (!loginCard || loginCard.dataset.layoutStyled === 'true') return;
-        loginCard.dataset.layoutStyled = 'true';
+        const loginForm = document.querySelector('#maincontent form[action="/login"]');
+        if (!loginForm) return;
+        const loginCard = loginForm.closest('.card.shadow');
+        if (!loginCard || loginCard.dataset.layoutStyled === 'true') return;
+        loginCard.dataset.layoutStyled = 'true';
 
-        // [PERBAIKAN 1: Memperbaiki lebar card agar pas & di tengah]
-        try {
-            if (!loginCard.parentElement.classList.contains('col-lg-6')) { 
-                const cardParent = loginCard.parentElement;
-                const newRow = document.createElement('div');
-                newRow.className = 'row';
-                const newCol = document.createElement('div');
-                newCol.className = 'col-lg-6 offset-lg-3';
-                cardParent.replaceChild(newRow, loginCard);
-                newRow.appendChild(newCol);
-                newCol.appendChild(loginCard);
-            }
-        } catch (e) {
-            console.error("GavanTheme Error (Centering Login):", e);
-        }
+        // [PERBAIKAN 1: Memperbaiki lebar card agar pas & di tengah]
+        try {
+            if (!loginCard.parentElement.classList.contains('col-lg-6')) { 
+                const cardParent = loginCard.parentElement;
+                const newRow = document.createElement('div');
+                newRow.className = 'row';
+                const newCol = document.createElement('div');
+                newCol.className = 'col-lg-6 offset-lg-3';
+                cardParent.replaceChild(newRow, loginCard);
+                newRow.appendChild(newCol);
+                newCol.appendChild(loginCard);
+            }
+        } catch (e) {
+            console.error("GavanTheme Error (Centering Login):", e);
+        }
 
-        // [PERBAIKAN 2: Mengubah layout default menjadi 2 baris (col-12)]
-        
-        // Selector baru yang lebih kuat untuk menemukan elemen default
-        const usernameLabel = loginForm.querySelector('label[for="username"]');
-        const passwordLabel = loginForm.querySelector('label[for="password"]');
-        
-        // Grup pembungkus elemen (yang berisi label dan input)
-        const usernameGroup = usernameLabel ? usernameLabel.parentElement : null;
-        const passwordGroup = passwordLabel ? passwordLabel.parentElement : null;
-        
-        // Input-nya sendiri
-        const usernameInput = loginForm.querySelector('input[name="userName"]');
-        const passwordInput = loginForm.querySelector('input[name="password"]');
-        
-        const buttonContainer = loginForm.querySelector('button[type="submit"]')?.parentElement;
+        // [PERBAIKAN 2: Mengubah layout default menjadi 2 baris (col-12)]
+        
+        // Selector baru yang lebih kuat untuk menemukan elemen default
+        const usernameLabel = loginForm.querySelector('label[for="username"]');
+        const passwordLabel = loginForm.querySelector('label[for="password"]');
+        
+        // Grup pembungkus elemen (yang berisi label dan input)
+        const usernameGroup = usernameLabel ? usernameLabel.parentElement : null;
+        const passwordGroup = passwordLabel ? passwordLabel.parentElement : null;
+        
+        // Input-nya sendiri
+        const usernameInput = loginForm.querySelector('input[name="userName"]');
+        const passwordInput = loginForm.querySelector('input[name="password"]');
+        
+        const buttonContainer = loginForm.querySelector('button[type="submit"]')?.parentElement;
 
-        // Cek jika semua elemen default ditemukan
-        if (usernameGroup && passwordGroup && buttonContainer && usernameInput && passwordInput) {
-            const newRow = document.createElement('div');
-            newRow.className = 'row g-2 mb-3';
-            
-            // 1. Proses Username
-            const usernameCol = document.createElement('div');
-            usernameCol.className = 'col-12';
-            const usernameInputGroup = document.createElement('div');
-            usernameInputGroup.className = 'input-group';
-            usernameInputGroup.innerHTML = '<span class="input-group-text"><i class="bi bi-person-fill"></i></span>';
-            usernameInput.placeholder = "User Name";
-            usernameInputGroup.appendChild(usernameInput); // Memindahkan input asli
-            usernameCol.appendChild(usernameInputGroup);
-            newRow.appendChild(usernameCol);
+        // Cek jika semua elemen default ditemukan
+        if (usernameGroup && passwordGroup && buttonContainer && usernameInput && passwordInput) {
+            const newRow = document.createElement('div');
+            newRow.className = 'row g-2 mb-3';
+            
+            // 1. Proses Username
+            const usernameCol = document.createElement('div');
+            usernameCol.className = 'col-12';
+            const usernameInputGroup = document.createElement('div');
+            usernameInputGroup.className = 'input-group';
+            usernameInputGroup.innerHTML = '<span class="input-group-text"><i class="bi bi-person-fill"></i></span>';
+            usernameInput.placeholder = "User Name";
+            usernameInputGroup.appendChild(usernameInput); // Memindahkan input asli
+            usernameCol.appendChild(usernameInputGroup);
+            newRow.appendChild(usernameCol);
 
-            // 2. Proses Password
-            const passwordCol = document.createElement('div');
-            passwordCol.className = 'col-12';
-            const passwordWrapper = document.createElement('div');
-            passwordWrapper.className = 'input-wrapper';
-            const passwordInputGroup = document.createElement('div');
-            passwordInputGroup.className = 'input-group';
-            passwordInputGroup.innerHTML = '<span class="input-group-text"><i class="bi bi-key-fill"></i></span>';
-            passwordInput.placeholder = "Password";
-            
-            // Hapus penanda lama (jika ada) agar ikon mata dibuat ulang
-            if (passwordInput.dataset.toggleAdded) {
-                delete passwordInput.dataset.toggleAdded;
-            }
+            // 2. Proses Password
+            const passwordCol = document.createElement('div');
+            passwordCol.className = 'col-12';
+            const passwordWrapper = document.createElement('div');
+            passwordWrapper.className = 'input-wrapper';
+            const passwordInputGroup = document.createElement('div');
+            passwordInputGroup.className = 'input-group';
+            passwordInputGroup.innerHTML = '<span class="input-group-text"><i class="bi bi-key-fill"></i></span>';
+            passwordInput.placeholder = "Password";
+            
+            // Hapus penanda lama (jika ada) agar ikon mata dibuat ulang
+            if (passwordInput.dataset.toggleAdded) {
+                delete passwordInput.dataset.toggleAdded;
+            }
 
-            passwordInputGroup.appendChild(passwordInput); // Memindahkan input asli
-            passwordWrapper.appendChild(passwordInputGroup);
-            passwordCol.appendChild(passwordWrapper);
-            newRow.appendChild(passwordCol);
+            passwordInputGroup.appendChild(passwordInput); // Memindahkan input asli
+            passwordWrapper.appendChild(passwordInputGroup);
+            passwordCol.appendChild(passwordWrapper);
+            newRow.appendChild(passwordCol);
 
-            // 3. Sisipkan baris baru sebelum tombol-tombol
-            buttonContainer.before(newRow);
-            
-            // 4. Hapus wrapper default yang lama (yang berisi label)
-            usernameGroup.remove();
-            passwordGroup.remove();
-        }
-    }
+            // 3. Sisipkan baris baru sebelum tombol-tombol
+            buttonContainer.before(newRow);
+            
+            // 4. Hapus wrapper default yang lama (yang berisi label)
+            usernameGroup.remove();
+            passwordGroup.remove();
+        }
+    }
     function styleRegisterPage() {
-        const form = document.querySelector('form[action="/register"]');
-        if (!form || form.dataset.styled === 'true') return;
-        form.dataset.styled = 'true';
-        const card = form.closest('.card.shadow');
-        const mainRow = card ? card.querySelector('.row.mb-3') : null;
-        const buttonWrapper = card ? card.querySelector('.d-grid.gap-3.mb-3') : null;
-        if (!card || !mainRow || !buttonWrapper) return;
+        const form = document.querySelector('form[action="/register"]');
+        if (!form || form.dataset.styled === 'true') return;
+        form.dataset.styled = 'true';
+        const card = form.closest('.card.shadow');
+        const mainRow = card ? card.querySelector('.row.mb-3') : null;
+        const buttonWrapper = card ? card.querySelector('.d-grid.gap-3.mb-3') : null;
+        if (!card || !mainRow || !buttonWrapper) return;
 
-        // Blok ini akan memindahkan field yang salah tempat ke dalam kolom grid yang benar
-        try {
-            const targetColumn = mainRow.querySelector('.col-lg-6:has(label[for="email"])') || mainRow.querySelector('.col-lg-6:nth-child(2)');
-            const usernameGroup = form.querySelector('label[for="username"]')?.closest('.form-group');
-            const passwordGroup = form.querySelector('label[for="password"]')?.closest('.form-group');
-            const confirmGroup = form.querySelector('label[for="confirmpassword"]')?.closest('.form-group');
-            if (targetColumn && usernameGroup && passwordGroup && confirmGroup) {
-                targetColumn.prepend(confirmGroup);
-                targetColumn.prepend(passwordGroup);
-                targetColumn.prepend(usernameGroup);
-            }
-        } catch (e) {
-            console.error("GavanTheme Error (Layouting Register):", e);
-        }
+        // Blok ini akan memindahkan field yang salah tempat ke dalam kolom grid yang benar
+        try {
+            const targetColumn = mainRow.querySelector('.col-lg-6:has(label[for="email"])') || mainRow.querySelector('.col-lg-6:nth-child(2)');
+            const usernameGroup = form.querySelector('label[for="username"]')?.closest('.form-group');
+            const passwordGroup = form.querySelector('label[for="password"]')?.closest('.form-group');
+            const confirmGroup = form.querySelector('label[for="confirmpassword"]')?.closest('.form-group');
+            if (targetColumn && usernameGroup && passwordGroup && confirmGroup) {
+                targetColumn.prepend(confirmGroup);
+                targetColumn.prepend(passwordGroup);
+                targetColumn.prepend(usernameGroup);
+            }
+        } catch (e) {
+            console.error("GavanTheme Error (Layouting Register):", e);
+        }
         
         // [MODIFIKASI BARU UNTUK MEMPERBAIKI LEBAR BOX]
         try {
@@ -727,77 +699,77 @@
         } catch (e) {
             console.error("GavanTheme Error (Centering Register):", e);
         }
-        // [AKHIR DARI MODIFIKASI BARU]
+        // [AKHIR DARI MODIFIKASI BARU]
 
-        mainRow.before(form);
-        form.append(mainRow);
-        form.append(buttonWrapper);
-        form.querySelectorAll('h3').forEach(h3 => h3.remove());
-        form.querySelectorAll('.form-group').forEach(group => {
-            const label = group.querySelector('label');
-            const input = group.querySelector('input, select');
-            if (!label || !input) return;
-            const icon = label.querySelector('i.bi');
-            const placeholderText = label.textContent.replace(/\(.*\)/g, '').replace(/(\r\n|\n|\r)/gm, " ").trim();
-            let newElement;
-            if (icon) {
-                const inputGroup = document.createElement('div');
-                inputGroup.className = 'input-group mb-2';
-                const iconSpan = document.createElement('span');
-                iconSpan.className = 'input-group-text';
-                iconSpan.appendChild(icon.cloneNode(true));
-                inputGroup.appendChild(iconSpan);
-                inputGroup.appendChild(input);
-                newElement = inputGroup;
-            } else {
-                const simpleDiv = document.createElement('div');
-                simpleDiv.className = 'mb-2';
-                simpleDiv.appendChild(input);
-                newElement = simpleDiv;
-            }
-            if (input.tagName.toLowerCase() !== 'select') {
-                input.placeholder = placeholderText;
-            } else {
-                if (!input.querySelector('option[value=""]')) {
-                    const defaultOption = document.createElement('option');
-                    defaultOption.value = "";
-                    defaultOption.textContent = placeholderText || "Pilih Opsi";
-                    defaultOption.disabled = true;
-                    defaultOption.selected = true;
-                    input.prepend(defaultOption);
-                }
-            }
-            input.classList.add('form-control');
-            if (input.type === 'password') {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'input-wrapper';
-                wrapper.appendChild(newElement);
-                group.replaceWith(wrapper);
-            } else {
-                group.replaceWith(newElement);
-            }
-        });
-        const passwordInput = form.querySelector('#password');
-        const confirmPasswordInput = form.querySelector('#confirmpassword');
-        if (passwordInput && confirmPasswordInput) {
-            const passwordWrapper = passwordInput.closest('.input-wrapper');
-            confirmPasswordInput.closest('.input-wrapper')?.querySelector('.password-toggle-icon')?.remove();
-            if (passwordWrapper && !passwordWrapper.querySelector('.password-toggle-icon')) {
-                const toggleIcon = document.createElement('i');
-                toggleIcon.className = 'bi bi-eye-fill password-toggle-icon';
-                toggleIcon.addEventListener('click', () => {
-                    const isPassword = passwordInput.type === 'password';
-                    const newType = isPassword ? 'text' : 'password';
-                    passwordInput.type = newType;
-                    confirmPasswordInput.type = newType;
-                    toggleIcon.className = isPassword ? 'bi bi-eye-slash-fill password-toggle-icon' : 'bi bi-eye-fill password-toggle-icon';
-                });
-                passwordWrapper.appendChild(toggleIcon);
-                passwordInput.dataset.toggleAdded = 'true';
-                confirmPasswordInput.dataset.toggleAdded = 'true';
-            }
-        }
-    }
+        mainRow.before(form);
+        form.append(mainRow);
+        form.append(buttonWrapper);
+        form.querySelectorAll('h3').forEach(h3 => h3.remove());
+        form.querySelectorAll('.form-group').forEach(group => {
+            const label = group.querySelector('label');
+            const input = group.querySelector('input, select');
+            if (!label || !input) return;
+            const icon = label.querySelector('i.bi');
+            const placeholderText = label.textContent.replace(/\(.*\)/g, '').replace(/(\r\n|\n|\r)/gm, " ").trim();
+            let newElement;
+            if (icon) {
+                const inputGroup = document.createElement('div');
+                inputGroup.className = 'input-group mb-2';
+                const iconSpan = document.createElement('span');
+                iconSpan.className = 'input-group-text';
+                iconSpan.appendChild(icon.cloneNode(true));
+                inputGroup.appendChild(iconSpan);
+                inputGroup.appendChild(input);
+                newElement = inputGroup;
+            } else {
+                const simpleDiv = document.createElement('div');
+                simpleDiv.className = 'mb-2';
+                simpleDiv.appendChild(input);
+                newElement = simpleDiv;
+            }
+            if (input.tagName.toLowerCase() !== 'select') {
+                input.placeholder = placeholderText;
+            } else {
+                if (!input.querySelector('option[value=""]')) {
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = "";
+                    defaultOption.textContent = placeholderText || "Pilih Opsi";
+                    defaultOption.disabled = true;
+                    defaultOption.selected = true;
+                    input.prepend(defaultOption);
+                }
+            }
+            input.classList.add('form-control');
+            if (input.type === 'password') {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'input-wrapper';
+                wrapper.appendChild(newElement);
+                group.replaceWith(wrapper);
+            } else {
+                group.replaceWith(newElement);
+            }
+        });
+        const passwordInput = form.querySelector('#password');
+        const confirmPasswordInput = form.querySelector('#confirmpassword');
+        if (passwordInput && confirmPasswordInput) {
+            const passwordWrapper = passwordInput.closest('.input-wrapper');
+            confirmPasswordInput.closest('.input-wrapper')?.querySelector('.password-toggle-icon')?.remove();
+            if (passwordWrapper && !passwordWrapper.querySelector('.password-toggle-icon')) {
+                const toggleIcon = document.createElement('i');
+                toggleIcon.className = 'bi bi-eye-fill password-toggle-icon';
+                toggleIcon.addEventListener('click', () => {
+                    const isPassword = passwordInput.type === 'password';
+                    const newType = isPassword ? 'text' : 'password';
+                    passwordInput.type = newType;
+                    confirmPasswordInput.type = newType;
+                    toggleIcon.className = isPassword ? 'bi bi-eye-slash-fill password-toggle-icon' : 'bi bi-eye-fill password-toggle-icon';
+                });
+                passwordWrapper.appendChild(toggleIcon);
+                passwordInput.dataset.toggleAdded = 'true';
+                confirmPasswordInput.dataset.toggleAdded = 'true';
+            }
+        }
+    }
     
     function styleProfilePage() {
         const title = Array.from(document.querySelectorAll('h1.text-center')).find(h1 => h1.textContent.trim() === 'Profil Akun');
@@ -863,12 +835,12 @@
 
             const iconClass = iconMapping[input.id];
             if (!iconClass) return;
-           
+            
             const placeholderText = label.textContent.trim();
-           
+            
             const inputGroup = document.createElement('div');
             inputGroup.className = 'input-group mb-3';
-           
+            
             const iconSpan = document.createElement('span');
             iconSpan.className = 'input-group-text';
             iconSpan.innerHTML = `<i class="bi ${iconClass}"></i>`;
@@ -882,7 +854,7 @@
             wrapper.appendChild(inputGroup);
 
             group.replaceWith(wrapper);
-           
+            
             const newPasswordInput = wrapper.querySelector('input');
             addPasswordToggle(newPasswordInput);
         });
@@ -914,7 +886,7 @@
         const contentWrapper = depositForm.parentElement;
         if (contentWrapper && contentWrapper.classList.contains('border-top-0') && !contentWrapper.dataset.padded) {
             contentWrapper.classList.remove('p-2'); 
-            contentWrapper.classList.add('p-3');   
+            contentWrapper.classList.add('p-3');    
             contentWrapper.dataset.padded = 'true';
         }
 
@@ -1275,7 +1247,7 @@
             // Susun ulang
             newGroup.appendChild(oldSelect); 
             newGroup.appendChild(newBtn);    
-            mainContainer.innerHTML = '';      
+            mainContainer.innerHTML = '';       
             mainContainer.appendChild(newGroup); 
             mainContainer.appendChild(scheduleBox); 
             modal.remove();
@@ -1384,66 +1356,66 @@
     }
 
 // [MODIFIKASI] Ini sekarang adalah fungsi pemindai utama kita
-    function runDynamicStyling() {
-        // --- JALANKAN SEMUA FUNGSI STYLING ANDA ---
-        initializeSwipeableHeaderMenu();
-        updateProfileElements();
-        addSidebarBalanceToggle();
-        addMainBalanceToggle();
-        styleMemberStatusPanel();
-        styleTogelTutorialPage();
-        initializeTogelCarousel();
-        stylePagePadding();
-        
-        const depositForm = document.querySelector('#deposit-form');
-        if (depositForm) {
-            initializeDepositForm(depositForm);
-            updateDepositFormUI(depositForm);
-            styleDepositFormFields(depositForm); 
-        }
+    function runDynamicStyling() {
+        // --- JALANKAN SEMUA FUNGSI STYLING ANDA ---
+        initializeSwipeableHeaderMenu();
+        updateProfileElements();
+        addSidebarBalanceToggle();
+        addMainBalanceToggle();
+        styleMemberStatusPanel();
+        styleTogelTutorialPage();
+        initializeTogelCarousel();
+        stylePagePadding();
+        
+        const depositForm = document.querySelector('#deposit-form');
+        if (depositForm) {
+            initializeDepositForm(depositForm);
+            updateDepositFormUI(depositForm);
+            styleDepositFormFields(depositForm); 
+        }
 
-        initializePromoSelection();
-        styleWithdrawPage();
-        styleResultPage();
-        styleResultTableHighlight();
-        hidePageOnePagination();
-        styleWithdrawForm();
-        styleRtpModal();
-        styleConfirmationModal(); 
-        initializeBetFormatting(); // Fungsi Anda akan berjalan dengan aman
-        
-        document.querySelectorAll('input[type="password"]:not([data-toggle-added="true"])').forEach(input => {
-            addPasswordToggle(input);
-        });
+        initializePromoSelection();
+        styleWithdrawPage();
+        styleResultPage();
+        styleResultTableHighlight();
+        // hidePageOnePagination(); // <-- DIHAPUS
+        styleWithdrawForm();
+        styleRtpModal();
+        styleConfirmationModal(); 
+        initializeBetFormatting(); // Fungsi Anda akan berjalan dengan aman
+        
+        document.querySelectorAll('input[type="password"]:not([data-toggle-added="true"])').forEach(input => {
+            addPasswordToggle(input);
+        });
 
-        styleBettingPage(); 
-        styleQuickLogin();
-        styleLoginPage();
-        styleRegisterPage(); 
-        styleProfilePage();
-        styleLogoutButton();
-        styleChangePasswordPage();
-    }
+        styleBettingPage(); 
+        styleQuickLogin();
+        styleLoginPage();
+        styleRegisterPage(); 
+        styleProfilePage();
+        styleLogoutButton();
+        styleChangePasswordPage();
+    }
     
     // --- INISIALISASI SKRIP ---
     document.addEventListener('DOMContentLoaded', () => {
-        redirectToPageTwo();
+        // redirectToPageTwo(); // <-- DIHAPUS
         setupPersistentCountdownIntervals();
         createSidebarToggleButton();
         runAllOtherScripts();
         injectGacorGame();
-       
-       
+        
+        
         setInterval(runDynamicStyling, 250); // Pindai halaman setiap 250ms
-        runDynamicStyling(); // Jalankan 1x saat halaman pertama kali dimuat
-       
+        runDynamicStyling(); // Jalankan 1x saat halaman pertama kali dimuat
+        
         document.body.addEventListener('change', (event) => {
             if (event.target.id === 'agentmemberbankid') {
                 const receiverBankSpan = document.getElementById('receiver-bank');
                 if (receiverBankSpan) delete receiverBankSpan.dataset.iconApplied;
             }
         });
-       
+        
         const sidebar = document.getElementById("sidebar");
         if (sidebar) {
             const toggleButton = document.getElementById("custom-sidebar-toggle");
@@ -1456,5 +1428,3 @@
         }
     });
 })();
-
-

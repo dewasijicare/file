@@ -1,111 +1,141 @@
 (function() {
+    // Fungsi Check & Inject
     function injectPintasWidget() {
         var target = document.querySelector('.jackpot-container-main');
-        var existingWidget = document.getElementById('pintas-widget-container');
+        var existingWidget = document.getElementById('pintas-widget-wrapper');
 
         if (target && !existingWidget) {
+            
+            // HTML WIDGET BARU (Desain Ramping & Neon)
             var widgetHTML = `
-                <div id="pintas-widget-container" class="row my-3 g-1 fade-in-pintas">
-                    <div class="col-12">
-                        <a href="https://pintasdomain.com" target="_blank" class="text-decoration-none">
-                            <div class="pintas-card d-flex align-items-center justify-content-between p-3 position-relative overflow-hidden">
-                                
-                                <div class="shine-effect"></div>
+                <div id="pintas-widget-wrapper" style="margin-bottom: 15px; margin-top: 5px;">
+                    <a href="https://pintasdomain.com" target="_blank" style="text-decoration: none;">
+                        
+                        <div class="pintas-neon-bar">
+                            
+                            <div class="pintas-icon">
+                                <span class="rocket-move">🚀</span>
+                            </div>
 
-                                <div class="d-flex align-items-center gap-3 position-relative z-10">
-                                    <div class="rocket-icon-wrapper">
-                                        <div class="rocket-emoji">🚀</div>
-                                        <div class="rocket-glow"></div>
-                                    </div>
-                                    <div class="lh-sm">
-                                        <div class="text-uppercase text-warning fw-bold" style="font-size: 0.75rem; letter-spacing: 1px;">
-                                            <i class="bi bi-shield-check me-1"></i> Anti-Nawala & Blokir
-                                        </div>
-                                        <div class="fw-black text-white mt-1" style="font-size: 1.35rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5); font-family: 'Arial Black', sans-serif;">
-                                            Pintas<span style="color: #3b82f6;">Domain</span>.com
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="btn-action position-relative z-10 d-none d-sm-block">
-                                    <span class="badge rounded-pill bg-primary px-4 py-2 fw-bold shadow-lg">
-                                        CARI LINK <i class="bi bi-search ms-1"></i>
-                                    </span>
+                            <div class="pintas-content">
+                                <div class="pintas-sub">SUSAH AKSES / TERBLOKIR?</div>
+                                <div class="pintas-title">
+                                    Gunakan <span class="highlight">PintasDomain.com</span>
                                 </div>
                             </div>
-                        </a>
-                    </div>
+
+                            <div class="pintas-action">
+                                <div class="btn-glitch">BUKA SEKARANG</div>
+                            </div>
+
+                        </div>
+                    </a>
                 </div>
 
                 <style>
-                    /* Container Utama */
-                    .pintas-card {
-                        background: linear-gradient(145deg, #1a1d29, #11131b);
-                        border: 1px solid rgba(59, 130, 246, 0.3);
-                        border-radius: 12px;
-                        transition: all 0.3s ease;
-                        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.1);
-                    }
-
-                    /* Hover Effect: Border Menyala */
-                    .pintas-card:hover {
-                        border-color: #3b82f6;
-                        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255,255,255,0.2);
-                        transform: translateY(-2px);
-                    }
-
-                    /* Animasi Roket */
-                    .rocket-emoji {
-                        font-size: 2.2rem;
-                        animation: rocketFloat 3s ease-in-out infinite;
+                    /* 1. Container Style - Ramping & Modern */
+                    .pintas-neon-bar {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        background: rgba(0, 0, 0, 0.6); /* Gelap Transparan */
+                        backdrop-filter: blur(10px); /* Efek Kaca */
+                        border: 1px solid rgba(60, 244, 244, 0.3); /* Border Cyan Halus */
+                        border-radius: 80px; /* Sisi Bulat Penuh (Capsule) */
+                        padding: 8px 15px;
                         position: relative;
-                        z-index: 2;
+                        overflow: hidden;
+                        box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+                        transition: all 0.3s ease;
                     }
-                    .rocket-glow {
-                        position: absolute;
+
+                    /* Efek Hover pada Container */
+                    .pintas-neon-bar:hover {
+                        border-color: #00e5ff;
+                        box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+                        transform: scale(1.01);
+                    }
+
+                    /* 2. Icon Roket */
+                    .pintas-icon {
+                        background: rgba(255, 255, 255, 0.1);
                         width: 40px; height: 40px;
-                        background: rgba(59, 130, 246, 0.6);
-                        filter: blur(15px);
                         border-radius: 50%;
-                        top: 50%; left: 50%;
-                        transform: translate(-50%, -50%);
-                        z-index: 1;
-                        animation: pulseGlow 2s infinite;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 1.5rem;
+                        flex-shrink: 0;
+                        margin-right: 10px;
+                    }
+                    .rocket-move {
+                        display: inline-block;
+                        animation: blastOff 2s infinite ease-in-out;
                     }
 
-                    /* Efek Kilau Berjalan */
-                    .shine-effect {
-                        position: absolute;
-                        top: 0; left: -100%;
-                        width: 50%; height: 100%;
-                        background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent);
-                        transform: skewX(-25deg);
-                        animation: shinePass 6s infinite;
+                    /* 3. Typography */
+                    .pintas-content {
+                        flex-grow: 1;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        line-height: 1.1;
+                        text-align: left;
+                    }
+                    .pintas-sub {
+                        font-family: sans-serif;
+                        font-size: 0.65rem;
+                        color: #fbbf24; /* Kuning Emas */
+                        font-weight: 700;
+                        letter-spacing: 1px;
+                        text-transform: uppercase;
+                    }
+                    .pintas-title {
+                        font-family: 'Arial Black', sans-serif;
+                        font-size: 1.1rem;
+                        color: #fff;
+                        font-weight: 900;
+                    }
+                    .highlight {
+                        color: #38bdf8; /* Biru Langit Cerah */
+                        text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
                     }
 
-                    @keyframes rocketFloat {
-                        0%, 100% { transform: translateY(0) rotate(0deg); }
-                        50% { transform: translateY(-6px) rotate(5deg); }
+                    /* 4. Tombol Aksi Kanan */
+                    .pintas-action {
+                        display: none; /* Sembunyikan di HP kecil sekali */
                     }
-                    @keyframes pulseGlow {
-                        0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-                        50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); }
+                    .btn-glitch {
+                        background: linear-gradient(90deg, #2563eb, #06b6d4);
+                        color: white;
+                        font-size: 0.75rem;
+                        font-weight: bold;
+                        padding: 5px 15px;
+                        border-radius: 20px;
+                        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
                     }
-                    @keyframes shinePass {
-                        0% { left: -100%; }
-                        20% { left: 200%; } /* Cepat lewat */
-                        100% { left: 200%; } /* Diam sebentar */
+
+                    /* RESPONSIVE: Tampilkan tombol di layar > 360px */
+                    @media (min-width: 360px) {
+                        .pintas-action { display: block; margin-left: 10px; }
                     }
-                    .fade-in-pintas { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
-                    @keyframes fadeIn { to { opacity: 1; } }
+
+                    /* ANIMASI ROKET */
+                    @keyframes blastOff {
+                        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+                        50% { transform: translate(2px, -2px) rotate(5deg); }
+                    }
                 </style>
             `;
+
+            // Inject Tepat di ATAS Jackpot Container
             target.insertAdjacentHTML('beforebegin', widgetHTML);
             return true;
         }
         return false;
     }
 
+    // Retry Logic (Penting untuk memastikan widget muncul walau loading lambat)
     if (!injectPintasWidget()) {
         document.addEventListener('DOMContentLoaded', function() {
             if (!injectPintasWidget()) {

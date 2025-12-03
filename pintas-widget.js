@@ -50,4 +50,72 @@
                     /* Efek Hover: Border Lebih Terang & Glow Kuat */
                     .pintas-neon-bar:hover {
                         border-color: #fcd34d;
-                        box-shadow: 0 0 25px rgba(251,
+                        box-shadow: 0 0 25px rgba(251, 191, 36, 0.5);
+                        transform: scale(1.01);
+                    }
+
+                    /* 2. Icon Roket */
+                    .pintas-icon {
+                        font-size: 2rem;
+                        margin-right: 15px;
+                        flex-shrink: 0;
+                        line-height: 1;
+                    }
+                    .rocket-move {
+                        display: inline-block;
+                        animation: blastOff 2s infinite ease-in-out;
+                    }
+
+                    /* 3. Typography */
+                    .pintas-content {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        line-height: 1.2;
+                        text-align: left;
+                    }
+                    .pintas-sub {
+                        font-family: sans-serif;
+                        font-size: 0.65rem;
+                        color: #fbbf24; /* Kuning Emas */
+                        font-weight: 700;
+                        letter-spacing: 1px;
+                        text-transform: uppercase;
+                    }
+                    .pintas-title {
+                        font-family: 'Arial Black', sans-serif;
+                        font-size: 1.2rem;
+                        color: #fff;
+                        font-weight: 900;
+                    }
+                    .highlight {
+                        color: #38bdf8; /* Biru Langit */
+                        text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+                    }
+
+                    /* ANIMASI ROKET */
+                    @keyframes blastOff {
+                        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+                        50% { transform: translate(3px, -3px) rotate(5deg); }
+                    }
+                </style>
+            `;
+
+            target.insertAdjacentHTML('beforebegin', widgetHTML);
+            return true;
+        }
+        return false;
+    }
+
+    if (!injectPintasWidget()) {
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!injectPintasWidget()) {
+                var attempts = 0;
+                var interval = setInterval(function() {
+                    attempts++;
+                    if (injectPintasWidget() || attempts >= 5) clearInterval(interval);
+                }, 1000);
+            }
+        });
+    }
+})();

@@ -1,13 +1,15 @@
 (function() {
     // Fungsi Check & Inject
     function injectPintasWidget() {
-        var target = document.querySelector('.jackpot-container-main');
+        // PERUBAHAN TARGET: Mencari elemen Running Text (#announcement)
+        var target = document.querySelector('#announcement'); 
         var existingWidget = document.getElementById('pintas-widget-wrapper');
 
+        // Jika running text ketemu dan widget belum ada
         if (target && !existingWidget) {
             
             var widgetHTML = `
-                <div id="pintas-widget-wrapper" style="margin-bottom: 15px; margin-top: 5px;">
+                <div id="pintas-widget-wrapper" style="margin: 10px auto 20px auto; max-width: 1200px; padding: 0 10px;">
                     <a href="https://pintasdomain.com" target="_blank" style="text-decoration: none;">
                         
                         <div class="pintas-neon-bar">
@@ -36,7 +38,7 @@
                         background: rgba(0, 0, 0, 0.6);
                         backdrop-filter: blur(10px);
                         
-                        /* PERUBAHAN DISINI: Border Kuning Lebih Tebal */
+                        /* Border Kuning Tebal */
                         border: 2px solid #fbbf24; 
                         box-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
                         
@@ -47,7 +49,7 @@
                         transition: all 0.3s ease;
                     }
 
-                    /* Efek Hover: Border Lebih Terang & Glow Kuat */
+                    /* Efek Hover */
                     .pintas-neon-bar:hover {
                         border-color: #fcd34d;
                         box-shadow: 0 0 25px rgba(251, 191, 36, 0.5);
@@ -101,7 +103,9 @@
                 </style>
             `;
 
-            target.insertAdjacentHTML('beforebegin', widgetHTML);
+            // PERUBAHAN METODE INJECT: insertAdjacentHTML('afterend')
+            // Artinya: Masukkan widget SETELAH (di bawah) elemen running text
+            target.insertAdjacentHTML('afterend', widgetHTML);
             return true;
         }
         return false;

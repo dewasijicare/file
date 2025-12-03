@@ -1,78 +1,118 @@
 (function() {
-    // Fungsi utama untuk menyuntikkan widget
     function injectPintasWidget() {
-        // 1. Cari Target (Pastikan belum ada widget sebelumnya)
         var target = document.querySelector('.jackpot-container-main');
         var existingWidget = document.getElementById('pintas-widget-container');
 
         if (target && !existingWidget) {
-            // 2. HTML Widget
             var widgetHTML = `
                 <div id="pintas-widget-container" class="row my-3 g-1 fade-in-pintas">
                     <div class="col-12">
-                        <div class="p-2 rounded-3 glassmorphism d-flex align-items-center justify-content-between" 
-                             style="border: 1px solid rgba(255,255,255,0.15); background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.0) 100%); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                            
-                            <div class="d-flex align-items-center gap-3 ps-2">
-                                <div style="font-size: 1.8rem; filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.8)); animation: floatRocket 3s ease-in-out infinite;">
-                                    🚀
-                                </div>
+                        <a href="https://pintasdomain.com" target="_blank" class="text-decoration-none">
+                            <div class="pintas-card d-flex align-items-center justify-content-between p-3 position-relative overflow-hidden">
                                 
-                                <div class="lh-1">
-                                    <div style="font-size: 0.7rem; color: #adb5bd; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">
-                                        Susah Akses Link?
+                                <div class="shine-effect"></div>
+
+                                <div class="d-flex align-items-center gap-3 position-relative z-10">
+                                    <div class="rocket-icon-wrapper">
+                                        <div class="rocket-emoji">🚀</div>
+                                        <div class="rocket-glow"></div>
                                     </div>
-                                    <div style="font-size: 0.95rem; font-weight: bold; color: #fff;">
-                                        Cari Kata Kunci di <span style="color: #60a5fa; text-shadow: 0 0 10px rgba(59,130,246,0.5);">PintasDomain.com</span>
+                                    <div class="lh-sm">
+                                        <div class="text-uppercase text-warning fw-bold" style="font-size: 0.75rem; letter-spacing: 1px;">
+                                            <i class="bi bi-shield-check me-1"></i> Anti-Nawala & Blokir
+                                        </div>
+                                        <div class="fw-black text-white mt-1" style="font-size: 1.35rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5); font-family: 'Arial Black', sans-serif;">
+                                            Pintas<span style="color: #3b82f6;">Domain</span>.com
+                                        </div>
                                     </div>
+                                </div>
+
+                                <div class="btn-action position-relative z-10 d-none d-sm-block">
+                                    <span class="badge rounded-pill bg-primary px-4 py-2 fw-bold shadow-lg">
+                                        CARI LINK <i class="bi bi-search ms-1"></i>
+                                    </span>
                                 </div>
                             </div>
-
-                            <a href="https://pintasdomain.com" target="_blank" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold d-flex align-items-center gap-2 shadow-sm" style="border:none; background: linear-gradient(135deg, #2563eb, #1d4ed8);">
-                                <span>CARI</span> <i class="fa-solid fa-magnifying-glass"></i>
-                            </a>
-                        </div>
+                        </a>
                     </div>
                 </div>
-                
+
                 <style>
-                    @keyframes floatRocket {
-                        0% { transform: translateY(0px) rotate(0deg); }
-                        50% { transform: translateY(-3px) rotate(2deg); }
-                        100% { transform: translateY(0px) rotate(0deg); }
+                    /* Container Utama */
+                    .pintas-card {
+                        background: linear-gradient(145deg, #1a1d29, #11131b);
+                        border: 1px solid rgba(59, 130, 246, 0.3);
+                        border-radius: 12px;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.1);
                     }
-                    .fade-in-pintas {
-                        animation: fadeInPintas 0.8s ease-out forwards;
-                        opacity: 0;
-                        transform: translateY(10px);
+
+                    /* Hover Effect: Border Menyala */
+                    .pintas-card:hover {
+                        border-color: #3b82f6;
+                        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255,255,255,0.2);
+                        transform: translateY(-2px);
                     }
-                    @keyframes fadeInPintas {
-                        to { opacity: 1; transform: translateY(0); }
+
+                    /* Animasi Roket */
+                    .rocket-emoji {
+                        font-size: 2.2rem;
+                        animation: rocketFloat 3s ease-in-out infinite;
+                        position: relative;
+                        z-index: 2;
                     }
+                    .rocket-glow {
+                        position: absolute;
+                        width: 40px; height: 40px;
+                        background: rgba(59, 130, 246, 0.6);
+                        filter: blur(15px);
+                        border-radius: 50%;
+                        top: 50%; left: 50%;
+                        transform: translate(-50%, -50%);
+                        z-index: 1;
+                        animation: pulseGlow 2s infinite;
+                    }
+
+                    /* Efek Kilau Berjalan */
+                    .shine-effect {
+                        position: absolute;
+                        top: 0; left: -100%;
+                        width: 50%; height: 100%;
+                        background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent);
+                        transform: skewX(-25deg);
+                        animation: shinePass 6s infinite;
+                    }
+
+                    @keyframes rocketFloat {
+                        0%, 100% { transform: translateY(0) rotate(0deg); }
+                        50% { transform: translateY(-6px) rotate(5deg); }
+                    }
+                    @keyframes pulseGlow {
+                        0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+                        50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); }
+                    }
+                    @keyframes shinePass {
+                        0% { left: -100%; }
+                        20% { left: 200%; } /* Cepat lewat */
+                        100% { left: 200%; } /* Diam sebentar */
+                    }
+                    .fade-in-pintas { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
+                    @keyframes fadeIn { to { opacity: 1; } }
                 </style>
             `;
-
-            // 3. Sisipkan Sebelum Target
             target.insertAdjacentHTML('beforebegin', widgetHTML);
-            return true; // Berhasil
+            return true;
         }
-        return false; // Belum berhasil (elemen tidak ditemukan)
+        return false;
     }
 
-    // --- LOGIKA PENGECEKAN ULANG (RETRY) ---
-    // Coba jalankan langsung
     if (!injectPintasWidget()) {
-        // Jika gagal, tunggu DOM siap
         document.addEventListener('DOMContentLoaded', function() {
             if (!injectPintasWidget()) {
-                // Jika masih gagal, coba cek setiap 1 detik (max 5x)
-                // Ini berguna jika konten diload belakangan oleh sistem website
                 var attempts = 0;
                 var interval = setInterval(function() {
                     attempts++;
-                    if (injectPintasWidget() || attempts >= 5) {
-                        clearInterval(interval);
-                    }
+                    if (injectPintasWidget() || attempts >= 5) clearInterval(interval);
                 }, 1000);
             }
         });

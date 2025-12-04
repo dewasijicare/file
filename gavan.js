@@ -846,6 +846,42 @@
             }
         });
 
+        // --- 4. FIX POSISI TOMBOL MATA (SOLUSI ABSOLUT KE INPUT GROUP) ---
+        // Kode ini WAJIB ADA agar tombol mata bawaan masuk ke dalam kolom input
+        const toggles = form.querySelectorAll('span[id^="toggle"]');
+        toggles.forEach(toggle => {
+            let targetInput = null;
+            // Deteksi apakah ini tombol untuk password biasa atau konfirmasi
+            if (toggle.id.toLowerCase().includes('confirm')) {
+                targetInput = form.querySelector('#confirmPassword');
+            } else {
+                targetInput = form.querySelector('#password');
+            }
+
+            if (targetInput) {
+                const group = targetInput.closest('.input-group');
+                if (group) {
+                    // PINDAHKAN tombol bawaan ke dalam group input yang baru
+                    group.appendChild(toggle);
+                    
+                    // Atur posisi agar rapi di sebelah kanan
+                    toggle.style.position = 'absolute';
+                    toggle.style.right = '15px';
+                    toggle.style.top = '50%';
+                    toggle.style.transform = 'translateY(-50%)';
+                    toggle.style.zIndex = '10';
+                    toggle.style.cursor = 'pointer';
+                    toggle.style.display = 'block'; 
+
+                    // Opsional: Mengubah warna jadi kuning agar terlihat jelas di background gelap
+                    // Jika ingin warna asli, hapus 4 baris di bawah ini
+                    const eyeIcon = toggle.querySelector('i');
+                    if(eyeIcon) {
+                        eyeIcon.style.color = '#FFD700'; 
+                    }
+                }
+            }
+        });
         
         // --- 5. VALIDATION WATCHER (Tanpa Border Tebal) ---
         setInterval(() => {
@@ -1533,6 +1569,7 @@
         }
     });
 })();
+
 
 
 

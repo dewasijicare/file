@@ -846,44 +846,7 @@
             }
         });
 
-        // --- 4. FIX POSISI TOMBOL MATA (SOLUSI ABSOLUT KE INPUT GROUP) ---
-        const toggles = form.querySelectorAll('span[id^="toggle"]');
-        toggles.forEach(toggle => {
-            // Cari input password terkait tombol ini
-            // Biasanya toggle adalah sibling dari wrapper lama, atau input ada di dekatnya
-            // Kita cari input password di dalam form yang ID-nya mirip (password -> togglePass, confirm -> toggleConfirm)
-            let targetInput = null;
-            if (toggle.id.toLowerCase().includes('confirm')) {
-                targetInput = form.querySelector('#confirmPassword');
-            } else {
-                targetInput = form.querySelector('#password');
-            }
-
-            if (targetInput) {
-                const group = targetInput.closest('.input-group');
-                if (group) {
-                    // PINDAHKAN Toggle ke DALAM input-group
-                    group.appendChild(toggle);
-                    
-                    // Styling agar menumpuk di kanan input
-                    toggle.style.position = 'absolute';
-                    toggle.style.right = '15px';
-                    toggle.style.top = '50%';
-                    toggle.style.transform = 'translateY(-50%)';
-                    toggle.style.zIndex = '10'; // Di atas input
-                    toggle.style.cursor = 'pointer';
-                    toggle.style.display = 'block'; // Pastikan muncul
-
-                    // Perbaiki warna mata
-                    const eyeIcon = toggle.querySelector('i');
-                    if(eyeIcon) {
-                        eyeIcon.style.color = '#FFD700';
-                        eyeIcon.className = 'fas fa-eye'; // Reset icon class jika perlu
-                    }
-                }
-            }
-        });
-
+        
         // --- 5. VALIDATION WATCHER (Tanpa Border Tebal) ---
         setInterval(() => {
             const allInputs = form.querySelectorAll('input, select');
@@ -1570,5 +1533,6 @@
         }
     });
 })();
+
 
 

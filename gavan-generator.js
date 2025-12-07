@@ -2,12 +2,12 @@
     // Fungsi ini akan berjalan setelah seluruh halaman dimuat
     document.addEventListener('DOMContentLoaded', () => {
 
-        // 1. Cari elemen jangkar yang ada di halaman (form login)
-        const loginForm = document.querySelector('form input[name*="userName"]')?.closest('form') || document.querySelector('form input[name*="password"]')?.closest('form');
+        // 1. [DIPERBARUI] Cari elemen jangkar yang baru (Widget Pintas Domain)
+        const anchorElement = document.getElementById('pintas-widget-wrapper');
 
-        // Jika form login tidak ditemukan, hentikan skrip
-        if (!loginForm) {
-            console.error('Generator Gagal: Form login tidak ditemukan sebagai titik penempatan.');
+        // Jika elemen target tidak ditemukan, hentikan skrip agar tidak error
+        if (!anchorElement) {
+            console.error('Generator Gagal: Widget PintasDomain (#pintas-widget-wrapper) tidak ditemukan sebagai titik penempatan.');
             return;
         }
 
@@ -15,8 +15,9 @@
         const container = document.createElement('div');
         container.id = '4d-generator-container';
 
-        // 3. Tempatkan kontainer yang baru dibuat ini di bawah form login
-        loginForm.parentElement.insertBefore(container, loginForm.nextSibling);
+        // 3. [DIPERBARUI] Tempatkan kontainer di bawah widget Pintas Domain
+        // Logika: Masukkan ke parent dari anchor, tepat sebelum elemen setelah anchor (efektifnya: di bawah anchor)
+        anchorElement.parentElement.insertBefore(container, anchorElement.nextSibling);
         
         // 4. Siapkan CSS khusus untuk widget (dengan animasi @keyframes)
         const widgetStyles = `
@@ -181,6 +182,6 @@
             }, totalDuration);
         });
         
-        console.log('Widget Generator 4D (v5 - Animasi @keyframes) berhasil dimuat.');
+        console.log('Widget Generator 4D (Posisi: Bawah PintasDomain) berhasil dimuat.');
     });
 })();

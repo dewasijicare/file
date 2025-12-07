@@ -2,34 +2,57 @@
     // Fungsi ini akan berjalan setelah seluruh halaman dimuat
     document.addEventListener('DOMContentLoaded', () => {
 
-        // 1. [DIPERBARUI] Cari elemen jangkar yang baru (Widget Pintas Domain)
-        const anchorElement = document.getElementById('pintas-widget-wrapper');
+        // ==========================================
+        // BAGIAN 1: LOGIKA PENEMPATAN CERDAS
+        // ==========================================
+        
+        let anchorElement = null;
+        let placementMethod = 'after'; // default: sisipkan setelah elemen
 
-        // Jika elemen target tidak ditemukan, hentikan skrip agar tidak error
-        if (!anchorElement) {
-            console.error('Generator Gagal: Widget PintasDomain (#pintas-widget-wrapper) tidak ditemukan sebagai titik penempatan.');
+        // Cek 1: Apakah ada widget PintasDomain? (Biasanya di Home)
+        const pintasWidget = document.getElementById('pintas-widget-wrapper');
+        
+        // Cek 2: Apakah ada Form Login/Daftar? (Biasanya di /login atau /register)
+        // Kita cari form yang punya input username, password, atau form apa saja
+        const formWidget = document.querySelector('form input[name*="userName"]')?.closest('form') || 
+                           document.querySelector('form input[name*="password"]')?.closest('form') ||
+                           document.querySelector('form');
+
+        // LOGIKA PEMILIHAN POSISI:
+        if (pintasWidget) {
+            // Jika ada di Home (ada pintas domain), tempel di situ
+            anchorElement = pintasWidget;
+            console.log('Generator: Target ditemukan di Widget Pintas Domain.');
+        } else if (formWidget) {
+            // Jika TIDAK ada pintas domain, tapi ada FORM (Halaman Login/Daftar), tempel di situ
+            anchorElement = formWidget;
+            console.log('Generator: Target ditemukan di Form Login/Daftar.');
+        } else {
+            // Jika tidak ada keduanya
+            console.error('Generator Gagal: Tidak menemukan Widget Pintas maupun Form Login.');
             return;
         }
 
-        // 2. Buat elemen kontainer secara dinamis dengan JavaScript
+        // ==========================================
+        // BAGIAN 2: PEMBUATAN WIDGET
+        // ==========================================
+
+        // Buat elemen kontainer
         const container = document.createElement('div');
         container.id = '4d-generator-container';
 
-        // 3. [DIPERBARUI] Tempatkan kontainer di bawah widget Pintas Domain
-        // Logika: Masukkan ke parent dari anchor, tepat sebelum elemen setelah anchor (efektifnya: di bawah anchor)
-        anchorElement.parentElement.insertBefore(container, anchorElement.nextSibling);
+        // Sisipkan elemen (Insert After Logic)
+        if (anchorElement.nextSibling) {
+            anchorElement.parentElement.insertBefore(container, anchorElement.nextSibling);
+        } else {
+            anchorElement.parentElement.appendChild(container);
+        }
         
-        // 4. Siapkan CSS khusus untuk widget (dengan animasi @keyframes)
+        // Siapkan CSS
         const widgetStyles = `
-            /* [ANIMASI FINAL] Definisikan animasi putaran yang mulus */
             @keyframes spinReel {
-                from {
-                    transform: translateY(0);
-                }
-                to {
-                    /* Putar sejauh 10 blok angka (5000px) */
-                    transform: translateY(-500px); 
-                }
+                from { transform: translateY(0); }
+                to { transform: translateY(-500px); }
             }
 
             #gavan-generator-widget {
@@ -43,6 +66,8 @@
                 margin: 1rem auto;
                 font-family: 'Exo 2', sans-serif;
                 max-width: 400px;
+                width: 100%; /* Pastikan responsif di dalam form */
+                box-sizing: border-box;
             }
             .generator-display-slot {
                 display: flex; justify-content: center; gap: 8px; margin-bottom: 0.75rem;
@@ -53,14 +78,11 @@
             }
             .digit-reel {
                 display: flex; flex-direction: column;
-                /* Transisi ini HANYA untuk efek berhenti 'bounce' */
                 transition: transform 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
             }
-            /* [ANIMASI FINAL] Gunakan @keyframes saat berputar */
             .digit-reel.is-spinning {
-                /* Durasi 0.5 detik per putaran penuh, berulang tak terbatas */
                 animation: spinReel 0.5s linear infinite;
-                transition: none; /* Matikan transisi 'bounce' saat berputar */
+                transition: none;
             }
             .digit-reel > div {
                 width: 45px; height: 50px; line-height: 50px;
@@ -85,18 +107,13 @@
                 background: #34495e !important; color: #7f8c8d !important;
                 cursor: not-allowed; transform: none; box-shadow: none;
             }
-            #generate-btn-slot i.bi {
-                font-size: 1.1rem;
-                font-weight: bold !important;
-            }
         `;
 
-        // 5. Buat elemen <style> dan suntikkan CSS ke dalam <head>
         const styleElement = document.createElement('style');
         styleElement.innerHTML = widgetStyles;
         document.head.appendChild(styleElement);
 
-        // 6. Buat HTML untuk widget
+        // Buat HTML
         let reelHTML = '';
         const numbers = '0123456789'.repeat(10);
         for(let i = 0; i < numbers.length; i++) {
@@ -117,7 +134,9 @@
             </div>
         `;
 
-        // 7. Tambahkan fungsionalitas ke tombol
+        // ==========================================
+        // BAGIAN 3: FUNGSIONALITAS
+        // ==========================================
         const generateBtn = document.getElementById('generate-btn-slot');
         const reels = document.querySelectorAll('.digit-reel');
         if (reels.length === 0) return;
@@ -127,7 +146,6 @@
         const baseSpinDuration = 1000;
         const extraDelayPerReel = 500;
 
-        // Inisialisasi posisi awal reel ke posisi acak
         reels.forEach(reel => {
             reel.style.transition = 'none';
             const randomNumber = Math.floor(Math.random() * 10);
@@ -135,7 +153,9 @@
             reel.style.transform = `translateY(${startPosition}px)`;
         });
 
-        generateBtn.addEventListener('click', () => {
+        generateBtn.addEventListener('click', (e) => {
+            e.preventDefault(); // Mencegah form submit jika tombol berada di dalam tag <form>
+            
             if(isSpinning) return;
             isSpinning = true;
 
@@ -143,29 +163,18 @@
             generateBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> MEMUTAR...';
             
             reels.forEach((reel, index) => {
-                // [ANIMASI FINAL] Logika baru dengan @keyframes
-                // 1. Mulai animasi putaran tak terbatas yang mulus
                 reel.classList.add('is-spinning');
-
-                // 2. Atur waktu berhenti yang unik untuk setiap reel
                 setTimeout(() => {
-                    // Ambil posisi visual reel saat ini
                     const computedStyle = window.getComputedStyle(reel);
                     const matrix = new DOMMatrix(computedStyle.transform);
                     const currentY = matrix.m42;
                     
-                    // Hentikan animasi @keyframes
                     reel.classList.remove('is-spinning');
-                    
-                    // Tahan posisi visual saat ini agar tidak melompat
                     reel.style.transform = `translateY(${currentY}px)`;
 
-                    // Hitung angka acak dan posisi akhir
                     const randomNumber = Math.floor(Math.random() * 10);
                     const targetPosition = -((10 * 5) + randomNumber) * digitHeight;
 
-                    // Beri jeda sangat singkat agar browser bisa memproses,
-                    // lalu perintahkan untuk berhenti dengan transisi 'bounce'
                     setTimeout(() => {
                         reel.style.transform = `translateY(${targetPosition}px)`;
                     }, 50);
@@ -173,7 +182,6 @@
                 }, baseSpinDuration + (index * extraDelayPerReel));
             });
 
-            // Aktifkan kembali tombol setelah semua animasi selesai
             const totalDuration = baseSpinDuration + ((reels.length - 1) * extraDelayPerReel) + 1200;
             setTimeout(() => {
                 generateBtn.disabled = false;
@@ -182,6 +190,6 @@
             }, totalDuration);
         });
         
-        console.log('Widget Generator 4D (Posisi: Bawah PintasDomain) berhasil dimuat.');
+        console.log('Widget Generator 4D (v6 - Multi Page Support) berhasil dimuat.');
     });
 })();

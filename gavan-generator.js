@@ -3,52 +3,78 @@
     document.addEventListener('DOMContentLoaded', () => {
 
         // ==========================================
-        // BAGIAN 1: LOGIKA PENEMPATAN CERDAS
+        // BAGIAN 0: FILTER URL (KHUSUS /login & /register)
+        // ==========================================
+        
+        // Ambil path URL saat ini (misal: /login atau /register)
+        // Kita ubah ke huruf kecil untuk antisipasi kesalahan penulisan (case-insensitive)
+        const path = window.location.pathname.toLowerCase();
+
+        // 1. Cek Halaman Utama (Root /, index.php, atau home)
+        const isHomePage = path === '/' || path === '/index.php' || path === '/index.html' || path === '/home';
+        
+        // 2. Cek Halaman Login (Hanya persis '/login' atau '/login/')
+        const isLoginPage = path === '/login' || path === '/login/';
+        
+        // 3. Cek Halaman Daftar (Hanya persis '/register' atau '/register/')
+        const isRegisterPage = path === '/register' || path === '/register/';
+
+        // LOGIKA PEMBATASAN:
+        // Jika BUKAN Home, BUKAN Login, dan BUKAN Register, script BERHENTI.
+        if (!isHomePage && !isLoginPage && !isRegisterPage) {
+            // Uncomment baris bawah ini jika ingin melihat log debug di Console browser
+            // console.log('Generator: Script berhenti. Ini bukan halaman Home, Login, atau Register.');
+            return; 
+        }
+
+        // ==========================================
+        // BAGIAN 1: LOGIKA PENEMPATAN
         // ==========================================
         
         let anchorElement = null;
-        let placementMethod = 'after'; // default: sisipkan setelah elemen
 
-        // Cek 1: Apakah ada widget PintasDomain? (Biasanya di Home)
+        // Cek elemen target
         const pintasWidget = document.getElementById('pintas-widget-wrapper');
         
-        // Cek 2: Apakah ada Form Login/Daftar? (Biasanya di /login atau /register)
-        // Kita cari form yang punya input username, password, atau form apa saja
+        // Cari Form (Hanya diproses jika lolos filter URL di atas)
+        // Kita cari form yang punya input username/password, atau form general
         const formWidget = document.querySelector('form input[name*="userName"]')?.closest('form') || 
                            document.querySelector('form input[name*="password"]')?.closest('form') ||
                            document.querySelector('form');
 
-        // LOGIKA PEMILIHAN POSISI:
-        if (pintasWidget) {
-            // Jika ada di Home (ada pintas domain), tempel di situ
+        // LOGIKA PILIH POSISI:
+        if (isHomePage && pintasWidget) {
+            // KONDISI 1: Di Home & Ada Widget Pintas
             anchorElement = pintasWidget;
-            console.log('Generator: Target ditemukan di Widget Pintas Domain.');
-        } else if (formWidget) {
-            // Jika TIDAK ada pintas domain, tapi ada FORM (Halaman Login/Daftar), tempel di situ
+            console.log('Generator: Aktif di Home (Target: Widget Pintas).');
+        } else if ((isLoginPage || isRegisterPage) && formWidget) {
+            // KONDISI 2: Di Login/Register & Ada Form
             anchorElement = formWidget;
-            console.log('Generator: Target ditemukan di Form Login/Daftar.');
+            console.log('Generator: Aktif di Login/Register (Target: Form).');
+        } else if (isHomePage && !pintasWidget) {
+             // Fallback Home: Jika di Home tapi tidak ada widget pintas, matikan atau cari body
+             console.log('Generator: Di Home, tapi target widget tidak ditemukan.');
+             return;
         } else {
-            // Jika tidak ada keduanya
-            console.error('Generator Gagal: Tidak menemukan Widget Pintas maupun Form Login.');
+            // Fallback Umum
+            console.log('Generator: Halaman cocok, tapi elemen target tidak ketemu.');
             return;
         }
 
         // ==========================================
-        // BAGIAN 2: PEMBUATAN WIDGET
+        // BAGIAN 2: UI & CSS (TIDAK BERUBAH)
         // ==========================================
 
-        // Buat elemen kontainer
         const container = document.createElement('div');
         container.id = '4d-generator-container';
 
-        // Sisipkan elemen (Insert After Logic)
+        // Sisipkan elemen (Insert After)
         if (anchorElement.nextSibling) {
             anchorElement.parentElement.insertBefore(container, anchorElement.nextSibling);
         } else {
             anchorElement.parentElement.appendChild(container);
         }
         
-        // Siapkan CSS
         const widgetStyles = `
             @keyframes spinReel {
                 from { transform: translateY(0); }
@@ -66,7 +92,7 @@
                 margin: 1rem auto;
                 font-family: 'Exo 2', sans-serif;
                 max-width: 400px;
-                width: 100%; /* Pastikan responsif di dalam form */
+                width: 100%;
                 box-sizing: border-box;
             }
             .generator-display-slot {
@@ -113,7 +139,6 @@
         styleElement.innerHTML = widgetStyles;
         document.head.appendChild(styleElement);
 
-        // Buat HTML
         let reelHTML = '';
         const numbers = '0123456789'.repeat(10);
         for(let i = 0; i < numbers.length; i++) {
@@ -154,7 +179,7 @@
         });
 
         generateBtn.addEventListener('click', (e) => {
-            e.preventDefault(); // Mencegah form submit jika tombol berada di dalam tag <form>
+            e.preventDefault(); 
             
             if(isSpinning) return;
             isSpinning = true;
@@ -190,6 +215,6 @@
             }, totalDuration);
         });
         
-        console.log('Widget Generator 4D (v6 - Multi Page Support) berhasil dimuat.');
+        console.log('Widget Generator 4D (v7.1 - Strict URL) berhasil dimuat.');
     });
 })();

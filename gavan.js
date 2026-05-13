@@ -442,8 +442,85 @@
     }
     
     function updateDepositFormUI(depositForm) { if(!depositForm)return;const receiverBankSpan=document.getElementById('receiver-bank');if(receiverBankSpan&&!receiverBankSpan.dataset.iconApplied){const bankName=receiverBankSpan.textContent.trim().toUpperCase();if(BANK_ICONS[bankName]){receiverBankSpan.innerHTML=`<img src="${BANK_ICONS[bankName]}" alt="${bankName}" style="height: 40px; vertical-align: middle;">`}receiverBankSpan.dataset.iconApplied='true'}for(const[key,iconClass]of Object.entries(ICON_MAPPINGS)){const isLabelForInput=!key.includes('receiver');const element=isLabelForInput?depositForm.querySelector(`label[for="${key}"]`):document.getElementById(key);if(element&&!element.querySelector('i.bi')){const iconEl=document.createElement('i');iconEl.className=`bi ${iconClass}`;element.prepend(iconEl,document.createTextNode(' '))}}const qrCodeImg=document.getElementById('receiver-qrcode');if(qrCodeImg){qrCodeImg.classList.remove('bg-white');qrCodeImg.style.setProperty('border-color','#00aaff','important');qrCodeImg.style.setProperty('background-color','transparent','important')} }
-    function styleWithdrawForm() { const withdrawCard=document.querySelector('#withdraw-form')?.closest('.card.shadow');if(!withdrawCard||withdrawCard.dataset.tabsApplied==='true')return;const mainTitle=withdrawCard.querySelector('h1.text-center');const historyTitle=Array.from(withdrawCard.querySelectorAll('h1, h2, h3')).find(el=>el.textContent.includes('RIWAYAT WITHDRAW'));if(mainTitle&&historyTitle){const navTabs=document.createElement('ul');navTabs.className='nav nav-tabs';navTabs.innerHTML=`<li class="nav-item"><a class="nav-link active" href="#">Withdraw</a></li><li class="nav-item"><a class="nav-link" href="#">Riwayat</a></li>`;const contentWrapper=document.createElement('div');contentWrapper.className='border border-top-0 px-3 pb-3 pt-2';Array.from(withdrawCard.children).forEach(child=>{if(child!==mainTitle){contentWrapper.appendChild(child.cloneNode(true))}});while(withdrawCard.firstChild){withdrawCard.removeChild(withdrawCard.firstChild)}withdrawCard.appendChild(mainTitle);withdrawCard.appendChild(navTabs);withdrawCard.appendChild(contentWrapper);const newHistoryTitle=contentWrapper.querySelector('h1, h2, h3');if(newHistoryTitle&&newHistoryTitle.textContent.includes('RIWAYAT WITHDRAW')){newHistoryTitle.style.display='none'}withdrawCard.dataset.tabsApplied='true'}const withdrawForm=withdrawCard.querySelector('#withdraw-form');if(withdrawForm){const bankLabel=withdrawForm.querySelector('label[for="agentmemberbankid"]');if(bankLabel&&!bankLabel.querySelector('i.bi')){bankLabel.innerHTML='<i class="bi bi-wallet2"></i> Bank / e-Wallet'}const amountLabel=withdrawForm.querySelector('label[for="amount"]');if(amountLabel&&!amountLabel.querySelector('i.bi')){amountLabel.innerHTML='<i class="bi bi-cash-coin"></i> '+amountLabel.textContent}} }
+    function styleWithdrawForm() { 
+        const withdrawCard = document.querySelector('#withdraw-form')?.closest('.card.shadow');
+        if (!withdrawCard || withdrawCard.dataset.tabsApplied === 'true') return;
 
+        const mainTitle = withdrawCard.querySelector('h1.text-center');
+        
+        // CARI CARD RIWAYAT (Karena sekarang terpisah di div .card.shadow yang lain)
+        const historyCard = Array.from(document.querySelectorAll('.card.shadow')).find(card => {
+            const title = card.querySelector('h1, h2, h3');
+            return title && title.textContent.toUpperCase().includes('RIWAYAT WITHDRAW');
+        });
+
+        if (mainTitle && historyCard) {
+            // Buat Navigasi Tabs
+            const navTabs = document.createElement('ul');
+            navTabs.className = 'nav nav-tabs';
+            navTabs.innerHTML = `
+                <li class="nav-item"><a class="nav-link active" href="javascript:void(0)">Withdraw</a></li>
+                <li class="nav-item"><a class="nav-link" href="javascript:void(0)">Riwayat</a></li>
+            `;
+
+            // Wrapper untuk form withdraw
+            const contentWrapper = document.createElement('div');
+            contentWrapper.className = 'border border-top-0 px-3 pb-3 pt-2';
+            Array.from(withdrawCard.children).forEach(child => {
+                if (child !== mainTitle) contentWrapper.appendChild(child);
+            });
+
+            // Wrapper untuk history
+            const historyWrapper = document.createElement('div');
+            historyWrapper.className = 'border border-top-0 px-3 pb-3 pt-2';
+            historyWrapper.style.display = 'none'; // Sembunyikan default
+            
+            // Pindahkan isi history card ke wrapper baru
+            Array.from(historyCard.children).forEach(child => {
+                if (!child.textContent.toUpperCase().includes('RIWAYAT WITHDRAW')) {
+                    historyWrapper.appendChild(child);
+                }
+            });
+
+            // Susun ulang ke dalam card utama
+            withdrawCard.innerHTML = '';
+            withdrawCard.appendChild(mainTitle);
+            withdrawCard.appendChild(navTabs);
+            withdrawCard.appendChild(contentWrapper);
+            withdrawCard.appendChild(historyWrapper);
+
+            // Hapus card riwayat bawaan yang sudah kosong
+            historyCard.remove();
+
+            // Fungsi Klik Tabs
+            const tabs = navTabs.querySelectorAll('.nav-link');
+            tabs[0].addEventListener('click', (e) => {
+                e.preventDefault();
+                tabs[0].classList.add('active'); tabs[1].classList.remove('active');
+                contentWrapper.style.display = 'block'; historyWrapper.style.display = 'none';
+            });
+            tabs[1].addEventListener('click', (e) => {
+                e.preventDefault();
+                tabs[1].classList.add('active'); tabs[0].classList.remove('active');
+                contentWrapper.style.display = 'none'; historyWrapper.style.display = 'block';
+            });
+
+            withdrawCard.dataset.tabsApplied = 'true';
+        }
+
+        // Fix Icon Label Withdraw
+        const withdrawForm = withdrawCard.querySelector('#withdraw-form');
+        if (withdrawForm) {
+            const bankLabel = withdrawForm.querySelector('label[for="agentmemberbankid"]');
+            if (bankLabel && !bankLabel.querySelector('i.bi')) {
+                bankLabel.innerHTML = '<i class="bi bi-wallet2"></i> Bank / e-Wallet';
+            }
+            const amountLabel = withdrawForm.querySelector('label[for="amount"]');
+            if (amountLabel && !amountLabel.querySelector('i.bi')) {
+                amountLabel.innerHTML = '<i class="bi bi-cash-coin"></i> ' + amountLabel.textContent;
+            }
+        } 
+    }
     function styleBettingPage() {
         const bettingContainer = document.querySelector('#select-market')?.closest('.container[class*="my-"]');
         if (!bettingContainer) return;
@@ -1036,12 +1113,12 @@
         }
 
         // --- REQUEST 1 (DIUBAH): Style "Akun Bank" ---
-        const agentBankSelect = depositForm.querySelector('#agentmemberbankid');
+        const agentBankSelect = depositForm.querySelector('#agentmemberbankid, #agentBankId');
         const currentWrapper = agentBankSelect ? agentBankSelect.closest('.form-group, .profile-row') : null;
 
         if (agentBankSelect && currentWrapper && !agentBankSelect.dataset.styledAsInputGroup) {
             
-            const originalLabel = document.querySelector('label[for="agentmemberbankid"]'); 
+            const originalLabel = document.querySelector('label[for="agentmemberbankid"], label[for="agentBankId"]'); 
             const labelIcon = originalLabel ? originalLabel.querySelector('i.bi') : null;
 
             const newInputGroup = document.createElement('div');

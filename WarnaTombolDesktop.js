@@ -1,34 +1,36 @@
 (function() {
-    function styleDesktopButtons() {
-        // Menargetkan tombol di area barisan tengah desktop (Login, Daftar, Promosi)
-        // Kita gunakan querySelectorAll untuk mencari tombol-tombol tersebut
-        const navButtons = document.querySelectorAll('button, a[href*="login"], a[href*="register"], a[href*="promosi"]');
+    function applyGabanButtonStyles() {
+        // Mengambil semua tombol yang ada di area navigasi/home
+        const buttons = document.querySelectorAll('button, a');
         
-        navButtons.forEach(btn => {
-            // Cek apakah teks tombol mengandung kata kunci
-            const text = btn.textContent.toLowerCase();
-            if (text.includes('login') || text.includes('daftar') || text.includes('promosi')) {
-                
-                // Terapkan style Gaban
-                btn.style.setProperty('background', 'linear-gradient(45deg, #0077ff, #00eaff)', 'important');
-                btn.style.setProperty('color', '#fff', 'important');
-                btn.style.setProperty('border', 'none', 'important');
-                btn.style.setProperty('font-weight', '700', 'important');
-                btn.style.setProperty('text-transform', 'uppercase', 'important');
-                btn.style.setProperty('box-shadow', '0 0 10px #00eaff', 'important');
-                btn.style.setProperty('transition', 'all 0.3s ease', 'important');
-                
-                // Tambahkan efek hover agar terlihat premium
-                btn.onmouseover = function() {
-                    this.style.boxShadow = '0 0 20px #00eaff, 0 0 30px #0077ff';
-                };
-                btn.onmouseout = function() {
-                    this.style.boxShadow = '0 0 10px #00eaff';
-                };
+        buttons.forEach(btn => {
+            const text = btn.textContent.trim().toLowerCase();
+            
+            // 1. STYLE LOGIN & DAFTAR (Biru ke Cyan)
+            if (text.includes('login') || text.includes('daftar')) {
+                btn.style.cssText = `
+                    background: linear-gradient(45deg, #0077ff, #00eaff) !important;
+                    color: #fff !important;
+                    border: none !important;
+                    font-weight: 700 !important;
+                    text-transform: uppercase !important;
+                    box-shadow: 0 0 10px #00eaff, inset 0 0 5px rgba(255,255,255,.4) !important;
+                `;
+            } 
+            // 2. STYLE PROMOSI (Kuning ke Oranye)
+            else if (text.includes('promosi')) {
+                btn.style.cssText = `
+                    background: linear-gradient(45deg, #ffd700, #ffa500) !important;
+                    color: #2c3e50 !important;
+                    border: none !important;
+                    font-weight: 700 !important;
+                    text-transform: uppercase !important;
+                    box-shadow: 0 0 10px #ffd700, inset 0 0 5px rgba(255,255,255,.7) !important;
+                `;
             }
         });
     }
 
-    // Jalankan setiap 200ms agar style tidak tertimpa oleh script asli website
-    setInterval(styleDesktopButtons, 200);
+    // Interval untuk memastikan gaya tidak tertimpa oleh CSS bawaan website
+    setInterval(applyGabanButtonStyles, 200);
 })();

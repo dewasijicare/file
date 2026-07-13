@@ -1,45 +1,62 @@
 (function() {
-    function injectCustomAuthAndContact() {
-        // Cari lokasi target (misalnya card quicklogin)
+    function applyGabanStyleToAuth() {
         const target = document.getElementById('row-quicklogin');
-        if (!target || target.dataset.injected === 'true') return;
+        if (!target) return;
 
-        // 1. Definisikan Tombol Tambahan (WA & Facebook)
-        const socialButtons = [
-            { text: "WHATSAPP", link: "https://wa.me/6282180332553", icon: "bi-whatsapp" },
-            { text: "GROUP FACEBOOK", link: "https://www.facebook.com/groups/1633061267257649", icon: "bi-facebook" }
-        ];
+        // 1. Terapkan CSS ke Card Utama (Sesuai tema Anda)
+        target.style.background = "linear-gradient(145deg, #2c3e50, #1a252f)";
+        target.style.border = "1px solid #00aaff";
+        target.style.boxShadow = "0 0 20px rgba(0, 170, 255, 0.6)";
+        target.style.borderRadius = "15px";
+        target.style.padding = "15px";
 
-        // 2. Buat Container untuk tombol sosial
-        const socialContainer = document.createElement('div');
-        socialContainer.className = 'mt-3 d-grid gap-2';
-        
-        socialButtons.forEach(btn => {
-            const a = document.createElement('a');
-            a.href = btn.link;
-            a.target = "_blank";
-            a.className = "btn btn-custom-promo";
-            a.style.cssText = "display: flex; align-items: center; justify-content: center; gap: 10px; background: #1a252f; border: 1px solid #00aaff; color: #fff; padding: 10px;";
-            a.innerHTML = `<i class="bi ${btn.icon}"></i> ${btn.text}`;
-            socialContainer.appendChild(a);
+        // 2. Styling Input (Username & Password)
+        const inputs = target.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.style.backgroundColor = "#1a252f";
+            input.style.border = "1px solid #34495e";
+            input.style.color = "#fff";
+            input.style.borderRadius = "5px";
         });
 
-        // 3. Masukkan ke dalam card login/daftar
-        const cardBody = target.querySelector('.card-body');
-        if (cardBody) {
-            cardBody.appendChild(socialContainer);
-            target.dataset.injected = 'true';
+        // 3. Styling Tombol Login & Daftar
+        const buttons = target.querySelectorAll('button');
+        buttons.forEach(btn => {
+            btn.style.background = "linear-gradient(45deg, #0077ff, #00eaff)";
+            btn.style.color = "#fff";
+            btn.style.border = "none";
+            btn.style.fontWeight = "700";
+            btn.style.textTransform = "uppercase";
+            btn.style.boxShadow = "0 0 10px #00eaff";
+        });
+
+        // 4. Integrasi Tombol Sosial Media (WA & FB) dengan tema .btn-custom-promo
+        if (!target.dataset.socialInjected) {
+            const socialLinks = [
+                { text: "WHATSAPP", link: "https://wa.me/6282180332553", icon: "bi-whatsapp" },
+                { text: "GROUP FACEBOOK", link: "https://www.facebook.com/groups/1633061267257649", icon: "bi-facebook" }
+            ];
+
+            socialLinks.forEach(item => {
+                const a = document.createElement('a');
+                a.href = item.link;
+                a.target = "_blank";
+                // Menggunakan class btn-custom-promo yang sudah ada di CSS Anda
+                a.className = "btn btn-custom-promo mt-2"; 
+                a.innerHTML = `<i class="bi ${item.icon}"></i> ${item.text}`;
+                target.appendChild(a);
+            });
+            target.dataset.socialInjected = 'true';
         }
     }
 
-    // Jalankan dengan interval singkat untuk memastikan elemen sudah dirender oleh web
-    const checkExist = setInterval(() => {
+    // Jalankan pengecekan berkala (200ms) untuk menangkap elemen setelah dirender
+    const observer = setInterval(() => {
         if (document.getElementById('row-quicklogin')) {
-            injectCustomAuthAndContact();
-            clearInterval(checkExist);
+            applyGabanStyleToAuth();
         }
-    }, 500);
+    }, 200);
 
-    // Timeout untuk menghentikan interval jika tidak ditemukan setelah 10 detik
-    setTimeout(() => clearInterval(checkExist), 10000);
+    // Hentikan observer setelah 5 detik agar tidak membebani performa
+    setTimeout(() => clearInterval(observer), 5000);
 })();

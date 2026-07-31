@@ -151,11 +151,6 @@
             /* Placeholder styling */
             #maincontent .td-input textarea.form-control::placeholder { color: rgba(236, 240, 241, 0.5) !important; }
 
-            /* --- PERBAIKAN OVERLAP RUNNING TEXT & ICON SPEAKER --- */
-            marquee { 
-                margin-left: 45px !important; /* Mendorong teks ke kanan agar tidak menabrak icon */
-                padding-right: 15px !important;
-            }
         `;
     const styleElement = document.createElement('style');
     document.head.appendChild(styleElement);

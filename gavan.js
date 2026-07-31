@@ -150,10 +150,22 @@
             
             /* Placeholder styling */
             #maincontent .td-input textarea.form-control::placeholder { color: rgba(236, 240, 241, 0.5) !important; }
+
+            /* --- PERBAIKAN OVERLAP RUNNING TEXT & ICON SPEAKER --- */
+            marquee { 
+                margin-left: 45px !important; /* Mendorong teks ke kanan agar tidak menabrak icon */
+                padding-right: 15px !important;
+            }
+            
+            /* (Opsional) Memastikan icon speaker tidak ikut menyusut jika berada di dalam flexbox */
+            .bi-megaphone-fill, .bi-volume-up-fill, [class*="speaker"], [class*="bullhorn"] {
+                flex-shrink: 0 !important;
+                z-index: 10 !important;
+            }
         `;
     const styleElement = document.createElement('style');
     document.head.appendChild(styleElement);
-    styleElement.innerHTML = gavanThemeStyles;
+    styleElement.innerHTML = ;
 
     // --- KUMPULAN FUNGSI ---
     let intervalsInitialized = false;

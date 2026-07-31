@@ -1,6 +1,6 @@
 (function() {
     // BLOK CSS LENGKAP
-    const gavanThemeStyles = `
+        const gavanThemeStyles = `
             @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
             .input-group-text { background-color: #2c3e50; border-color: #34495e; color: #00eaff; }
             .alert.themed-alert-danger { background: linear-gradient(145deg, #a73c2e, #c0392b) !important; border: 1px solid #e74c3c !important; color: #fff !important; box-shadow: 0 0 15px rgba(231, 76, 60, 0.6); border-radius: 8px; text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
@@ -150,7 +150,6 @@
             
             /* Placeholder styling */
             #maincontent .td-input textarea.form-control::placeholder { color: rgba(236, 240, 241, 0.5) !important; }
-
         `;
     const styleElement = document.createElement('style');
     document.head.appendChild(styleElement);
